@@ -1,0 +1,89 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.Dashboard {
+  background-color: #282c34;
+  color: white;
+  min-height: 100vh;
+}
+
+.Dashboard-content {
+  margin-top: 72px;
+  min-width: 100vh;
+}
+
+.App-link {
+  color: #3399FF;
+  cursor: pointer;
+}
+
+.App-TextField {
+  color: white !important;
+  border-color: white !important;
+}
+
+.App-TextField-Filter {
+  color: white !important;
+  border-color: gray !important;
+  font-size: 12px !important;
+}
+
+.App-Label-Filter {
+  color: white !important;
+  font-size: 12px !important;
+  float: left;
+  width: 170px;
+  vertical-align: middle !important;
+}
+
+.App-Label-Filter-Table {
+  color: white !important;
+  font-size: 12px !important;
+  width: 170px;
+  vertical-align: middle !important;
+}
+
+.App-Label-Filter-NoFloat {
+  color: white !important;
+  font-size: 12px !important;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.Data-Grid-Row {
+  color: white;
+  font-size: 11px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
