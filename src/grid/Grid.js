@@ -99,8 +99,12 @@ const columns = [
     disableColumnMenu: true,
     hideSortIcons: true,
     hideable: false,
-    sortable: false
-
+    sortable: false,
+    renderCell: (params) => (
+      <div>
+        {params.id}
+      </div>
+    ),
   },
 
   {
@@ -109,10 +113,10 @@ const columns = [
       <strong>
         {i18next.t("column_chain")}
         <span id="arrowChainDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}>Ethereum</ArrowDown>
+          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
         </span>
         <span id="arrowChainUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}>Ethereum</ArrowUp>
+          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
         </span>
       </strong>
     ),
@@ -121,8 +125,12 @@ const columns = [
     hideable: false,
     disableColumnMenu: true,
     hideSortIcons: true,
-    sortingOrder: ['asc', 'desc']
-
+    sortingOrder: ['asc', 'desc'],
+    renderCell: (params) => (
+      <div>
+        Ethereum
+      </div>
+    ),
   },
   {
     field: 'hist_name',
@@ -147,7 +155,7 @@ const columns = [
     sortingOrder: ['asc', 'desc'],
     renderCell: (params) => (
       <div>
-        <div onClick={() => history(params)} className="App-link"><u>{/*params.value.replace("/", " / ")*/params.value + ' / Ether'}</u></div>
+        <div onClick={() => history(params)} className="App-link"><u>{/*params.value.replace("/", " / ")*/params.value + ' / WETH'}</u></div>
         <div style={{ marginTop: 4 }}>
           <img src={cgreen} style={{ width: 16, height: 16, display: params.row.hist_contract_verified == 1 ? 'inline' : 'none' }} />
           <img src={rgreen} style={{ marginLeft: params.row.hist_contract_verified == 1 ? 6 : 0, width: 16, height: 16, display: params.row.hist_is_contract_renounced == 1 ? 'inline' : 'none' }} />
@@ -208,7 +216,7 @@ const columns = [
     hideSortIcons: true,
     renderCell: (params) => (
       <div>
-        {/*params.value.substring(0, 15)*/}...
+        {params.value.substring(0, 15)}...
         <CopyAll onClick={() => copy(params)}
           sx={{ width: 16, height: 16, cursor: "pointer" }}
           aria-label="dclose"
@@ -240,17 +248,8 @@ const columns = [
     hideSortIcons: true,
     sortingOrder: ['desc', 'asc'],
     renderCell: (params) => {
-      if (params.value != undefined) {
-        var parts = params.value.split(" ")
-        var dateParts = parts[0].split('-');
-        var timeParts = parts[1].split(':');
-
-        var mydate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
-        return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
-      }
-      else {
-        return "-"
-      }
+      var mydate = new Date(params.value* 1000);
+      return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
     }
   },
   {
@@ -762,7 +761,7 @@ class Grid extends React.Component {
       sortField: this.props.hist == "true" ? 'hist_created' : 'hist_creation',
       sortDir: "desc",
       page: 0,
-      pageSize: 100,
+      pageSize: 50,
       copyText: "",
       alertCopiedOpen: "none",
       loading: false,
@@ -939,6 +938,8 @@ class Grid extends React.Component {
       body: JSON.stringify({
         sort: sortModel,
         page: pageModel,
+        offset: pageModel.page * pageModel.pageSize,
+        count: pageModel.pageSize,
         filter: this.state.filterModel,
         chain: this.props.chain,
         token: this.props.token,
@@ -969,9 +970,13 @@ class Grid extends React.Component {
         let tableData = [];
         data.map((row, index) => {
           tableData.push({
-            id: index + 1,
-            hist_address: row[0],
-            hist_name: row[1],
+            id: pageModel.page * pageModel.pageSize + index + 1,
+            hist_address: row.token_address,
+            hist_name: row.token_symbol,
+            hist_pair_address: row.pool_address,
+            hist_creation: row.pool_create_time,
+            hist_price: row.token_price,
+            hist_total_liquidity: row.total_liquidity,
           })
         })
         this.setState(
@@ -979,7 +984,7 @@ class Grid extends React.Component {
             rows: tableData,
             rowCount: data.length,
             page: 0,
-            pageSize: 100,
+            pageSize: 50,
             loading: false,
           }
         )
