@@ -946,8 +946,8 @@ class Grid extends React.Component {
         trail: this.props.trail == "true" ? "true" : "false"
       }),
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'Access-Control-Allow-Origin': '*'
+        'Content-type': 'application/json;',
+        'Access-Control-Allow-Origin': '*',
       },
 
     })
