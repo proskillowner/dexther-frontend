@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import cgreen from "../media/c_green.svg"
 import rgreen from "../media/r_green.svg"
 import honeypot from "../media/honeypot.png"
-import { SERVER_URL, API_GET_TOKEN, API_GET_CHAIN } from '../Api.js'
+import { SERVER_URL, API_GET_POOL, API_GET_CHAIN } from '../Api.js'
 
 import {
   useGridApiContext,
@@ -936,7 +936,7 @@ class Grid extends React.Component {
       pageModel.pageSize = this.state.pageSize
     }
 
-    await fetch(`${SERVER_URL}${API_GET_TOKEN}`, {
+    await fetch(`${SERVER_URL}${API_GET_POOL}`, {
       method: 'POST',
       body: JSON.stringify({
         sort: sortModel,

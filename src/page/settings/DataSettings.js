@@ -278,6 +278,10 @@ class DataSettings extends React.Component {
   async loadCronLog() {
     await fetch(`${SERVER_URL}${API_GET_SYNC_LOG}`, {
       method: 'POST',
+      body: JSON.stringify({
+        offset: 0,
+        count: 100,
+      }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
