@@ -83,7 +83,7 @@ class Login extends React.Component {
         password: password,
       }),
       headers: {
-        'Content-Type': 'application/json',
+        'Content-type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
       },
     })

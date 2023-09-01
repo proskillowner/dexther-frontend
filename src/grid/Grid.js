@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import cgreen from "../media/c_green.svg"
 import rgreen from "../media/r_green.svg"
 import honeypot from "../media/honeypot.png"
-import { SERVER_URL, API_GET_TOKEN } from '../Api.js'
+import { SERVER_URL, API_GET_TOKEN, API_GET_CHAIN } from '../Api.js'
 
 import {
   useGridApiContext,
@@ -248,7 +248,7 @@ const columns = [
     hideSortIcons: true,
     sortingOrder: ['desc', 'asc'],
     renderCell: (params) => {
-      var mydate = new Date(params.value* 1000);
+      var mydate = new Date(params.value * 1000);
       return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
     }
   },
@@ -274,7 +274,8 @@ const columns = [
     renderCell: (params) => (
       <div style={{ textAlign: "right" }}>
         <div>
-          <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatDecimaOri(params.value)}</a>
+          {/* <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatDecimaOri(params.value)}</a> */}
+          {params.value ? `${params.value} ETH` : '-'}
         </div>
       </div>
     )
@@ -299,8 +300,9 @@ const columns = [
     hideSortIcons: true,
     sortingOrder: ['asc', 'desc'],
     renderCell: (params) => {
-      let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 6 });
-      return params.value ? nf.format((params.value)) : "-";
+      // const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 6 });
+      // return params.value ? nf.format((params.value / 10 ** 18)) : "-";
+      return params.value ? `${params.value} ETH` : '-'
     }
 
   },
@@ -908,7 +910,9 @@ class Grid extends React.Component {
   }
 
   async loadChains() {
-    let response = await fetch(window.BASE_URL + '/chain')
+    await fetch(`${SERVER_URL}${API_GET_CHAIN}`, {
+      method: 'POST',
+    })
       .then((response) => response.json())
       .then((data) => {
         this.setState(
@@ -932,8 +936,7 @@ class Grid extends React.Component {
       pageModel.pageSize = this.state.pageSize
     }
 
-    let response = await fetch(`${SERVER_URL}${API_GET_TOKEN}`, {
-      mode: 'cors',
+    await fetch(`${SERVER_URL}${API_GET_TOKEN}`, {
       method: 'POST',
       body: JSON.stringify({
         sort: sortModel,
@@ -946,7 +949,7 @@ class Grid extends React.Component {
         trail: this.props.trail == "true" ? "true" : "false"
       }),
       headers: {
-        'Content-type': 'application/json;',
+        'Content-type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
       },
 

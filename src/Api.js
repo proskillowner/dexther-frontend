@@ -1,5 +1,11 @@
-// export const SERVER_URL = 'http://localhost:5000'
-export const SERVER_URL = 'https://dexther-api.mnconcept.one'
+export const SERVER_URL = 'http://localhost:3010'
+// export const SERVER_URL = 'https://dexther-api.mnconcept.one'
 
 export const API_GET_USER = '/getuser'
+export const API_GET_CONFIG = '/getconfig'
+export const API_SET_CONFIG = '/setconfig'
+export const API_GET_SYNC_INFO = '/getsyncinfo'
+export const API_SET_SYNC_INTERVAL = '/setsyncinterval'
+export const API_GET_SYNC_LOG = '/getsynclog'
+export const API_GET_CHAIN = '/getchain'
 export const API_GET_TOKEN = '/gettoken'

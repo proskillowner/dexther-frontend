@@ -6,6 +6,7 @@ import i18next from 'i18next';
 import Grid from '../grid/Grid';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { API_GET_CONFIG, SERVER_URL } from '../Api';
 
 function Dashboard(props) {
   const [gridKey, setGridKey] = useState(0);
@@ -16,29 +17,31 @@ function Dashboard(props) {
   }
 
   const checkRequestData = async () => {
-    // let response = await fetch(window.BASE_URL + '/config')
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     var found = false
-    //     for (let i = 0; i < data.length; i++) {
-    //       if (data[i].name == "data_request") {
-    //         found = true
-    //         break
-    //       }
-    //     }
+    await fetch(`${SERVER_URL}${API_GET_CONFIG}`, {
+      method: 'POST',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        var found = false
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].name == "data_request") {
+            found = true
+            break
+          }
+        }
 
-    //     if (found) {
-    //       scheduleCheckData()
-    //     }
-    //     else {
-    //       alert("Reload data berhasil")
-    //       setGridKey(gridKey + 1)
+        if (found) {
+          scheduleCheckData()
+        }
+        else {
+          alert("Reload data berhasil")
+          setGridKey(gridKey + 1)
 
-    //     }
-    //   })
-    //   .catch((err) => {
+        }
+      })
+      .catch((err) => {
 
-    //   })
+      })
   }
 
   const onReloadData = async () => {
@@ -71,12 +74,10 @@ function Dashboard(props) {
 
     if (props.trail) {
       setSubTitle(i18next.t("audit_trail"))
-
     }
     else
       if (props.hist) {
         setSubTitle(i18next.t("history") + " " + data.detail.hist_chain + ", " + data.detail.hist_name)
-
       }
       else {
         setSubTitle(i18next.t("current_latest_date") + " " + mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US"))
