@@ -90,7 +90,7 @@ class Login extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         const { t } = this.props;
-        if (!data.id) {
+        if (!data.name) {
           this.setState({
             isPasswordError: true,
             passwordErrorMessage: t("invalid_email_or_password"),
