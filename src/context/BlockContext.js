@@ -20,7 +20,7 @@ class BlockContextProvider extends React.Component {
     if (pageModel == null) {
       pageModel = new Object()
       pageModel.page = 0
-      pageModel.pageSize = 10
+      pageModel.pageSize = 50
     }
 
     let response = await fetch(`${SERVER_URL}${API_GET_POOL}`, {

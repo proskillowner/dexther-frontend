@@ -769,7 +769,7 @@ class Grid extends React.Component {
       sortField: this.props.hist == "true" ? 'hist_created' : 'hist_creation',
       sortDir: "desc",
       page: 0,
-      pageSize: 10,
+      pageSize: 50,
       copyText: "",
       alertCopiedOpen: "none",
       loading: false,
@@ -1230,7 +1230,7 @@ console.log(pageModel)
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 10,
+                pageSize: 50,
                 page: this.state.page
               },
             },/* 
@@ -1239,7 +1239,7 @@ console.log(pageModel)
             }, */
           }}
           paginationModel={{
-            pageSize: 10,
+            pageSize: this.state.pageSize,
             page: this.state.page
           }}
           paginationMode="server"
