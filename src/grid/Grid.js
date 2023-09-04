@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import { withTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import Box from '@mui/material/Box';
@@ -16,6 +16,8 @@ import cgreen from "../media/c_green.svg"
 import rgreen from "../media/r_green.svg"
 import honeypot from "../media/honeypot.png"
 import { SERVER_URL, API_GET_POOL, API_GET_CHAIN } from '../Api.js'
+
+import BlockContext from "../context/BlockContext";
 
 import {
   useGridApiContext,
@@ -192,11 +194,9 @@ const columns = [
         >
         </CopyAll>
         <div>
-          <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">DEXTOOLS</a>
-          <br /><a href="#" onClick={() => etherscan(params)} className="App-link" style={{ display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">ETHERSCAN</a>
-          <a href="#" onClick={() => sniffer(params)} className="App-link" style={{ marginLeft: 6, display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">SNIFFER</a>
-
-
+          {/* <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">DEXTOOLS</a> */}
+          <a href={"#"} onClick={() => etherscan(params.value)} className="App-link" target="_blank">ETHERSCAN</a>
+          {/* <a href="#" onClick={() => sniffer(params)} className="App-link" style={{ marginLeft: 6, display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">SNIFFER</a> */}
         </div>
       </div>
     ),
@@ -222,6 +222,11 @@ const columns = [
           aria-label="dclose"
         >
         </CopyAll>
+        <div>
+          <a href="#" onClick={() => dextools(params.value)} className="App-link" target="_blank">DEXTOOLS</a>
+          {/* <a href="#" onClick={() => etherscan(params)} className="App-link" style={{ display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">ETHERSCAN</a> */}
+          {/* <a href="#" onClick={() => sniffer(params)} className="App-link" style={{ marginLeft: 6, display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">SNIFFER</a> */}
+        </div>
       </div>
     ),
 
@@ -274,8 +279,8 @@ const columns = [
     renderCell: (params) => (
       <div style={{ textAlign: "right" }}>
         <div>
-          {/* <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatDecimaOri(params.value)}</a> */}
-          {params.value ? `${params.value} ETH` : '-'}
+          <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatDecimaOri(params.value)}</a>
+          {/* {params.value ? `${params.value} ETH` : '-'} */}
         </div>
       </div>
     )
@@ -300,9 +305,9 @@ const columns = [
     hideSortIcons: true,
     sortingOrder: ['asc', 'desc'],
     renderCell: (params) => {
-      // const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 6 });
-      // return params.value ? nf.format((params.value / 10 ** 18)) : "-";
-      return params.value ? `${params.value} ETH` : '-'
+      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 6 });
+      return params.value ? nf.format(params.value) : "-";
+      // return params.value ? `${parseInt(params.value * 100) / 100} ETH` : '-'
     }
 
   },
@@ -750,6 +755,7 @@ export function CustomPagination() {
 }
 
 class Grid extends React.Component {
+  static contextType = BlockContext
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -763,7 +769,7 @@ class Grid extends React.Component {
       sortField: this.props.hist == "true" ? 'hist_created' : 'hist_creation',
       sortDir: "desc",
       page: 0,
-      pageSize: 50,
+      pageSize: 10,
       copyText: "",
       alertCopiedOpen: "none",
       loading: false,
@@ -783,7 +789,6 @@ class Grid extends React.Component {
     this.showFilter = this.showFilter.bind(this)
     this.hideFilter = this.hideFilter.bind(this)
     this.onFilter = this.onFilter.bind(this)
-
   }
 
   componentDidMount() {
@@ -860,9 +865,8 @@ class Grid extends React.Component {
     this.loadData()
   }
 
-  dextools(params) {
-    var idx = (params.row.idx - 1) % this.state.pageSize
-    window.open("https://www.dextools.io/app/en/" + this.state.rows[idx].hist_chain_code + "/pair-explorer/" + this.state.rows[idx].hist_pair_address, '_blank', 'noopener,noreferrer')
+  dextools(pair_address) {
+    window.open("https://www.dextools.io/app/en/ether/pair-explorer/" + pair_address, '_blank', 'noopener,noreferrer')
   }
 
   history(params) {
@@ -870,9 +874,8 @@ class Grid extends React.Component {
     this.props.navigate("/history?chain=" + this.state.rows[idx].hist_chain_code + "&token=" + this.state.rows[idx].hist_address, { replace: false });
   }
 
-  etherscan(params) {
-    var idx = (params.row.idx - 1) % this.state.pageSize
-    window.open("https://etherscan.io/token/" + this.state.rows[idx].hist_address, '_blank', 'noopener,noreferrer')
+  etherscan(token_address) {
+    window.open("https://etherscan.io/token/" + token_address, '_blank', 'noopener,noreferrer')
   }
 
   sniffer(params) {
@@ -929,80 +932,40 @@ class Grid extends React.Component {
     this.setState({
       loading: true
     })
-
+console.log(pageModel)
     if (pageModel == null) {
       pageModel = new Object()
       pageModel.page = 0
       pageModel.pageSize = this.state.pageSize
     }
-
-    await fetch(`${SERVER_URL}${API_GET_POOL}`, {
-      method: 'POST',
-      body: JSON.stringify({
-        sort: sortModel,
-        page: pageModel,
-        offset: pageModel.page * pageModel.pageSize,
-        count: pageModel.pageSize,
-        filter: this.state.filterModel,
-        chain: this.props.chain,
-        token: this.props.token,
-        trail: this.props.trail == "true" ? "true" : "false"
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
-      },
-
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // filterKeyIndex++
-        /* this.setState(
-          {
-            rows: data.data,
-            rowCount: data.rowCount,
-            sortField: data.sortField,
-            sortDir: data.sortDir,
-            page: data.page,
-            pageSize: data.pageSize,
-            loading: false,
-            filterModel: data.filter,
-            filterKey: "filterKey" + filterKeyIndex
-          }
-        ) */
-        let tableData = [];
-        data.map((row, index) => {
-          tableData.push({
-            id: pageModel.page * pageModel.pageSize + index + 1,
-            hist_address: row.token_address,
-            hist_name: row.token_symbol,
-            hist_pair_address: row.pool_address,
-            hist_creation: row.pool_create_time,
-            hist_price: row.token_price,
-            hist_total_liquidity: row.total_liquidity,
-          })
-        })
-        this.setState(
-          {
-            rows: tableData,
-            rowCount: data.length,
-            page: 0,
-            pageSize: 50,
-            loading: false,
-          }
-        )
-
-        // this.setSortIcon(data)
-        // this.props.updateData(data)
-      })
-      .catch((err) => {
-        this.setState({
-          loading: false
-        })
-        console.log(err.message)
-        // alert(err.message)
-      })
-
+    let tableData = []
+    if (this.context.blockList.length > pageModel.page * pageModel.pageSize) {
+      tableData = this.context.blockList.slice(pageModel.page*pageModel.pageSize, pageModel.pageSize)
+      console.log("from cache:", tableData)
+    } else {
+      tableData = await this.context.loadList({
+				sortModel: {},
+				pageModel: {
+					pageSize: pageModel.pageSize,
+					page: pageModel.page,
+				},
+				filterModel: {},
+				chain: 0,
+				token: '',
+				trail: ''
+			})
+      console.log("load list: ", tableData)
+    }
+    
+    this.setState(
+      {
+        rows: tableData,
+        rowCount: tableData.length,
+        page: pageModel.page,
+        pageSize: pageModel.pageSize,
+        loading: false,
+      }
+    )
   }
 
   setSortIcon(data) {
@@ -1267,7 +1230,7 @@ class Grid extends React.Component {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: this.state.pageSize,
+                pageSize: 10,
                 page: this.state.page
               },
             },/* 
@@ -1276,7 +1239,7 @@ class Grid extends React.Component {
             }, */
           }}
           paginationModel={{
-            pageSize: this.state.pageSize,
+            pageSize: 10,
             page: this.state.page
           }}
           paginationMode="server"
@@ -1284,7 +1247,7 @@ class Grid extends React.Component {
           filterMode="server"
           onSortModelChange={this.handleSortModelChange}
           onPaginationModelChange={this.handlePageModelChange}
-          rowCount={this.state.rowCount}
+          rowCount={50}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
           getRowClassName={(params) => `Data-Grid-Row`}

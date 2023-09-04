@@ -1,25 +1,29 @@
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { SERVER_URL, API_GET_POOL } from "../Api";
 
-export const BlockContext = createContext('BLOCKS')
+const BlockContext = createContext()
 
-export function BlockContextProvider ({children}) {
+class BlockContextProvider extends React.Component {
 
-	const [blockList, setBlockList] = useState([])
+	state = {
+		totalSize: 50,
+		blockList: []
+	}
 
-	useEffect(() => {
-		console.log(blockList)
-	}, [blockList])
+	setBlockList = (blockList) => {
+		console.log("Update Block List: ", blockList)
+		this.setState({blockList})
+	}
 
-	const loadList = async ({sortModel, pageModel, filterModel, chain, token, trail}) => {
+	loadList = async ({sortModel, pageModel, filterModel, chain, token, trail}) => {
 		
     if (pageModel == null) {
       pageModel = new Object()
       pageModel.page = 0
-      pageModel.pageSize = 5
+      pageModel.pageSize = 10
     }
 
-    await fetch(`${SERVER_URL}${API_GET_POOL}`, {
+    let response = await fetch(`${SERVER_URL}${API_GET_POOL}`, {
       method: 'POST',
       body: JSON.stringify({
         sort: sortModel,
@@ -37,52 +41,70 @@ export function BlockContextProvider ({children}) {
       },
 
     })
-      .then((response) => response.json())
-      .then((data) => {
-				console.log(data)
-        let tableData = blockList.slice();
-        data.map((row, index) => {
-					let exist = tableData.findIndex(block => block.id == (pageModel.page * pageModel.pageSize + index + 1))
-					if (exist < 0) {
-						tableData.push({
-							id: pageModel.page * pageModel.pageSize + index + 1,
-							hist_address: row.token_address,
-							hist_name: row.token_symbol,
-							hist_pair_address: row.pool_address,
-							hist_creation: row.pool_create_time,
-							hist_price: row.token_price,
-							hist_total_liquidity: row.total_liquidity,
-						})
-					}
-        })
-				// tableData.
-				setBlockList(tableData)
-      })
-      .catch((err) => {
-        console.log(err.message)
-      })
-	}
+    let data = await response.json()
+		console.log("loaded data: ", data)
 
-	const gettList = (page, pageSize) => {
-		if (blockList.length < page*pageSize) {
-			loadList({
+		let tableData = []
+		data.map((row, index) => {
+			let exist = tableData.findIndex(block => block.id == (pageModel.page * pageModel.pageSize + index + 1))
+			if (exist < 0) {
+				tableData.push({
+					id: pageModel.page * pageModel.pageSize + index + 1,
+					hist_address: row.token_address,
+					hist_name: row.token_symbol,
+					hist_pair_address: row.pool_address,
+					hist_creation: row.pool_create_time,
+					hist_price: row.token_price * row.coin_price,
+					hist_total_liquidity: row.total_liquidity * row.coin_price,
+					hist_total_tx: row.pool_total_txs,
+					hist_market_cap: parseInt(row.token_total_supply) / 10 ** row.token_decimals * row.token_price * row.coin_price,
+					hist_supply: parseInt(row.token_total_supply) / 10 ** row.token_decimals,
+				})
+			}
+		})
+		console.log(this.state.blockList, this.state.blockList.concat(...tableData), this.state.blockList.concat(tableData))
+		this.setBlockList(this.state.blockList.concat(...tableData))
+		return tableData
+	}
+/* 
+	getList = (page, pageSize) => {
+		if (this.state.blockList.length < page*pageSize) {
+			this.loadList({
 				sortModel: {},
 				pageModel: {
-					pageSize: 5,
-					page: 0,
+					pageSize: pageSize,
+					page: page,
 				},
 				filterModel: {},
 				chain: 0,
 				token: '',
 				trail: ''
 			})
-			// loadList
+				.then(data => {
+					console.log(data)
+					return data
+				})
+				.catch(error => {
+					console.log(error)
+					return []
+				})
+		} else {
+			return this.state.blockList.slice(page*pageSize, pageSize)
 		}
+	} */
+
+	render() {
+		const { children } = this.props
+		const { blockList } = this.state
+
+		return (
+			<BlockContext.Provider value={{blockList, loadList: this.loadList}}>
+				{children}
+			</BlockContext.Provider>
+		)
 	}
 
-	return (
-		<BlockContext.Provider value={blockList}>
-			{children}
-		</BlockContext.Provider>
-	)
 }
+
+export default BlockContext
+export { BlockContextProvider }
