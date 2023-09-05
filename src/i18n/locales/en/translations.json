@@ -68,11 +68,12 @@
 
     "column_chain": "CHAIN",
     "column_name": "NAME/ PROTOCOL",
-    "column_address": "ADDRESS",
+    "column_token_address": "TOKEN ADDRESS",
     "column_pair_address": "PAIR ADDRESS",
     "column_creation_time": "LISTED SINCE",
     "column_price": "PRICE",
     "column_total_liquidity": "TOTAL LIQUIDITY",
+    "column_pool_amount": "POOL AMOUNT",
     "column_total_market_cap": "TOTAL MARKET CAP",
     "column_total_supply": "TOTAL SUPPLY",
     "column_holders": "HOLDERS",

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { withTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import Box from '@mui/material/Box';
@@ -159,9 +159,9 @@ const columns = [
       <div>
         <div onClick={() => history(params)} className="App-link"><u>{/*params.value.replace("/", " / ")*/params.value + ' / WETH'}</u></div>
         <div style={{ marginTop: 4 }}>
-          <img src={cgreen} style={{ width: 16, height: 16, display: params.row.hist_contract_verified == 1 ? 'inline' : 'none' }} />
-          <img src={rgreen} style={{ marginLeft: params.row.hist_contract_verified == 1 ? 6 : 0, width: 16, height: 16, display: params.row.hist_is_contract_renounced == 1 ? 'inline' : 'none' }} />
-          <img src={honeypot} style={{ marginLeft: params.row.hist_contract_verified == 1 || params.row.hist_contract_verified == 1 ? 6 : 0, width: 16, height: 16, display: params.row.hist_honey_pot == 1 ? 'inline' : 'none' }} />
+          <img src={cgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_verified == 1 ? 'inline' : 'none' }} />
+          <img src={rgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_renounced == 1 ? 'inline' : 'none' }} />
+          {/* <img src={honeypot} style={{ marginLeft: params.row.hist_contract_verified == 1 || params.row.hist_contract_verified == 1 ? 6 : 0, width: 16, height: 16, display: params.row.hist_honey_pot == 1 ? 'inline' : 'none' }} /> */}
         </div>
         <div style={{ marginTop: 4, display: params.row.hist_buy_tax != null && params.row.hist_sell_tax != null ? "inline" : "none" }}>
           <span>BT: {formatPct(params.row.hist_buy_tax)}</span>
@@ -173,14 +173,14 @@ const columns = [
 
   },
   {
-    field: 'hist_address',
+    field: 'hist_token_address',
     renderHeader: (params) => (
       <strong>
-        {i18next.t("column_address")}
+        {i18next.t("column_token_address")}
       </strong>
     ),
     headerClassName: 'super-app-theme--header',
-    width: 150,
+    width: 200,
     disableColumnMenu: true,
     filterable: false,
     sortable: false,
@@ -188,15 +188,14 @@ const columns = [
     renderCell: (params) => (
       <div>
         {params.value.substring(0, 15)}...
-        <CopyAll
-          sx={{ width: 16, height: 16, cursor: "pointer" }} onClick={() => copy(params)}
+        <CopyAll onClick={() => copy(params)}
+          sx={{ width: 16, height: 16, cursor: "pointer" }}
           aria-label="dclose"
         >
         </CopyAll>
         <div>
-          {/* <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">DEXTOOLS</a> */}
-          <a href={"#"} onClick={() => etherscan(params.value)} className="App-link" target="_blank">ETHERSCAN</a>
-          {/* <a href="#" onClick={() => sniffer(params)} className="App-link" style={{ marginLeft: 6, display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">SNIFFER</a> */}
+          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{marginRight: 5}} target="_blank">ETHERSCAN</a>
+          <a href="#" onClick={() => tokensniffer(params.value)} className="App-link" style={{marginLeft: 5}} target="_blank">TOKENSNIFFER</a>
         </div>
       </div>
     ),
@@ -209,7 +208,7 @@ const columns = [
       </strong>
     ),
     headerClassName: 'super-app-theme--header',
-    width: 150,
+    width: 200,
     disableColumnMenu: true,
     sortable: false,
     filterable: false,
@@ -223,9 +222,8 @@ const columns = [
         >
         </CopyAll>
         <div>
-          <a href="#" onClick={() => dextools(params.value)} className="App-link" target="_blank">DEXTOOLS</a>
-          {/* <a href="#" onClick={() => etherscan(params)} className="App-link" style={{ display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">ETHERSCAN</a> */}
-          {/* <a href="#" onClick={() => sniffer(params)} className="App-link" style={{ marginLeft: 6, display: params.row.hist_chain_code == 'ether' ? "yes" : "none" }} target="_blank">SNIFFER</a> */}
+          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{marginRight: 5}} target="_blank">ETHERSCAN</a>
+          <a href="#" onClick={() => dextools(params.value)} className="App-link" style={{marginLeft: 5}} target="_blank">DEXTOOLS</a>
         </div>
       </div>
     ),
@@ -284,6 +282,32 @@ const columns = [
         </div>
       </div>
     )
+  },
+  {
+    type: 'number',
+    field: 'hist_pool_amount',
+    renderHeader: (params) => (
+      <strong>
+        {i18next.t("column_pool_amount")}
+        <span id="arrowLiquidityDown" style={{ display: "none" }}>
+          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+        </span>
+        <span id="arrowLiquidityUp" style={{ display: "none" }}>
+          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+        </span>
+      </strong>
+    ),
+    headerClassName: 'super-app-theme--header',
+    width: 140,
+    disableColumnMenu: true,
+    hideSortIcons: true,
+    sortingOrder: ['asc', 'desc'],
+    renderCell: (params) => {
+      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 6 });
+      return params.value ? nf.format(params.value) : "-";
+      // return params.value ? `${parseInt(params.value * 100) / 100} ETH` : '-'
+    }
+
   },
   {
     type: 'number',
@@ -640,7 +664,7 @@ const historyColumns = []
 for (var i = 0; i < columns.length; i++) {
   var column = columns[i]
 
-  if (column.field == "hist_chain" || column.field == "hist_name" || column.field == "hist_address"
+  if (column.field == "hist_chain" || column.field == "hist_name" || column.field == "hist_token_address"
     || column.field == "hist_pair_address" || column.field == "hist_creation") {
     continue;
   }
@@ -705,16 +729,16 @@ const copy = (params) => {
   window.gridComponent.onCellClick(params)
 }
 
-const dextools = (params) => {
-  window.gridComponent.dextools(params)
-}
-
 const etherscan = (params) => {
   window.gridComponent.etherscan(params)
 }
 
-const sniffer = (params) => {
-  window.gridComponent.sniffer(params)
+const tokensniffer = (params) => {
+  window.gridComponent.tokensniffer(params)
+}
+
+const dextools = (params) => {
+  window.gridComponent.dextools(params)
 }
 
 var sortModel = null
@@ -792,7 +816,7 @@ class Grid extends React.Component {
   }
 
   componentDidMount() {
-    this.loadData()
+    this.loadData(true)
     window.addEventListener("scroll", this.listenToScroll);
   }
 
@@ -865,26 +889,25 @@ class Grid extends React.Component {
     this.loadData()
   }
 
+  history(params) {
+    var idx = (params.row.idx - 1) % this.state.pageSize
+    this.props.navigate("/history?chain=" + this.state.rows[idx].hist_chain_code + "&token=" + this.state.rows[idx].hist_token_address, { replace: false });
+  }
+
+  etherscan(address) {
+    window.open("https://etherscan.io/address/" + address, '_blank', 'noopener,noreferrer')
+  }
+
+  tokensniffer(token_address) {
+    window.open("https://tokensniffer.com/token/eth/" + token_address, '_blank', 'noopener,noreferrer')
+  }
+
   dextools(pair_address) {
     window.open("https://www.dextools.io/app/en/ether/pair-explorer/" + pair_address, '_blank', 'noopener,noreferrer')
   }
 
-  history(params) {
-    var idx = (params.row.idx - 1) % this.state.pageSize
-    this.props.navigate("/history?chain=" + this.state.rows[idx].hist_chain_code + "&token=" + this.state.rows[idx].hist_address, { replace: false });
-  }
-
-  etherscan(token_address) {
-    window.open("https://etherscan.io/token/" + token_address, '_blank', 'noopener,noreferrer')
-  }
-
-  sniffer(params) {
-    var idx = (params.row.idx - 1) % this.state.pageSize
-    window.open("https://tokensniffer.com/token/eth/" + this.state.rows[idx].hist_address, '_blank', 'noopener,noreferrer')
-  }
-
   onCellClick(params) {
-    if (params.field == "hist_address" || params.field == "hist_pair_address") {
+    if (params.field == "hist_token_address" || params.field == "hist_pair_address") {
       navigator.clipboard.writeText(params.value)
       this.setState({
         alertCopiedOpen: "block"
@@ -928,39 +951,37 @@ class Grid extends React.Component {
       })
   }
 
-  async loadData() {
+  async loadData(keepPage = false) {
     this.setState({
       loading: true
     })
-console.log(pageModel)
+
     if (pageModel == null) {
       pageModel = new Object()
       pageModel.page = 0
       pageModel.pageSize = this.state.pageSize
     }
     let tableData = []
-    if (this.context.blockList.length > pageModel.page * pageModel.pageSize) {
-      tableData = this.context.blockList.slice(pageModel.page*pageModel.pageSize, pageModel.pageSize)
-      console.log("from cache:", tableData)
+    if (keepPage && this.context.tableData && this.context.tableData.totalCount) {
+      tableData = this.context.tableData
     } else {
-      tableData = await this.context.loadList({
-				sortModel: {},
-				pageModel: {
-					pageSize: pageModel.pageSize,
-					page: pageModel.page,
-				},
-				filterModel: {},
-				chain: 0,
-				token: '',
-				trail: ''
-			})
-      console.log("load list: ", tableData)
+      tableData = await this.context.loadTableData({
+        sortModel: {},
+        pageModel: {
+          page_number: pageModel.page,
+          page_size: pageModel.pageSize,
+        },
+        filterModel: {},
+        chain: 0,
+        token: '',
+        trail: '',
+      })
     }
-    
+
     this.setState(
       {
-        rows: tableData,
-        rowCount: tableData.length,
+        rows: tableData.rowData,
+        rowCount: tableData.totalCount,
         page: pageModel.page,
         pageSize: pageModel.pageSize,
         loading: false,
@@ -1247,7 +1268,7 @@ console.log(pageModel)
           filterMode="server"
           onSortModelChange={this.handleSortModelChange}
           onPaginationModelChange={this.handlePageModelChange}
-          rowCount={50}
+          rowCount={this.state.rowCount}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
           getRowClassName={(params) => `Data-Grid-Row`}

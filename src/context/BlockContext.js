@@ -6,21 +6,20 @@ const BlockContext = createContext()
 class BlockContextProvider extends React.Component {
 
 	state = {
-		totalSize: 50,
-		blockList: []
+		tableData: {
+			totalCount: 0,
+			ethPrice: 0,
+			rowData: [],
+		}
 	}
 
-	setBlockList = (blockList) => {
-		console.log("Update Block List: ", blockList)
-		this.setState({blockList})
-	}
-
-	loadList = async ({sortModel, pageModel, filterModel, chain, token, trail}) => {
+	loadTableData = async ({sortModel, pageModel, filterModel, chain, token, trail}) => {
 		
     if (pageModel == null) {
-      pageModel = new Object()
-      pageModel.page = 0
-      pageModel.pageSize = 50
+      pageModel = {
+				page_number: 0,
+				page_size: 50,
+			}
     }
 
     let response = await fetch(`${SERVER_URL}${API_GET_POOL}`, {
@@ -28,8 +27,6 @@ class BlockContextProvider extends React.Component {
       body: JSON.stringify({
         sort: sortModel,
         page: pageModel,
-        offset: pageModel.page * pageModel.pageSize,
-        count: pageModel.pageSize,
         filter: filterModel,
         chain: chain,
         token: token,
@@ -39,66 +36,51 @@ class BlockContextProvider extends React.Component {
         'Content-type': 'application/json; charset=UTF-8',
         'Access-Control-Allow-Origin': '*',
       },
-
     })
     let data = await response.json()
-		console.log("loaded data: ", data)
 
-		let tableData = []
-		data.map((row, index) => {
-			let exist = tableData.findIndex(block => block.id == (pageModel.page * pageModel.pageSize + index + 1))
+		let rowData = []
+		data.pool_data.map((row, index) => {
+			let exist = rowData.findIndex(block => block.id == (pageModel.page_number * pageModel.page_size + index + 1))
 			if (exist < 0) {
-				tableData.push({
-					id: pageModel.page * pageModel.pageSize + index + 1,
-					hist_address: row.token_address,
+				rowData.push({
+					id: pageModel.page_number * pageModel.page_size + index + 1,
+					hist_token_address: row.token_address,
 					hist_name: row.token_symbol,
 					hist_pair_address: row.pool_address,
-					hist_creation: row.pool_create_time,
-					hist_price: row.token_price * row.coin_price,
-					hist_total_liquidity: row.total_liquidity * row.coin_price,
+					hist_creation: row.pool_creation_time,
+					hist_price: row.token_price * data.coin_price,
+					hist_pool_amount: 0,
+					hist_total_liquidity: row.total_liquidity * data.coin_price * 2,
+					hist_holders: 0,
 					hist_total_tx: row.pool_total_txs,
-					hist_market_cap: parseInt(row.token_total_supply) / 10 ** row.token_decimals * row.token_price * row.coin_price,
+					hist_market_cap: parseInt(row.token_total_supply) / 10 ** row.token_decimals * row.token_price * data.coin_price,
 					hist_supply: parseInt(row.token_total_supply) / 10 ** row.token_decimals,
+					hist_contract_verified: row.token_contract_verified,
+					hist_contract_renounced: row.token_contract_renounced,
 				})
 			}
 		})
-		console.log(this.state.blockList, this.state.blockList.concat(...tableData), this.state.blockList.concat(tableData))
-		this.setBlockList(this.state.blockList.concat(...tableData))
+		
+		const tableData = {
+			totalCount: data.pool_count,
+			coinPrice: data.coin_price,
+			rowData,
+		}
+
+		this.setState({
+			tableData
+		})
+
 		return tableData
 	}
-/* 
-	getList = (page, pageSize) => {
-		if (this.state.blockList.length < page*pageSize) {
-			this.loadList({
-				sortModel: {},
-				pageModel: {
-					pageSize: pageSize,
-					page: page,
-				},
-				filterModel: {},
-				chain: 0,
-				token: '',
-				trail: ''
-			})
-				.then(data => {
-					console.log(data)
-					return data
-				})
-				.catch(error => {
-					console.log(error)
-					return []
-				})
-		} else {
-			return this.state.blockList.slice(page*pageSize, pageSize)
-		}
-	} */
 
 	render() {
 		const { children } = this.props
-		const { blockList } = this.state
+		const { tableData } = this.state
 
 		return (
-			<BlockContext.Provider value={{blockList, loadList: this.loadList}}>
+			<BlockContext.Provider value={{tableData, loadTableData: this.loadTableData}}>
 				{children}
 			</BlockContext.Provider>
 		)
