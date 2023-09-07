@@ -15,9 +15,9 @@ import { useNavigate } from 'react-router-dom';
 import cgreen from "../media/c_green.svg"
 import rgreen from "../media/r_green.svg"
 import honeypot from "../media/honeypot.png"
-import { SERVER_URL, API_GET_POOL, API_GET_CHAIN } from '../Api.js'
+import { SERVER_URL, API_GET_CHAIN } from '../Api.js'
 
-import MainContext from "../context/MainContext";
+import MainContext, { GET_POOL, GET_POOL_LOG } from "../context/MainContext";
 
 import {
   useGridApiContext,
@@ -194,8 +194,8 @@ const columns = [
         >
         </CopyAll>
         <div>
-          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{marginRight: 5}} target="_blank">ETHERSCAN</a>
-          <a href="#" onClick={() => tokensniffer(params.value)} className="App-link" style={{marginLeft: 5}} target="_blank">TOKENSNIFFER</a>
+          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
+          <a href="#" onClick={() => tokensniffer(params.value)} className="App-link" style={{ marginLeft: 5 }} target="_blank">TOKENSNIFFER</a>
         </div>
       </div>
     ),
@@ -222,8 +222,8 @@ const columns = [
         >
         </CopyAll>
         <div>
-          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{marginRight: 5}} target="_blank">ETHERSCAN</a>
-          <a href="#" onClick={() => dextools(params.value)} className="App-link" style={{marginLeft: 5}} target="_blank">DEXTOOLS</a>
+          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
+          <a href="#" onClick={() => dextools(params.value)} className="App-link" style={{ marginLeft: 5 }} target="_blank">DEXTOOLS</a>
         </div>
       </div>
     ),
@@ -674,7 +674,7 @@ for (var i = 0; i < columns.length; i++) {
   if (column.field == "idx") {
     historyColumns.push({
       headerAlign: 'center',
-      field: 'hist_created',
+      field: 'hist_log_time',
       renderHeader: (params) => (
         <strong>
           {i18next.t("column_history_time")}
@@ -694,17 +694,8 @@ for (var i = 0; i < columns.length; i++) {
       hideSortIcons: true,
       sortingOrder: ['desc', 'asc'],
       renderCell: (params) => {
-        if (params.value != undefined) {
-          var parts = params.value.split(" ")
-          var dateParts = parts[0].split('-');
-          var timeParts = parts[1].split(':');
-
-          var mydate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1], timeParts[2]);
-          return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
-        }
-        else {
-          return "-"
-        }
+        var mydate = new Date(params.value * 1000);
+        return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
       }
     })
   }
@@ -816,7 +807,7 @@ class Grid extends React.Component {
   }
 
   componentDidMount() {
-    this.loadData(true)
+    this.loadData()
     window.addEventListener("scroll", this.listenToScroll);
   }
 
@@ -890,8 +881,7 @@ class Grid extends React.Component {
   }
 
   history(params) {
-    var idx = (params.row.idx - 1) % this.state.pageSize
-    this.props.navigate("/history?chain=" + this.state.rows[idx].hist_chain_code + "&token=" + this.state.rows[idx].hist_token_address, { replace: false });
+    this.props.navigate("/history?token=" + params.row.hist_token_address + "&pair=" + params.row.hist_pair_address, { replace: false });
   }
 
   etherscan(address) {
@@ -961,21 +951,37 @@ class Grid extends React.Component {
       pageModel.page = 0
       pageModel.pageSize = this.state.pageSize
     }
-    let tableData = []
+
+    let tableData = {}
+
     if (keepPage && this.context.tableData && this.context.tableData.totalCount) {
       tableData = this.context.tableData
     } else {
-      tableData = await this.context.loadTableData({
-        sortModel: {},
-        pageModel: {
-          page_number: pageModel.page,
-          page_size: pageModel.pageSize,
-        },
-        filterModel: {},
-        chain: 0,
-        token: '',
-        trail: '',
-      })
+      if (this.props.hist === "true") {
+        tableData = await this.context.loadTableData({
+          sortModel: {},
+          pageModel: {
+            page_number: pageModel.page,
+            page_size: pageModel.pageSize,
+          },
+          filterModel: {},
+          chain: 0,
+          token: '',
+          trail: '',
+        }, GET_POOL_LOG, this.props.pair)
+      } else {
+        tableData = await this.context.loadTableData({
+          sortModel: {},
+          pageModel: {
+            page_number: pageModel.page,
+            page_size: pageModel.pageSize,
+          },
+          filterModel: {},
+          chain: 0,
+          token: '',
+          trail: '',
+        }, GET_POOL)
+      }
     }
 
     this.setState(
@@ -1254,7 +1260,7 @@ class Grid extends React.Component {
                 pageSize: 50,
                 page: this.state.page
               },
-            }, 
+            },
             sorting: {
               sortModel: [{ field: this.state.sortField, sort: this.state.sortDir }],
             },

@@ -99,6 +99,7 @@ function Dashboard(props) {
           trail={props.trail ? "true" : "false"}
           chain={searchParams.get('chain')}
           token={searchParams.get('token')}
+          pair={searchParams.get('pair')}
           key={gridKey}
           updateData={updateData}
         />

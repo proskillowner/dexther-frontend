@@ -1,7 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
-import { SERVER_URL, API_GET_CONFIG, API_SET_CONFIG, API_GET_POOL } from "../Api";
+import { SERVER_URL, API_GET_CONFIG, API_SET_CONFIG, API_GET_POOL, API_GET_POOL_LOG } from "../Api";
 
 const MainContext = createContext()
+
+export const GET_POOL = 1
+export const GET_POOL_LOG = 2
 
 class MainContextProvider extends React.Component {
 
@@ -10,58 +13,67 @@ class MainContextProvider extends React.Component {
 		config: null,
 	}
 
-	loadTableData = async ({ sortModel, pageModel, filterModel, chain, token, trail }) => {
-
-		if (pageModel == null) {
-			pageModel = {
-				page_number: 0,
-				page_size: 50,
-			}
+	loadTableData = async ({ sortModel, pageModel, filterModel, chain, token, trail }, type, pool_address = null) => {
+		let url
+		const body = {
+			sort: sortModel,
+			page: pageModel,
+			filter: filterModel,
+			chain: chain,
+			token: token,
+			trail: trail,
 		}
 
-		let response = await fetch(`${SERVER_URL}${API_GET_POOL}`, {
+		if (type === GET_POOL) {
+			url = `${SERVER_URL}${API_GET_POOL}`
+		} else if (type === GET_POOL_LOG) {
+			url = `${SERVER_URL}${API_GET_POOL_LOG}`
+			body.pool_address = pool_address
+		}
+
+		const response = await fetch(url, {
 			method: 'POST',
-			body: JSON.stringify({
-				sort: sortModel,
-				page: pageModel,
-				filter: filterModel,
-				chain: chain,
-				token: token,
-				trail: trail == "true" ? "true" : "false"
-			}),
+			body: JSON.stringify(body),
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8',
 			},
 		})
 
 		let data = await response.json()
+		let totalCount = 0
 
-		let rowData = []
-		data.pool_data.map((row, index) => {
-			let exist = rowData.findIndex(block => block.id == (pageModel.page_number * pageModel.page_size + index + 1))
-			if (exist < 0) {
-				rowData.push({
-					id: pageModel.page_number * pageModel.page_size + index + 1,
-					hist_token_address: row.token_address,
-					hist_name: row.token_symbol,
-					hist_pair_address: row.pool_address,
-					hist_creation: row.pool_creation_time,
-					hist_price: row.token_price * data.coin_price,
-					hist_pool_amount: 0,
-					hist_total_liquidity: row.total_liquidity * data.coin_price * 2,
-					hist_holders: 0,
-					hist_total_tx: row.pool_total_txs,
-					hist_market_cap: parseInt(row.token_total_supply) / 10 ** row.token_decimals * row.token_price * data.coin_price,
-					hist_supply: parseInt(row.token_total_supply) / 10 ** row.token_decimals,
-					hist_contract_verified: row.token_contract_verified,
-					hist_contract_renounced: row.token_contract_renounced,
-				})
-			}
+		if (type === GET_POOL) {
+			totalCount = data.pool_count
+			data = data.pool_data
+		} else if (type === GET_POOL_LOG) {
+			totalCount = data.pool_log_count
+			data = data.pool_log_data
+		}
+
+		const rowData = []
+
+		data.map((row, index) => {
+			rowData.push({
+				id: pageModel.page_number * pageModel.page_size + index + 1,
+				hist_token_address: row.token_address,
+				hist_name: row.token_symbol,
+				hist_pair_address: row.pool_address,
+				hist_log_time: row.log_time,
+				hist_creation: row.pool_creation_time,
+				hist_price: row.token_price * row.coin_price,
+				hist_pool_amount: 0,
+				hist_total_liquidity: row.total_liquidity * row.coin_price * 2,
+				hist_holders: 0,
+				hist_total_tx: row.pool_total_txs,
+				hist_market_cap: parseInt(row.token_total_supply) / 10 ** row.token_decimals * row.token_price * row.coin_price,
+				hist_supply: parseInt(row.token_total_supply) / 10 ** row.token_decimals,
+				hist_contract_verified: row.token_contract_verified,
+				hist_contract_renounced: row.token_contract_renounced,
+			})
 		})
 
 		const tableData = {
-			totalCount: data.pool_count,
-			coinPrice: data.coin_price,
+			totalCount,
 			rowData,
 		}
 
