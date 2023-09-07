@@ -75,6 +75,27 @@ const columns = [
   },
 
   {
+    field: 'operation_type',
+    type: 'number',
+    renderHeader: (params) => (
+      <strong>
+        {i18next.t("type")}
+      </strong>
+    ),
+    headerClassName: 'super-app-theme--header',
+    width: 80,
+    sortable: false,
+    hideable: false,
+    disableColumnMenu: true,
+    hideSortIcons: true,
+    renderCell: (params) => {
+      if (params.value === 1) return i18next.t("sync")
+      if (params.value === 2) return i18next.t("scan")
+      return i18next.t("unknown")
+    }
+  },
+
+  {
     field: 'operation_duration',
     type: 'number',
     renderHeader: (params) => (
@@ -249,6 +270,7 @@ class DataSettings extends React.Component {
           tableData.push({
             id: index + 1,
             operation_start_time: row.operation_start_time,
+            operation_type: row.operation_type,
             operation_duration: row.operation_duration,
             operation_status: row.operation_status,
             operation_description: row.operation_description,
@@ -282,26 +304,26 @@ class DataSettings extends React.Component {
       <h2>{t("data_settings")}</h2>
       <div >
         <div style={{ marginLeft: 16, marginRight: 16 }}>
-            <div>
-              <CssSelect
-                multiple
-                value={selectedChains}
-                onChange={this.chainOnChange}
-                renderValue={(selected) => selected.join(',')}
-                MenuProps={MenuProps}>
-                {chains.map((arr) => (
-                  <MenuItem key={arr} value={arr}>
-                    <Checkbox
-                      checked={selectedChains.indexOf(arr) > -1}
-                      style={{
-                        color: "#ffffff",
-                      }} />
-                    <ListItemText primary={arr} />
-                  </MenuItem>
-                ))}
-              </CssSelect>
-              <span className="App-Label-Filter">{t("chains")}</span>
-            </div>
+          <div>
+            <CssSelect
+              multiple
+              value={selectedChains}
+              onChange={this.chainOnChange}
+              renderValue={(selected) => selected.join(',')}
+              MenuProps={MenuProps}>
+              {chains.map((arr) => (
+                <MenuItem key={arr} value={arr}>
+                  <Checkbox
+                    checked={selectedChains.indexOf(arr) > -1}
+                    style={{
+                      color: "#ffffff",
+                    }} />
+                  <ListItemText primary={arr} />
+                </MenuItem>
+              ))}
+            </CssSelect>
+            <span className="App-Label-Filter">{t("chains")}</span>
+          </div>
 
           <div style={{ columnCount: 2 }}>
             <div style={{ clear: "both", marginTop: 6 }}>
