@@ -17,7 +17,7 @@ import rgreen from "../media/r_green.svg"
 import honeypot from "../media/honeypot.png"
 import { SERVER_URL, API_GET_POOL, API_GET_CHAIN } from '../Api.js'
 
-import BlockContext from "../context/BlockContext";
+import MainContext from "../context/MainContext";
 
 import {
   useGridApiContext,
@@ -779,7 +779,7 @@ export function CustomPagination() {
 }
 
 class Grid extends React.Component {
-  static contextType = BlockContext
+  static contextType = MainContext
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -1254,10 +1254,10 @@ class Grid extends React.Component {
                 pageSize: 50,
                 page: this.state.page
               },
-            },/* 
+            }, 
             sorting: {
               sortModel: [{ field: this.state.sortField, sort: this.state.sortDir }],
-            }, */
+            },
           }}
           paginationModel={{
             pageSize: this.state.pageSize,
@@ -1280,7 +1280,7 @@ class Grid extends React.Component {
         />
       </Box>
       <div style={{ position: "absolute", left: "50%", top: "80%", display: this.state.alertCopiedOpen }}><Alert sx={{ background: "#282c34", color: "#ffffff" }} severity="info">{t("text_copied")}</Alert></div>
-      {/* <div style={{ position: "fixed", left: "50%", top: "90%", display: this.state.filterButtonDisplay }}>
+      <div style={{ position: "fixed", left: "50%", top: "90%", display: this.state.filterButtonDisplay }}>
         <Fab variant="extended" onClick={this.showFilter}>
           <FilterIcon></FilterIcon>
           {t("filter")}
@@ -1293,7 +1293,7 @@ class Grid extends React.Component {
         open={this.state.filterOpen}
         hist={this.props.hist}
         onClose={this.hideFilter}
-        onFilter={this.onFilter} /> */}
+        onFilter={this.onFilter} />
     </div>
   }
 }

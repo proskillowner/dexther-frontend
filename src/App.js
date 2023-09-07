@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     document.title = i18next.t("app_name")
-    if (cookies.user == null || cookies.user.name == null) {
+    if (cookies.user == null || cookies.user.user_name == null) {
       navigate('/', { replace: true });
     }
     else {

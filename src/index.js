@@ -6,15 +6,15 @@ import reportWebVitals from './reportWebVitals';
 import './i18n/config';
 import { BrowserRouter } from 'react-router-dom';
 
-import { BlockContextProvider } from './context/BlockContext';
+import { MainContextProvider } from './context/MainContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BlockContextProvider>
+  <MainContextProvider>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </BlockContextProvider>
+  </MainContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -9,7 +9,9 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-import { SERVER_URL, API_GET_CONFIG, API_SET_CONFIG, API_GET_CHAIN } from '../../Api.js'
+
+import { CssSelect, CssTextField, style } from "../../Style.js";
+import MainContext from "../../context/MainContext";
 
 
 const ITEM_HEIGHT = 48;
@@ -25,56 +27,8 @@ const MenuProps = {
   },
 };
 
-const CssSelect = styled(Select)(() => ({
-  width: 350,
-  color: "#ffffff",
-  "&.MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "#A0AAB4"
-    },
-    "&:hover fieldset": {
-      borderColor: "#ffffff"
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#A0AAB4"
-    },
-    "& .MuiSvgIcon-root": {
-      color: "#ffffff",
-    },
-  }
-}));
-
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#A0AAB4',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#B2BAC2',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#E0E3E7',
-    },
-    '&:hover fieldset': {
-      borderColor: '#B2BAC2',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#6F7E8C',
-    },
-  },
-});
-
-const style = {
-  position: "fixed",
-  top: 0,
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  alignItems: "flex-end",
-};
-
-
 class SearchFilter extends React.Component {
+  static contextType = MainContext
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -84,8 +38,8 @@ class SearchFilter extends React.Component {
     super(props)
 
     const { cookies } = this.props;
+
     this.state = {
-      selectedChains: this.props.data != null ? this.props.data.selectedChains : [],
       startPrice: this.props.data != null ? this.props.data.startPrice : null,
       endPrice: this.props.data != null ? this.props.data.endPrice : null,
       startLiquidity: this.props.data != null ? this.props.data.startLiquidity : null,
@@ -102,8 +56,6 @@ class SearchFilter extends React.Component {
       endVolume24H: this.props.data != null ? this.props.data.endVolume24H : null,
       startCreationDate: this.props.data != null ? this.props.data.startCreationDate : null,
       endCreationDate: this.props.data != null ? this.props.data.endCreationDate : null,
-      chains: []
-
     }
 
     this.setStartPrice = this.setStartPrice.bind(this)
@@ -122,30 +74,13 @@ class SearchFilter extends React.Component {
     this.setEndVolume24H = this.setEndVolume24H.bind(this)
     this.setTimeRange = this.setTimeRange.bind(this)
 
-    this.submit = this.submit.bind(this)
-    this.loadData = this.loadData.bind(this)
+    this.loadConfig = this.loadConfig.bind(this)
+    this.saveConfig = this.saveConfig.bind(this)
     this.chainOnChange = this.chainOnChange.bind(this)
   }
 
-  async loadChains() {
-    await fetch(`${SERVER_URL}${API_GET_CHAIN}`, {
-      method: 'POST',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState(
-          {
-            chains: data
-          }
-        )
-      })
-      .catch((err) => {
-      })
-  }
-
   componentDidMount() {
-    this.loadData()
-    this.loadChains()
+    this.loadConfig()
   }
 
   setStartVolume24H(value) {
@@ -238,154 +173,96 @@ class SearchFilter extends React.Component {
     })
   }
 
-  async loadData() {
+  async loadConfig() {
+    try {
+      const config = await this.context.loadConfig()
 
-    await fetch(`${SERVER_URL}${API_GET_CONFIG}`, {
-      method: 'POST',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const chains = 'Ethereum'
-
-        this.setState(
-          {
-            startPrice: this.getConfigValue(data, "start_price"),
-            endPrice: this.getConfigValue(data, "end_price"),
-            startLiquidity: this.getConfigValue(data, "start_liquidity"),
-            endLiquidity: this.getConfigValue(data, "end_liquidity"),
-            startMarketCap: this.getConfigValue(data, "start_market_cap"),
-            endMarketCap: this.getConfigValue(data, "end_market_cap"),
-            startTotalSupply: this.getConfigValue(data, "start_total_supply"),
-            endTotalSupply: this.getConfigValue(data, "end_total_supply"),
-            startHolder: this.getConfigValue(data, "start_holder"),
-            endHolder: this.getConfigValue(data, "end_holder"),
-            startTotalTx: this.getConfigValue(data, "start_total_tx"),
-            endTotalTx: this.getConfigValue(data, "end_total_tx"),
-            startVolume24H: this.getConfigValue(data, "start_volume_24h"),
-            endVolume24H: this.getConfigValue(data, "end_volume_24h"),
-            timeRange: this.getConfigValue(data, "time_range"),
-            selectedChains: chains ? chains.split(",") : []
-          }
-        )
+      this.setState({
+        startPrice: config["start_token_price"],
+        endPrice: config["end_token_price"],
+        startLiquidity: config["start_pool_liquidity"],
+        endLiquidity: config["end_pool_liquidity"],
+        startMarketCap: config["start_token_market_cap"],
+        endMarketCap: config["end_token_market_cap"],
+        startTotalSupply: config["start_token_total_supply"],
+        endTotalSupply: config["end_token_total_supply"],
+        startHolder: config["start_token_total_holders"],
+        endHolder: config["end_token_total_holders"],
+        startTotalTx: config["start_pool_total_txs"],
+        endTotalTx: config["end_pool_total_txs"],
+        startVolume24H: config["start_pool_volume_24h"],
+        endVolume24H: config["end_pool_volume_24h"],
+        timeRange: config["time_range"],
       })
-      .catch((err) => {
-        alert(err.message)
-      })
-
+    } catch (error) {
+      alert(error.message)
+    }
   }
 
-  getConfigValue(config, config_key) {
-    for (var i = 0; i < config.length; i++) {
-      if (config[i].config_key == config_key) {
-        return config[i].config_value
+  async saveConfig() {
+    try {
+      const { t } = this.props;
+
+      const config = {
+        start_token_price: this.state.startPrice ? this.state.startPrice : null,
+        end_token_price: this.state.endPrice ? this.state.endPrice : null,
+        start_pool_liquidity: this.state.startLiquidity ? this.state.startLiquidity : null,
+        end_pool_liquidity: this.state.endLiquidity ? this.state.endLiquidity : null,
+        start_token_market_cap: this.state.startMarketCap ? this.state.startMarketCap : null,
+        end_token_market_cap: this.state.endMarketCap ? this.state.endMarketCap : null,
+        start_token_total_supply: this.state.startTotalSupply ? this.state.startTotalSupply : null,
+        end_token_total_supply: this.state.endTotalSupply ? this.state.endTotalSupply : null,
+        start_token_total_holders: this.state.startHolder ? this.state.startHolder : null,
+        end_token_total_holders: this.state.endHolder ? this.state.endHolder : null,
+        start_pool_total_txs: this.state.startTotalTx ? this.state.startTotalTx : null,
+        end_pool_total_txs: this.state.endTotalTx ? this.state.endTotalTx : null,
+        start_pool_volume_24h: this.state.startVolume24H ? this.state.startVolume24H : null,
+        end_pool_volume_24h: this.state.endVolume24H ? this.state.endVolume24H : null,
+        time_range: this.state.timeRange ? this.state.timeRange : null,
       }
+
+      await this.context.saveConfig(config)
+      alert(t("save_search_default_value_success"))
+    } catch (error) {
+      alert(error.message)
     }
-
-    return ""
-  }
-
-  submit() {
-    const { cookies } = this.props;
-
-    const data = {}
-
-    // data.chains = this.state.selectedChains.length > 0 ? this.state.selectedChains.join(",") : null
-    data.start_price = this.state.startPrice ? this.state.startPrice : null
-    data.end_price = this.state.endPrice ? this.state.endPrice : null
-    data.start_liquidity = this.state.startLiquidity ? this.state.startLiquidity : null
-    data.end_liquidity = this.state.endLiquidity ? this.state.endLiquidity : null
-    data.start_market_cap = this.state.startMarketCap ? this.state.startMarketCap : null
-    data.end_market_cap = this.state.endMarketCap ? this.state.endMarketCap : null
-    data.start_total_supply = this.state.startTotalSupply ? this.state.startTotalSupply : null
-    data.end_total_supply = this.state.endTotalSupply ? this.state.endTotalSupply : null
-    data.start_holder = this.state.startHolder ? this.state.startHolder : null
-    data.end_holder = this.state.endHolder ? this.state.endHolder : null
-    data.start_total_tx = this.state.startTotalTx ? this.state.startTotalTx : null
-    data.end_total_tx = this.state.endTotalTx ? this.state.endTotalTx : null
-    data.start_volume_24h = this.state.startVolume24H ? this.state.startVolume24H : null
-    data.end_volume_24h = this.state.endVolume24H ? this.state.endVolume24H : null
-    data.time_range = this.state.timeRange ? this.state.timeRange : null
-
-    this.save(data)
-  }
-
-
-  async save(data) {
-    const { t } = this.props;
-
-    const configs = []
-
-    for (const key in data) {
-      configs.push({
-        config_key: key,
-        config_value: data[key]
-      })
-    }
-
-    await fetch(`${SERVER_URL}${API_SET_CONFIG}`, {
-      method: 'POST',
-      body: JSON.stringify(configs),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert(t("save_search_default_value_success"))
-      })
-      .catch((err) => {
-        alert(err.message)
-      })
-
   }
 
   chainOnChange(event) {
-    const {
-      target: { value },
-    } = event;
-
-    this.setState(
-      {
-        selectedChains: typeof value === 'string' ? value.split(',') : value
-      }
-    )
   };
 
   render() {
     const { t } = this.props;
 
-    var chains = this.state.chains ? this.state.chains : []
+    const chains = ['Ethereum']
+    const selectedChains = ['Ethereum']
 
     return <div>
-      <div className='Dashboard-content'>
-        <h2>{t("search_default_value")}</h2>
-      </div>
+      <h2>{t("search_default_value")}</h2>
       <div >
         <div style={{ marginLeft: 16, marginRight: 16 }}>
+          <div>
+            <CssSelect
+              multiple
+              value={selectedChains}
+              onChange={this.chainOnChange}
+              renderValue={(selected) => selected.join(',')}
+              MenuProps={MenuProps}>
+              {chains.map((arr) => (
+                <MenuItem key={arr} value={arr}>
+                  <Checkbox
+                    checked={selectedChains.indexOf(arr) > -1}
+                    style={{
+                      color: "#ffffff",
+                    }} />
+                  <ListItemText primary={arr} />
+                </MenuItem>
+              ))}
+            </CssSelect>
+            <span className="App-Label-Filter">{t("chains")}</span>
+          </div>
+
           <div style={{ columnCount: 2 }}>
-            <div>
-              <CssSelect
-                multiple
-                value={this.state.selectedChains}
-                onChange={this.chainOnChange}
-                renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}>
-                {chains.map((arr) => (
-                  <MenuItem key={arr.name} value={arr.name}>
-                    <Checkbox
-                      checked={this.state.selectedChains.indexOf(arr.name) > -1}
-                      style={{
-                        color: "#ffffff",
-                      }} />
-                    <ListItemText primary={arr.name} />
-                  </MenuItem>
-                ))}
-              </CssSelect>
-              <span className="App-Label-Filter">{t("chains")}</span>
-            </div>
-
-
             <div style={{ clear: "both", marginTop: 6 }}>
               <CssTextField
                 type="number"
@@ -661,7 +538,7 @@ class SearchFilter extends React.Component {
 
           </div>
         </div>
-        <Button onClick={this.submit} style={{ marginTop: 16, paddingLeft: 16, paddingRight: 16 }} variant="contained">{t("save_search_default_value")}</Button>
+        <Button onClick={this.saveConfig} style={{ marginTop: 16, paddingLeft: 16, paddingRight: 16 }} variant="contained">{t("save_search_default_value")}</Button>
       </div>
     </div>
   }

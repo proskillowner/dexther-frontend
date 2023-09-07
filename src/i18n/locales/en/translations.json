@@ -45,7 +45,8 @@
     "data_settings": "Data Settings",
     "save_data_settings_success": "Data settings has been saved",
     "save_data_settings": "Save Data Settings",
-    "data_interval": "Data Interval",
+    "sync_interval": "Sync Interval",
+    "scan_interval": "Scan Interval",
     "minute_15": "Every 15 minutes",
     "minute_30": "Every 30 minutes",
     "minute_1h": "Every 1 hour",
@@ -63,7 +64,7 @@
     "minute": "Minute",
     "second": "Second",
     "data_interval_empty": "Please input interval data",
-    "data_interval_invalid": "Data interval must equal or greater than 10 minute",
+    "data_interval_invalid": "Interval data must equal or greater than 1 minute",
     "description": "Description",
 
     "column_chain": "CHAIN",

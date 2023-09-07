@@ -3,9 +3,7 @@ import i18next from 'i18next';
 import { withTranslation } from 'react-i18next';
 import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
-import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
@@ -15,13 +13,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { SERVER_URL, API_GET_SYNC_INFO, API_SET_SYNC_INTERVAL, API_GET_SYNC_LOG, API_GET_CHAIN } from '../../Api.js'
+import { CssSelect, CssTextField, style } from "../../Style.js";
+import { SERVER_URL, API_GET_OPERATION_LOG, API_GET_CHAIN, API_GET_CONFIG, API_SET_CONFIG } from '../../Api.js'
 
 import { DataGrid, gridPageSizeSelector, gridPaginationModelSelector, gridRowCountSelector, gridClasses } from '@mui/x-data-grid';
 
-const DEFAULT_INTERVAL = 10
+import MainContext from "../../context/MainContext";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -34,53 +32,6 @@ const MenuProps = {
       color: "#ffffff"
     },
   },
-};
-
-const CssSelect = styled(Select)(() => ({
-  color: "#ffffff",
-  "&.MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "#A0AAB4"
-    },
-    "&:hover fieldset": {
-      borderColor: "#ffffff"
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#A0AAB4"
-    },
-    "& .MuiSvgIcon-root": {
-      color: "#ffffff",
-    },
-  }
-}));
-
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: '#A0AAB4',
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: '#B2BAC2',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#E0E3E7',
-    },
-    '&:hover fieldset': {
-      borderColor: '#B2BAC2',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#6F7E8C',
-    },
-  },
-});
-
-const style = {
-  position: "fixed",
-  top: 0,
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  alignItems: "flex-end",
 };
 
 const columns = [
@@ -105,7 +56,7 @@ const columns = [
   },
 
   {
-    field: 'sync_start_time',
+    field: 'operation_start_time',
     renderHeader: (params) => (
       <strong>
         {i18next.t("start_time")}
@@ -124,7 +75,7 @@ const columns = [
   },
 
   {
-    field: 'sync_duration',
+    field: 'operation_duration',
     type: 'number',
     renderHeader: (params) => (
       <div>
@@ -153,7 +104,7 @@ const columns = [
   },
 
   {
-    field: 'sync_status',
+    field: 'operation_status',
     renderHeader: (params) => (
       <strong>
         {i18next.t("status")}
@@ -166,12 +117,12 @@ const columns = [
     disableColumnMenu: true,
     hideSortIcons: true,
     renderCell: (params) => {
-        return params.value === 0 ? i18next.t("success") : (params.value === 1 ? i18next.t("failed") : i18next.t("unknown"))
+      return params.value === 0 ? i18next.t("success") : (params.value === 1 ? i18next.t("failed") : i18next.t("unknown"))
     }
   },
 
   {
-    field: 'sync_description',
+    field: 'operation_description',
     renderHeader: (params) => (
       <strong>
         {i18next.t("description")}
@@ -190,81 +141,86 @@ const columns = [
 ];
 
 class DataSettings extends React.Component {
+  static contextType = MainContext
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
-
 
   constructor(props) {
     super(props)
 
     const { cookies } = this.props;
     this.state = {
+      syncInterval: this.props.data ? this.props.data.syncInterval : null,
+      scanInterval: this.props.data ? this.props.data.scanInterval : null,
+      scanCount: this.props.data ? this.props.data.scanCount : null,
       dialogCronLog: false,
       loading: false,
-      selectedChains: this.props.data != null ? this.props.data.selectedChains : [],
-      interval: this.props.data != null ? this.props.data.interval : DEFAULT_INTERVAL,
-      isErrorInterval: false,
-      errorText: "",
-      chains: [],
       rows: []
-
     }
 
-    this.submit = this.submit.bind(this)
-    this.loadData = this.loadData.bind(this)
+    this.setSyncInterval = this.setSyncInterval.bind(this)
+    this.setScanInterval = this.setScanInterval.bind(this)
+
+    this.loadConfig = this.loadConfig.bind(this)
+    this.saveConfig = this.saveConfig.bind(this)
     this.chainOnChange = this.chainOnChange.bind(this)
-    this.setInterval = this.setInterval.bind(this)
+
     this.showCronLog = this.showCronLog.bind(this)
     this.closeCronLog = this.closeCronLog.bind(this)
   }
 
-  async loadChains() {
-    await fetch(`${SERVER_URL}${API_GET_CHAIN}`, {
-      method: 'POST',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState(
-          {
-            chains: data
-          }, this.loadData
-        )
-      })
-      .catch((err) => {
-        this.loadData()
-      })
-  }
-
   componentDidMount() {
-    this.loadChains()
+    this.loadConfig()
   }
 
-  async loadData() {
-    var allSelected = []
-    for (var i = 0; i < this.state.chains.length; i++) {
-      allSelected.push(this.state.chains[i].name)
-    }
-
-    await fetch(`${SERVER_URL}${API_GET_SYNC_INFO}`, {
-      method: 'POST',
+  setSyncInterval(value) {
+    this.setState({
+      syncInterval: value,
     })
-      .then((response) => response.json())
-      .then((data) => {
-        for (const sync_info of data) {
-          const chain_id = /*sync_info.chain_id*/'Ethereum'
-          const sync_interval = sync_info.sync_interval / 60
+  };
 
-          this.setState({
-            interval: sync_interval ? sync_interval : DEFAULT_INTERVAL,
-            selectedChains: chain_id ? chain_id.split(",") : allSelected
-          })
-        }
-      })
-      .catch((err) => {
-        alert(err.message)
-      })
+  setScanInterval(value) {
+    this.setState({
+      scanInterval: value,
+    })
+  };
 
+  setSyncCount(value) {
+    this.setState({
+      syncInterval: value,
+    })
+  };
+
+  async loadConfig() {
+    try {
+      const config = await this.context.loadConfig()
+
+      this.setState({
+        syncInterval: config['sync_interval'] / 60,
+        scanInterval: config['scan_interval'] / 60,
+        scanCount: config['scan_count'],
+      })
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  saveConfig() {
+    try {
+      const { t } = this.props;
+
+      const config = {
+        sync_interval: this.state.syncInterval ? this.state.syncInterval * 60 : null,
+        scan_interval: this.state.scanInterval ? this.state.scanInterval * 60 : null,
+        scan_count: this.state.scanCount ? this.state.scanCount : null,
+      }
+
+      this.context.saveConfig(config)
+      alert(t("save_data_settings_success"))
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 
   showCronLog() {
@@ -276,7 +232,7 @@ class DataSettings extends React.Component {
   }
 
   async loadCronLog() {
-    await fetch(`${SERVER_URL}${API_GET_SYNC_LOG}`, {
+    await fetch(`${SERVER_URL}${API_GET_OPERATION_LOG}`, {
       method: 'POST',
       body: JSON.stringify({
         offset: 0,
@@ -284,7 +240,6 @@ class DataSettings extends React.Component {
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
       },
     })
       .then((response) => response.json())
@@ -293,10 +248,10 @@ class DataSettings extends React.Component {
         data.map((row, index) => {
           tableData.push({
             id: index + 1,
-            sync_start_time: row.sync_start_time,
-            sync_duration: row.sync_duration,
-            sync_status: row.sync_status,
-            sync_description: row.sync_description,
+            operation_start_time: row.operation_start_time,
+            operation_duration: row.operation_duration,
+            operation_status: row.operation_status,
+            operation_description: row.operation_description,
           })
         })
         this.setState({
@@ -308,132 +263,56 @@ class DataSettings extends React.Component {
       })
   }
 
-  submit() {
-    const { t } = this.props;
-
-    const data = []
-
-    const data_chains = this.state.selectedChains.length > 0 ? this.state.selectedChains.join(",") : null
-    const sync_interval = this.state.interval != null ? this.state.interval : null
-
-    if (!sync_interval) {
-      this.setState({
-        isErrorInterval: true,
-        errorText: t("data_interval_empty")
-      })
-    }
-    else
-      if (sync_interval < 1) {
-        this.setState({
-          isErrorInterval: true,
-          errorText: t("data_interval_invalid")
-        })
-      }
-      else {
-        this.save([{
-          chain_id: 1,
-          exchange_id: 1,
-          sync_interval: sync_interval * 60,
-        }])
-      }
-
-  }
-
-
-  async save(data) {
-    const { t } = this.props;
-
-    await fetch(`${SERVER_URL}${API_SET_SYNC_INTERVAL}`, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert(t("save_data_settings_success"))
-      })
-      .catch((err) => {
-        alert(err.message)
-      })
-
-  }
-
-  chainOnChange(event) {
-    const {
-      target: { value },
-    } = event;
-
-    this.setState(
-      {
-        selectedChains: typeof value === 'string' ? value.split(',') : value
-      }
-    )
-  };
-
-  setInterval(value) {
-    this.setState(
-      {
-        interval: value,
-        isErrorInterval: false,
-        errorText: ""
-      }
-    )
-  };
-
   closeCronLog() {
     this.setState({
       dialogCronLog: false
     })
   }
 
+  chainOnChange(event) {
+  };
 
   render() {
     const { t } = this.props;
 
-    var chains = this.state.chains ? this.state.chains : []
+    const chains = ['Ethereum']
+    const selectedChains = ['Ethereum']
 
     return <div>
       <h2>{t("data_settings")}</h2>
       <div >
         <div style={{ marginLeft: 16, marginRight: 16 }}>
-          <div>
             <div>
               <CssSelect
-                style={{ width: "80%" }}
                 multiple
-                value={this.state.selectedChains}
+                value={selectedChains}
                 onChange={this.chainOnChange}
-                renderValue={(selected) => selected.join(', ')}
+                renderValue={(selected) => selected.join(',')}
                 MenuProps={MenuProps}>
                 {chains.map((arr) => (
-                  <MenuItem key={arr.name} value={arr.name}>
+                  <MenuItem key={arr} value={arr}>
                     <Checkbox
-                      checked={this.state.selectedChains.indexOf(arr.name) > -1}
+                      checked={selectedChains.indexOf(arr) > -1}
                       style={{
                         color: "#ffffff",
                       }} />
-                    <ListItemText primary={arr.name} />
+                    <ListItemText primary={arr} />
                   </MenuItem>
                 ))}
               </CssSelect>
               <span className="App-Label-Filter">{t("chains")}</span>
             </div>
 
-
+          <div style={{ columnCount: 2 }}>
             <div style={{ clear: "both", marginTop: 6 }}>
               <CssTextField
                 type="number"
-                style={{ width: 180 }}
+                style={{ width: 125 }}
                 size="small"
                 variant="outlined"
-                value={this.state.interval}
-                error={this.state.isErrorInterval}
-                helperText={this.state.errorText}
+                value={this.state.syncInterval ? this.state.syncInterval : ""}
                 onChange={(event) => {
-                  this.setInterval(event.target.value);
+                  this.setSyncInterval(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -443,14 +322,34 @@ class DataSettings extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
               <span style={{ marginTop: 4 }} className="App-Label-Filter-NoFloat">{t("minute")}</span>
-              <span onClick={this.showCronLog} className="App-link" style={{ marginLeft: 16 }}>{t("log_job")}</span>
-              <span className="App-Label-Filter">{t("data_interval")}</span>
+              <span className="App-Label-Filter">{t("sync_interval")}</span>
             </div>
-
+            <div style={{ clear: "both", marginTop: 6 }}>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.scanInterval ? this.state.scanInterval : ""}
+                onChange={(event) => {
+                  this.setScanInterval(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+              <span style={{ marginTop: 4 }} className="App-Label-Filter-NoFloat">{t("minute")}</span>
+              <span className="App-Label-Filter">{t("scan_interval")}</span>
+            </div>
           </div>
         </div>
-        <Button onClick={this.submit} style={{ marginTop: 16, paddingLeft: 16, paddingRight: 16 }} variant="contained">{t("save_data_settings")}</Button>
+        <Button onClick={this.showCronLog} style={{ marginTop: 16, marginRight: 8, paddingLeft: 16, paddingRight: 16 }} variant="contained">{t("log_job")}</Button>
+        <Button onClick={this.saveConfig} style={{ marginTop: 16, marginLeft: 8, paddingLeft: 16, paddingRight: 16 }} variant="contained">{t("save_data_settings")}</Button>
       </div>
+
       <Dialog
         PaperProps={{
           style: {

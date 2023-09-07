@@ -18,8 +18,8 @@ import logo from "./media/logo.jpeg"
 import { SERVER_URL, API_GET_USER } from './Api'
 
 
-var email = ""
-var password = ""
+let email = ""
+let password = ""
 
 export const withNavigation = (Component) => {
   return props => <Component {...props} navigate={useNavigate()} />;
@@ -79,18 +79,17 @@ class Login extends React.Component {
     await fetch(`${SERVER_URL}${API_GET_USER}`, {
       method: 'POST',
       body: JSON.stringify({
-        email: email,
-        password: password,
+        user_email: email,
+        user_password: password,
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
       },
     })
       .then((response) => response.json())
       .then((data) => {
         const { t } = this.props;
-        if (!data.name) {
+        if (!data.user_name) {
           this.setState({
             isPasswordError: true,
             passwordErrorMessage: t("invalid_email_or_password"),

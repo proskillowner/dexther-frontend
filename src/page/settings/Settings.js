@@ -16,7 +16,7 @@ function Settings(props) {
         <TokarAppBar
           showBack={true}
           subTitle={i18next.t("settings")} />        
-        <div className='Dashboard' style={{marginLeft: 16}}>
+        <div className='Dashboard-content' style={{marginLeft: 16}}>
           <SearchFilter />
           <DataSettings />
         </div>
