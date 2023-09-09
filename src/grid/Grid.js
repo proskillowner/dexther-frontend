@@ -88,7 +88,7 @@ const formatPct = (value) => {
 
 const columns = [
   {
-    field: 'idx',
+    field: 'id',
     renderHeader: (params) => (
       <strong>
         {'NO'}
@@ -104,7 +104,7 @@ const columns = [
     sortable: false,
     renderCell: (params) => (
       <div>
-        {params.id}
+        {params.value}
       </div>
     ),
   },
@@ -329,8 +329,8 @@ const columns = [
     hideSortIcons: true,
     sortingOrder: ['asc', 'desc'],
     renderCell: (params) => {
-      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 6 });
-      return params.value ? nf.format(params.value) : "-";
+      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+      return parseInt(params.value) ? nf.format(params.value) : "-";
       // return params.value ? `${parseInt(params.value * 100) / 100} ETH` : '-'
     }
 
