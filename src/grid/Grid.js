@@ -152,8 +152,8 @@ const COLUMN_PROTOCOL = {
     <div>
       <div onClick={() => history(params)} className="App-link"><u>{params.value}</u></div>
       <div style={{ marginTop: 4 }}>
-        <img src={cgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_verified == 1 ? 'inline' : 'none' }} />
-        <img src={rgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_renounced == 1 ? 'inline' : 'none' }} />
+        <img src={cgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.token_contract_verified == 1 ? 'inline' : 'none' }} />
+        <img src={rgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.token_contract_renounced == 1 ? 'inline' : 'none' }} />
         {/* <img src={honeypot} style={{ marginLeft: params.row.hist_contract_verified == 1 || params.row.hist_contract_verified == 1 ? 6 : 0, width: 16, height: 16, display: params.row.hist_honey_pot == 1 ? 'inline' : 'none' }} /> */}
       </div>
       <div style={{ marginTop: 4, display: params.row.hist_buy_tax != null && params.row.hist_sell_tax != null ? "inline" : "none" }}>
@@ -208,7 +208,7 @@ const COLUMN_TOKEN_ADDRESS = {
       >
       </CopyAll>
       <div>
-        <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
+        <a href="#" onClick={() => etherscan_token(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
         <a href="#" onClick={() => tokensniffer(params.value)} className="App-link" style={{ marginLeft: 5 }} target="_blank">TOKENSNIFFER</a>
       </div>
     </div>
@@ -559,6 +559,10 @@ const etherscan = (params) => {
   window.gridComponent.etherscan(params)
 }
 
+const etherscan_token = (params) => {
+  window.gridComponent.etherscan_token(params)
+}
+
 const tokensniffer = (params) => {
   window.gridComponent.tokensniffer(params)
 }
@@ -721,6 +725,10 @@ class Grid extends React.Component {
 
   etherscan(address) {
     window.open("https://etherscan.io/address/" + address, '_blank', 'noopener,noreferrer')
+  }
+
+  etherscan_token(address) {
+    window.open("https://etherscan.io/token/" + address, '_blank', 'noopener,noreferrer')
   }
 
   tokensniffer(params) {
