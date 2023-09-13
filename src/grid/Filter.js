@@ -4,19 +4,18 @@ import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
 import Box from '@mui/material/Box';
 import CloseIcon from '@mui/icons-material/CloseOutlined';
-import TextField from '@mui/material/TextField';
-import { styled } from '@mui/material/styles';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
-import dayjs, { Dayjs } from 'dayjs';
-import Select from '@mui/material/Select';
+import dayjs from 'dayjs';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 
 import { CssSelect, CssTextField, style } from "../Style.js";
+
+import MainContext from "../context/MainContext";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -32,6 +31,8 @@ const MenuProps = {
 };
 
 class Filter extends React.Component {
+  static contextType = MainContext
+
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired
   };
@@ -42,260 +43,291 @@ class Filter extends React.Component {
 
     const { cookies } = this.props;
 
-    if (this.props.data != null) {
-      var startCreationDate = this.props.data.start_creation_date
-      var sStartCreationDate = ""
-      if (startCreationDate) {
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var dateFormat = new Date(startCreationDate * 1)
-
-        var year = dateFormat.getFullYear();
-        var month = months[dateFormat.getMonth()];
-        var date = dateFormat.getDate();
-        var hour = dateFormat.getHours();
-        var min = dateFormat.getMinutes();
-        var sec = dateFormat.getSeconds();
-
-        var sStartCreationDate = month + ", " + date + " " + year + " " + hour + ":" + min + ":" + sec
-      }
-
-      var endCreationDate = this.props.data.end_creation_date
-      var sEndCreationDate = ""
-      if (endCreationDate) {
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var dateFormat = new Date(endCreationDate * 1)
-
-        var year = dateFormat.getFullYear();
-        var month = months[dateFormat.getMonth()];
-        var date = dateFormat.getDate();
-        var hour = dateFormat.getHours();
-        var min = dateFormat.getMinutes();
-        var sec = dateFormat.getSeconds();
-
-        var sEndCreationDate = month + ", " + date + " " + year + " " + hour + ":" + min + ":" + sec
-      }
-    }
-
     this.state = {
-      name: this.props.data != null ? this.props.data.name : "",
-      address: this.props.data != null ? this.props.data.address : "",
-      pairAddress: this.props.data != null ? this.props.data.pair_address : "",
-      startPrice: this.props.data != null ? this.props.data.start_price : "",
-      endPrice: this.props.data != null ? this.props.data.end_price : null,
-      startLiquidity: this.props.data != null ? this.props.data.start_liquidity : null,
-      endLiquidity: this.props.data != null ? this.props.data.end_liquidity : null,
-      startMarketCap: this.props.data != null ? this.props.data.start_market_cap : null,
-      endMarketCap: this.props.data != null ? this.props.data.end_market_cap : null,
-      startTotalSupply: this.props.data != null ? this.props.data.start_total_supply : null,
-      endTotalSupply: this.props.data != null ? this.props.data.end_total_supply : null,
-      startHolder: this.props.data != null ? this.props.data.start_holder : null,
-      endHolder: this.props.data != null ? this.props.data.end_holder : null,
-      startTotalTx: this.props.data != null ? this.props.data.start_total_tx : null,
-      endTotalTx: this.props.data != null ? this.props.data.end_total_tx : null,
-      startVolume24H: this.props.data != null ? this.props.data.start_volume_24h : null,
-      endVolume24H: this.props.data != null ? this.props.data.end_volume_24h : null,
-      startCreationDate: dayjs(sStartCreationDate),
-      endCreationDate: dayjs(sEndCreationDate),
-
+      subTokenName: this.props.data != null ? this.props.data.sub_token_name : null,
+      subTokenAddress: this.props.data != null ? this.props.data.sub_token_address : null,
+      subPoolAddress: this.props.data != null ? this.props.data.sub_pool_address : null,
+      minPoolCreationTime: this.props.data != null ? this.props.data.min_pool_creation_time : null,
+      maxPoolCreationTime: this.props.data != null ? this.props.data.max_pool_creation_time : null,
+      minTokenPriceUsd: this.props.data != null ? this.props.data.min_token_price_usd : null,
+      maxTokenPriceUsd: this.props.data != null ? this.props.data.max_token_price_usd : null,
+      minPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.min_pool_initial_liquidity_usd : null,
+      maxPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.max_pool_initial_liquidity_usd : null,
+      minPoolTotalLiquidityUsd: this.props.data != null ? this.props.data.min_pool_total_liquidity_usd : null,
+      maxPoolTotalLiquidityUsd: this.props.data != null ? this.props.data.max_pool_total_liquidity_usd : null,
+      minPoolTotalTxs: this.props.data != null ? this.props.data.min_pool_total_txs : null,
+      maxPoolTotalTxs: this.props.data != null ? this.props.data.max_pool_total_txs : null,
+      minTokenTotalHolders: this.props.data != null ? this.props.data.min_token_total_holders : null,
+      maxTokenTotalHolders: this.props.data != null ? this.props.data.max_token_total_holders : null,
+      minTokenTotalSupply: this.props.data != null ? this.props.data.min_token_total_supply : null,
+      maxTokenTotalSupply: this.props.data != null ? this.props.data.max_token_total_supply : null,
+      minTokenMarketCapUsd: this.props.data != null ? this.props.data.min_token_market_cap_usd : null,
+      maxTokenMarketCapUsd: this.props.data != null ? this.props.data.max_token_market_cap_usd : null,
+      minVolume1H: this.props.data != null ? this.props.data.min_volume_1h : null,
+      maxVolume1H: this.props.data != null ? this.props.data.max_volume_1h : null,
+      minVolume24H: this.props.data != null ? this.props.data.min_volume_24h : null,
+      maxVolume24H: this.props.data != null ? this.props.data.max_volume_24h : null,
     }
 
-    this.setName = this.setName.bind(this)
-    this.setAddress = this.setAddress.bind(this)
-    this.setPairAddress = this.setPairAddress.bind(this)
-    this.setStartPrice = this.setStartPrice.bind(this)
-    this.setEndPrice = this.setEndPrice.bind(this)
-    this.setStartLiquidity = this.setStartLiquidity.bind(this)
-    this.setEndLiquidity = this.setEndLiquidity.bind(this)
-    this.setStartMarketCap = this.setStartMarketCap.bind(this)
-    this.setEndMarketCap = this.setEndMarketCap.bind(this)
-    this.setStartTotalSupply = this.setStartTotalSupply.bind(this)
-    this.setEndTotalSupply = this.setEndTotalSupply.bind(this)
-    this.setStartHolder = this.setStartHolder.bind(this)
-    this.setEndHolder = this.setEndHolder.bind(this)
-    this.setStartTotalTx = this.setStartTotalTx.bind(this)
-    this.setEndTotalTx = this.setEndTotalTx.bind(this)
-    this.setStartVolume24H = this.setStartVolume24H.bind(this)
-    this.setEndVolume24H = this.setEndVolume24H.bind(this)
-    this.setStartCreationDate = this.setStartCreationDate.bind(this)
-    this.setEndCreationDate = this.setEndCreationDate.bind(this)
+    this.setSubTokenName = this.setSubTokenName.bind(this)
+    this.setSubTokenAddress = this.setSubTokenAddress.bind(this)
+    this.setSubPoolAddress = this.setSubPoolAddress.bind(this)
+    this.setMinPoolCreationTime = this.setMinPoolCreationTime.bind(this)
+    this.setMaxPoolCreationTime = this.setMaxPoolCreationTime.bind(this)
+    this.setMinTokenPriceUsd = this.setMinTokenPriceUsd.bind(this)
+    this.setMaxTokenPriceUsd = this.setMaxTokenPriceUsd.bind(this)
+    this.setMinPoolInitialLiquidityUsd = this.setMinPoolInitialLiquidityUsd.bind(this)
+    this.setMaxPoolInitialLiquidityUsd = this.setMaxPoolInitialLiquidityUsd.bind(this)
+    this.setMinPoolTotalLiquidityUsd = this.setMinPoolTotalLiquidityUsd.bind(this)
+    this.setMaxPoolTotalLiquidityUsd = this.setMaxPoolTotalLiquidityUsd.bind(this)
+    this.setMinPoolTotalTxs = this.setMinPoolTotalTxs.bind(this)
+    this.setMaxPoolTotalTxs = this.setMaxPoolTotalTxs.bind(this)
+    this.setMinTokenTotalHolders = this.setMinTokenTotalHolders.bind(this)
+    this.setMaxTokenTotalHolders = this.setMaxTokenTotalHolders.bind(this)
+    this.setMinTokenTotalSupply = this.setMinTokenTotalSupply.bind(this)
+    this.setMaxTokenTotalSupply = this.setMaxTokenTotalSupply.bind(this)
+    this.setMinTokenMarketCapUsd = this.setMinTokenMarketCapUsd.bind(this)
+    this.setMaxTokenMarketCapUsd = this.setMaxTokenMarketCapUsd.bind(this)
+    this.setMinPoolVolume1H = this.setMinVolume1H.bind(this)
+    this.setMaxPoolVolume1H = this.setMaxVolume1H.bind(this)
+    this.setMinPoolVolume24H = this.setMinVolume24H.bind(this)
+    this.setMaxPoolVolume24H = this.setMaxVolume24H.bind(this)
 
-    this.submit = this.submit.bind(this)
-    this.clear = this.clear.bind(this)
+    this.loadConfig = this.loadConfig.bind(this)
+    this.applyFilter = this.applyFilter.bind(this)
+    this.clearFilter = this.clearFilter.bind(this)
   }
 
-  setStartVolume24H(value) {
+  componentDidMount() {
+    this.loadConfig()
+  }
+
+  setSubTokenName(value) {
     this.setState({
-      startVolume24H: value
+      subTokenName: value
     })
   }
 
-  setEndVolume24H(value) {
+  setSubTokenAddress(value) {
     this.setState({
-      endVolume24H: value
+      subTokenAddress: value
     })
   }
 
-  setStartTotalTx(value) {
+  setSubPoolAddress(value) {
     this.setState({
-      startTotalTx: value
+      subPoolAddress: value
     })
   }
 
-  setEndTotalTx(value) {
+  setMinPoolCreationTime(value) {
     this.setState({
-      endTotalTx: value
+      minPoolCreationTime: value
     })
   }
 
-  setStartHolder(value) {
+  setMaxPoolCreationTime(value) {
     this.setState({
-      startHolder: value
+      maxPoolCreationTime: value
     })
   }
 
-  setEndHolder(value) {
+  setMinTokenPriceUsd(value) {
     this.setState({
-      endHolder: value
+      minTokenPriceUsd: value
     })
   }
 
-  setStartTotalSupply(value) {
+  setMaxTokenPriceUsd(value) {
     this.setState({
-      startTotalSupply: value
+      maxTokenPriceUsd: value
     })
   }
 
-  setEndTotalSupply(value) {
+  setMinPoolInitialLiquidityUsd(value) {
     this.setState({
-      endTotalSupply: value
+      minPoolInitialLiquidityUsd: value
     })
   }
 
-  setName(value) {
+  setMaxPoolInitialLiquidityUsd(value) {
     this.setState({
-      name: value
+      maxPoolInitialLiquidityUsd: value
     })
   }
 
-  setAddress(value) {
+  setMinPoolTotalLiquidityUsd(value) {
     this.setState({
-      address: value
+      minPoolTotalLiquidityUsd: value
     })
   }
 
-  setPairAddress(value) {
+  setMaxPoolTotalLiquidityUsd(value) {
     this.setState({
-      pairAddress: value
+      maxPoolTotalLiquidityUsd: value
     })
   }
 
-  setStartPrice(value) {
+  setMinPoolTotalTxs(value) {
     this.setState({
-      startPrice: value
+      minPoolTotalTxs: value
     })
   }
 
-  setEndPrice(value) {
+  setMaxPoolTotalTxs(value) {
     this.setState({
-      endPrice: value
+      maxPoolTotalTxs: value
     })
   }
 
-  setStartLiquidity(value) {
+  setMinTokenTotalHolders(value) {
     this.setState({
-      startLiquidity: value
+      minTokenTotalHolders: value
     })
   }
 
-  setEndLiquidity(value) {
+  setMaxTokenTotalHolders(value) {
     this.setState({
-      endLiquidity: value
+      maxTokenTotalHolders: value
     })
   }
 
-  setStartMarketCap(value) {
+  setMinTokenTotalSupply(value) {
     this.setState({
-      startMarketCap: value
+      minTokenTotalSupply: value
     })
   }
 
-  setEndMarketCap(value) {
+  setMaxTokenTotalSupply(value) {
     this.setState({
-      endMarketCap: value
+      maxTokenTotalSupply: value
     })
   }
 
-  setStartCreationDate(value) {
+  setMinTokenMarketCapUsd(value) {
     this.setState({
-      startCreationDate: value
+      minTokenMarketCapUsd: value
     })
   }
 
-  setEndCreationDate(value) {
+  setMaxTokenMarketCapUsd(value) {
     this.setState({
-      endCreationDate: value
+      maxTokenMarketCapUsd: value
     })
   }
 
-  clear() {
+  setMinVolume1H(value) {
+    this.setState({
+      minVolume1H: value
+    })
+  }
+
+  setMaxVolume1H(value) {
+    this.setState({
+      maxVolume1H: value
+    })
+  }
+
+  setMinVolume24H(value) {
+    this.setState({
+      minVolume24H: value
+    })
+  }
+
+  setMaxVolume24H(value) {
+    this.setState({
+      maxVolume24H: value
+    })
+  }
+
+  clearFilter() {
     this.setState(
       {
-        name: "",
-        address: "",
-        pairAddress: "",
-        startPrice: "",
-        endPrice: "",
-        startLiquidity: "",
-        endLiquidity: "",
-        startMarketCap: "",
-        endMarketCap: "",
-        startTotalSupply: "",
-        endTotalSupply: "",
-        startHolder: "",
-        endHolder: "",
-        startTotalTx: "",
-        endTotalTx: "",
-        startVolume24H: "",
-        endVolume24H: "",
-        startCreationDate: "",
-        endCreationDate: "",
+        subTokenName: null,
+        subTokenAddress: null,
+        subPoolAddress: null,
+        minPoolCreationTime: null,
+        maxPoolCreationTime: null,
+        minTokenPriceUsd: null,
+        maxTokenPriceUsd: null,
+        minPoolInitialLiquidityUsd: null,
+        maxPoolInitialLiquidityUsd: null,
+        minPoolTotalLiquidityUsd: null,
+        maxPoolTotalLiquidityUsd: null,
+        minPoolTotalTxs: null,
+        maxPoolTotalTxs: null,
+        minTokenTotalHolders: null,
+        maxTokenTotalHolders: null,
+        minTokenTotalSupply: null,
+        maxTokenTotalSupply: null,
+        minTokenMarketCapUsd: null,
+        maxTokenMarketCapUsd: null,
+        minVolume1H: null,
+        maxVolume1H: null,
+        minVolume24H: null,
+        maxVolume24H: null,
       }
     )
-
   }
 
+  async loadConfig() {
+    try {
+      const config = await this.context.loadConfig()
 
-  submit() {
+      const poolCreationTimeRange = config['pool_creation_time_range']
+
+      if (poolCreationTimeRange) {
+        this.setState({
+          minPoolCreationTime: Date.now() - poolCreationTimeRange * 1000,
+          maxPoolCreationTime: Date.now(),
+        })
+      }
+
+      this.setState({
+        minPoolInitialLiquidityUsd: config['min_pool_initial_liquidity_usd'],
+        maxPoolInitialLiquidityUsd: config['max_pool_initial_liquidity_usd'],
+        minPoolTotalLiquidityUsd: config['min_pool_total_liquidity_usd'],
+        maxPoolTotalLiquidityUsd: config['max_pool_total_liquidity_usd'],
+        minPoolTotalTxs: config['min_pool_total_txs'],
+        maxPoolTotalTxs: config['max_pool_total_txs'],
+        minTokenTotalHolders: config['min_token_total_holders'],
+        maxTokenTotalHolders: config['max_token_total_holders'],
+      })
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
+  applyFilter() {
     const { cookies } = this.props;
 
+    const filter = {
+      sub_token_name: this.state.subTokenName ? this.state.subTokenName : null,
+      sub_token_address: this.state.subTokenAddress ? this.state.subTokenAddress : null,
+      sub_pool_address: this.state.subPoolAddress ? this.state.subPoolAddress : null,
+      min_pool_creation_time: this.state.minPoolCreationTime ? this.state.minPoolCreationTime / 1000 : null,
+      max_pool_creation_time: this.state.maxPoolCreationTime ? this.state.maxPoolCreationTime / 1000 : null,
+      min_token_price_usd: this.state.minTokenPriceUsd ? this.state.minTokenPriceUsd : null,
+      max_token_price_usd: this.state.maxTokenPriceUsd ? this.state.maxTokenPriceUsd : null,
+      min_pool_initial_liquidity_usd: this.state.minPoolInitialLiquidityUsd ? this.state.minPoolInitialLiquidityUsd : null,
+      max_pool_initial_iiquidity_usd: this.state.maxPoolInitialLiquidityUsd ? this.state.maxPoolInitialLiquidityUsd : null,
+      min_pool_total_liquidity_usd: this.state.minPoolTotalLiquidityUsd ? this.state.minPoolTotalLiquidityUsd : null,
+      max_pool_total_iiquidity_usd: this.state.maxPoolTotalLiquidityUsd ? this.state.maxPoolTotalLiquidityUsd : null,
+      min_pool_total_txs: this.state.minPoolTotalTxs ? this.state.minPoolTotalTxs : null,
+      max_pool_total_txs: this.state.maxPoolTotalTxs ? this.state.maxPoolTotalTxs : null,
+      min_token_total_holders: this.state.minTokenTotalHolders ? this.state.minTokenTotalHolders : null,
+      max_token_total_holders: this.state.maxTokenTotalHolders ? this.state.maxTokenTotalHolders : null,
+      min_token_total_supply: this.state.minTokenTotalSupply ? this.state.minTokenTotalSupply : null,
+      max_token_total_supply: this.state.maxTokenTotalSupply ? this.state.maxTokenTotalSupply : null,
+      min_token_market_cap_usd: this.state.minTokenMarketCapUsd ? this.state.minTokenMarketCapUsd : null,
+      max_token_market_cap_usd: this.state.maxTokenMarketCapUsd ? this.state.maxTokenMarketCapUsd : null,
+      min_volume_1h: this.state.minVolume1H ? this.state.minVolume1H : null,
+      max_volume_1h: this.state.maxVolume1H ? this.state.maxVolume1H : null,
+      min_volume_24h: this.state.minVolume24H ? this.state.minVolume24H : null,
+      max_volume_24h: this.state.maxVolume24H ? this.state.maxVolume24H : null,
+    }
 
-    var model = new Object()
-    model.name = this.state.name
-    model.address = this.state.address
-    model.pairAddress = this.state.pairAddress
-
-    model.startPrice = this.state.startPrice != null && this.state.startPrice.length > 0 ? this.state.startPrice : null
-    model.endPrice = this.state.endPrice != null && this.state.endPrice.length > 0 ? this.state.endPrice : null
-    model.startLiquidity = this.state.startLiquidity != null && this.state.startLiquidity.length > 0 ? this.state.startLiquidity : null
-    model.endLiquidity = this.state.endLiquidity != null && this.state.endLiquidity.length > 0 ? this.state.endLiquidity : null
-    model.startMarketCap = this.state.startMarketCap != null && this.state.startMarketCap.length > 0 ? this.state.startMarketCap : null
-    model.endMarketCap = this.state.endMarketCap != null && this.state.endMarketCap.length > 0 ? this.state.endMarketCap : null
-    model.startTotalSupply = this.state.startTotalSupply != null && this.state.startTotalSupply.length > 0 ? this.state.startTotalSupply : null
-    model.endTotalSupply = this.state.endTotalSupply != null && this.state.endTotalSupply.length > 0 ? this.state.endTotalSupply : null
-    model.startHolder = this.state.startHolder != null && this.state.startHolder.length > 0 ? this.state.startHolder : null
-    model.endHolder = this.state.endHolder != null && this.state.endHolder.length > 0 ? this.state.endHolder : null
-    model.startTotalTx = this.state.startTotalTx != null && this.state.startTotalTx.length > 0 ? this.state.startTotalTx : null
-    model.endTotalTx = this.state.endTotalTx != null && this.state.endTotalTx.length > 0 ? this.state.endTotalTx : null
-    model.startVolume24H = this.state.startVolume24H != null && this.state.startVolume24H.length > 0 ? this.state.startVolume24H : null
-    model.endVolume24H = this.state.endVolume24H != null && this.state.endVolume24H.length > 0 ? this.state.endVolume24H : null
-
-    model.startCreationDate = this.state.startCreationDate
-    model.startCreationTimeStamp = this.state.startCreationDate + 0
-
-    model.endCreationDate = this.state.endCreationDate
-    model.endCreationTimeStamp = this.state.endCreationDate + 0
-
-    this.props.onFilter(model)
+    this.props.onFilter(filter)
   }
 
 
@@ -305,40 +337,6 @@ class Filter extends React.Component {
     const chains = ['Ethereum']
     const selectedChains = ['Ethereum']
 
-    if (this.props.data != null) {
-      var startCreationDate = this.props.data.start_creation_date
-      var sStartCreationDate = ""
-      if (startCreationDate) {
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var dateFormat = new Date(startCreationDate * 1)
-
-        var year = dateFormat.getFullYear();
-        var month = months[dateFormat.getMonth()];
-        var date = dateFormat.getDate();
-        var hour = dateFormat.getHours();
-        var min = dateFormat.getMinutes();
-        var sec = dateFormat.getSeconds();
-
-        var sStartCreationDate = month + ", " + date + " " + year + " " + hour + ":" + min + ":" + sec
-      }
-
-      var endCreationDate = this.props.data.end_creation_date
-      var sEndCreationDate = ""
-      if (endCreationDate) {
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var dateFormat = new Date(endCreationDate * 1)
-
-        var year = dateFormat.getFullYear();
-        var month = months[dateFormat.getMonth()];
-        var date = dateFormat.getDate();
-        var hour = dateFormat.getHours();
-        var min = dateFormat.getMinutes();
-        var sec = dateFormat.getSeconds();
-
-        var sEndCreationDate = month + ", " + date + " " + year + " " + hour + ":" + min + ":" + sec
-      }
-    }
-
     return <div style={{ display: this.props.open }}>
       <Box sx={style}>
         <div style={{ background: "#3b3f46", width: '100%', opacity: 1 }}>
@@ -347,7 +345,8 @@ class Filter extends React.Component {
             </CloseIcon>
             <h3>{t("filter")}</h3>
             <div>
-              <div style={{ clear: "both", marginTop: 6, display: this.props.hist != "true" ? "inline" : "none" }}>
+              <div style={{ clear: "both", height: 50, display: this.props.hist != "true" ? "inline" : "none" }}>
+                <span className="App-Label-Filter-Block">{t("chains")}</span>
                 <CssSelect
                   multiple
                   value={selectedChains}
@@ -365,18 +364,17 @@ class Filter extends React.Component {
                     </MenuItem>
                   ))}
                 </CssSelect>
-                <span className="App-Label-Filter">{t("chains")}</span>
               </div>
-
-              <div style={{ columnCount: 2 }}>
-                <div style={{ clear: "both", marginTop: 6, display: this.props.hist != "true" ? "inline" : "none" }}>
+              <div style={{ columnCount: 2, marginTop: 10 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("name_protocol")}</span>
                   <CssTextField
                     style={{ width: 300 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.name}
+                    value={this.state.subTokenName ? this.state.subTokenName : ""}
                     onChange={(event) => {
-                      this.setName(event.target.value);
+                      this.setSubTokenName(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -385,16 +383,16 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("name_protocol")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6, display: this.props.hist != "true" ? "inline" : "none" }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("token_address")}</span>
                   <CssTextField
                     style={{ width: 300 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.address}
+                    value={this.state.subTokenAddress ? this.state.subTokenAddress : ""}
                     onChange={(event) => {
-                      this.setAddress(event.target.value);
+                      this.setSubTokenAddress(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -403,16 +401,16 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("token_address")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6, display: this.props.hist != "true" ? "inline" : "none" }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("pool_address")}</span>
                   <CssTextField
                     style={{ width: 300 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.pairAddress}
+                    value={this.state.subPoolAddress ? this.state.subPoolAddress : ""}
                     onChange={(event) => {
-                      this.setPairAddress(event.target.value);
+                      this.setSubPoolAddress(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -421,13 +419,13 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("pair_address")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="id-id">
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{this.props.hist != "true" ? t("listed_since") : t("date_history_range")}</span>
+                  <LocalizationProvider style={{ width: 100 }} dateAdapter={AdapterDayjs} adapterLocale="id-id">
                     <DateTimePicker
-                      value={this.state.startCreationDate}
-                      onChange={(newValue) => this.setStartCreationDate(newValue)}
+                      value={dayjs(this.state.minPoolCreationTime)}
+                      onChange={(newValue) => this.setMinPoolCreationTime(newValue)}
                       slotProps={{ textField: { size: 'small' } }}
                       sx={{
                         svg: {
@@ -449,11 +447,14 @@ class Filter extends React.Component {
                         },
                       }} />
                   </LocalizationProvider>
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                </div>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">&nbsp;</span>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateTimePicker
-                      value={this.state.endCreationDate}
-                      onChange={(newValue) => this.setEndCreationDate(newValue)}
+                      value={dayjs(this.state.maxPoolCreationTime)}
+                      onChange={(newValue) => this.setMaxPoolCreationTime(newValue)}
                       slotProps={{ textField: { size: 'small' } }}
                       sx={{
                         svg: {
@@ -475,17 +476,17 @@ class Filter extends React.Component {
                         },
                       }} />
                   </LocalizationProvider>
-                  <span className="App-Label-Filter">{this.props.hist != "true" ? t("date_creation_range") : t("date_history_range")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("price_usd")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.startPrice}
+                    value={this.state.minTokenPriceUsd ? this.state.minTokenPriceUsd : ""}
                     onChange={(event) => {
-                      this.setStartPrice(event.target.value);
+                      this.setMinTokenPriceUsd(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -494,15 +495,15 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.endPrice}
+                    value={this.state.maxTokenPriceUsd ? this.state.maxTokenPriceUsd : ""}
                     onChange={(event) => {
-                      this.setEndPrice(event.target.value);
+                      this.setMaxTokenPriceUsd(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -511,17 +512,17 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("price_range_usd")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("initial_liquidity_usd")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.startLiquidity}
+                    value={this.state.minPoolInitialLiquidityUsd ? this.state.minPoolInitialLiquidityUsd : ""}
                     onChange={(event) => {
-                      this.setStartLiquidity(event.target.value);
+                      this.setMinPoolInitialLiquidityUsd(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -530,14 +531,14 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
-                    value={this.state.endLiquidity}
+                    value={this.state.maxPoolInitialLiquidityUsd ? this.state.maxPoolInitialLiquidityUsd : ""}
                     onChange={(event) => {
-                      this.setEndLiquidity(event.target.value);
+                      this.setMaxPoolInitialLiquidityUsd(event.target.value);
                     }}
                     variant="outlined"
                     InputLabelProps={{
@@ -547,17 +548,17 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("total_liquidity_range_usd")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("total_liquidity_usd")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.startMarketCap}
+                    value={this.state.minPoolTotalLiquidityUsd ? this.state.minPoolTotalLiquidityUsd : ""}
                     onChange={(event) => {
-                      this.setStartMarketCap(event.target.value);
+                      this.setMinPoolTotalLiquidityUsd(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -566,16 +567,16 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
-                    variant="outlined"
-                    value={this.state.endMarketCap}
+                    value={this.state.maxPoolTotalLiquidityUsd ? this.state.maxPoolTotalLiquidityUsd : ""}
                     onChange={(event) => {
-                      this.setEndMarketCap(event.target.value);
+                      this.setMaxPoolTotalLiquidityUsd(event.target.value);
                     }}
+                    variant="outlined"
                     InputLabelProps={{
                       shrink: false,
                       className: "App-TextField-Filter"
@@ -583,17 +584,17 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("total_market_cap_range_usd")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("total_supply")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.startTotalSupply}
+                    value={this.state.minTokenTotalSupply ? this.state.minTokenTotalSupply : ""}
                     onChange={(event) => {
-                      this.setStartTotalSupply(event.target.value);
+                      this.setMinTokenTotalSupply(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -602,15 +603,15 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.endTotalSupply}
+                    value={this.state.maxTokenTotalSupply ? this.state.maxTokenTotalSupply : ""}
                     onChange={(event) => {
-                      this.setEndTotalSupply(event.target.value);
+                      this.setMaxTokenTotalSupply(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -619,17 +620,17 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("total_supply_range")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("total_market_cap_usd")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.startHolder}
+                    value={this.state.minTokenMarketCapUsd ? this.state.minTokenMarketCapUsd : ""}
                     onChange={(event) => {
-                      this.setStartHolder(event.target.value);
+                      this.setMinTokenMarketCapUsd(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -638,15 +639,15 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.endHolder}
+                    value={this.state.maxTokenMarketCapUsd ? this.state.maxTokenMarketCapUsd : ""}
                     onChange={(event) => {
-                      this.setEndHolder(event.target.value);
+                      this.setMaxTokenMarketCapUsd(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -655,17 +656,17 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("holder_range_k")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("token_holder")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.startVolume24H}
+                    value={this.state.minTokenTotalHolders ? this.state.minTokenTotalHolders : ""}
                     onChange={(event) => {
-                      this.setStartVolume24H(event.target.value);
+                      this.setMinTokenTotalHolders(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -674,15 +675,15 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.endVolume24H}
+                    value={this.state.maxTokenTotalHolders ? this.state.maxTokenTotalHolders : ""}
                     onChange={(event) => {
-                      this.setEndVolume24H(event.target.value);
+                      this.setMaxTokenTotalHolders(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -691,17 +692,17 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("volume_24h_range")}</span>
                 </div>
-                <div style={{ clear: "both", marginTop: 6 }}>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("total_tx")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.startTotalTx}
+                    value={this.state.minPoolTotalTxs ? this.state.minPoolTotalTxs : ""}
                     onChange={(event) => {
-                      this.setStartTotalTx(event.target.value);
+                      this.setMinPoolTotalTxs(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -710,15 +711,15 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter-NoFloat">{t("to")}</span>
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.endTotalTx}
+                    value={this.state.maxPoolTotalTxs ? this.state.maxPoolTotalTxs : ""}
                     onChange={(event) => {
-                      this.setEndTotalTx(event.target.value);
+                      this.setMaxPoolTotalTxs(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -727,21 +728,88 @@ class Filter extends React.Component {
                     InputProps={{
                       className: "App-TextField-Filter"
                     }} />
-                  <span className="App-Label-Filter">{t("total_tx_range")}</span>
+                </div>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("volume_1h")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.minVolume1H ? this.state.minVolume1H : ""}
+                    onChange={(event) => {
+                      this.setMinVolume1H(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.maxVolume1H ? this.state.maxVolume1H : ""}
+                    onChange={(event) => {
+                      this.setMaxVolume1H(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                </div>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("volume_24h")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.minVolume24H ? this.state.minVolume24H : ""}
+                    onChange={(event) => {
+                      this.setMinVolume24H(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.maxVolume24H ? this.state.maxVolume24H : ""}
+                    onChange={(event) => {
+                      this.setMaxVolume24H(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
                 </div>
               </div>
             </div>
             <div style={{ textAlign: "center", marginTop: 16, marginBottom: 16 }}>
-              <Button onClick={this.submit} style={{ width: 200, marginRight: 12 }} variant="contained">{t("apply")}</Button>
-              <Button onClick={this.clear} style={{ width: 200, marginLeft: 12 }} variant="outlined">{t("clear")}</Button>
+              <Button onClick={this.applyFilter} style={{ width: 200, marginRight: 12 }} variant="contained">{t("apply")}</Button>
+              <Button onClick={this.clearFilter} style={{ width: 200, marginLeft: 12 }} variant="outlined">{t("clear")}</Button>
             </div>
-
-
           </div>
-
         </div>
       </Box>
-
     </div>
   }
 }

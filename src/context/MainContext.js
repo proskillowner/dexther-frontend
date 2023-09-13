@@ -11,64 +11,69 @@ class MainContextProvider extends React.Component {
 	state = {
 		tableData: null,
 		config: null,
+		localConfig: null,
 	}
 
-	loadTableData = async ({ sortModel, pageModel, filterModel, chain, token, trail }, type, pool_address = null) => {
-		let url
-		const body = {
-			sort: sortModel,
-			page: pageModel,
-			filter: filterModel,
-			chain: chain,
-			token: token,
-			trail: trail,
+	loadTableData = async ({ sortModel, pageModel, filterModel, chain, token, trail, pool_address }) => {
+		const requestBody = {}
+
+		if (pool_address) {
+			requestBody.pool_address = pool_address
 		}
 
-		if (type === GET_POOL) {
-			url = `${SERVER_URL}${API_GET_POOL}`
-		} else if (type === GET_POOL_LOG) {
-			url = `${SERVER_URL}${API_GET_POOL_LOG}`
-			body.pool_address = pool_address
+		if (filterModel) {
+			requestBody.where = filterModel
 		}
 
-		const response = await fetch(url, {
+		if (sortModel && sortModel.length) {
+			requestBody.order = {
+				order_field: sortModel[0].field,
+				order_direction: sortModel[0].sort,
+			}
+		}
+
+		if (pageModel) {
+			requestBody.limit = {
+				limit_offset: pageModel.page * pageModel.pageSize,
+				limit_count: pageModel.pageSize,
+			}
+		}
+
+		let response = await fetch(`${SERVER_URL}${API_GET_POOL_LOG}`, {
 			method: 'POST',
-			body: JSON.stringify(body),
+			body: JSON.stringify(requestBody),
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8',
 			},
 		})
 
-		let data = await response.json()
-		let totalCount = 0
+		response = await response.json()
 
-		if (type === GET_POOL) {
-			totalCount = data.pool_count
-			data = data.pool_data
-		} else if (type === GET_POOL_LOG) {
-			totalCount = data.pool_log_count
-			data = data.pool_log_data
-		}
+		const totalCount = response.pool_log_count
+		const poolLogData = response.pool_log_data
 
 		const rowData = []
 
-		data.map((row, index) => {
+		poolLogData.map((poolLog, index) => {
 			rowData.push({
-				id: pageModel.page_number * pageModel.page_size + index + 1,
-				hist_token_address: row.token_address,
-				hist_name: row.token_symbol,
-				hist_pair_address: row.pool_address,
-				hist_log_time: row.log_time,
-				hist_creation: row.pool_creation_time,
-				hist_price: row.token_price * row.coin_price,
-				hist_pool_amount: 0,
-				hist_total_liquidity: row.total_liquidity * row.coin_price * 2,
-				hist_holders: 0,
-				hist_total_tx: row.pool_total_txs,
-				hist_market_cap: parseInt(row.token_total_supply) / 10 ** row.token_decimals * row.token_price * row.coin_price,
-				hist_supply: parseInt(row.token_total_supply) / 10 ** row.token_decimals,
-				hist_contract_verified: row.token_contract_verified,
-				hist_contract_renounced: row.token_contract_renounced,
+				id: pageModel.page * pageModel.pageSize + index + 1,
+				token_symbol: `${poolLog.token_symbol} / ${poolLog.base_token_symbol}`,
+				pool_index: poolLog.pool_index,
+				pool_address: poolLog.pool_address,
+				token_address: poolLog.token_address,
+				pool_creation_time: poolLog.pool_creation_time,
+				log_time: poolLog.log_time,
+				token_price_usd: poolLog.token_price_usd,
+				pool_initial_liquidity_usd: poolLog.pool_initial_liquidity_usd,
+				pool_total_liquidity_usd: poolLog.pool_total_liquidity_usd,
+				token_total_holders: poolLog.token_total_holders,
+				pool_total_txs: poolLog.pool_total_txs,
+				token_total_supply: poolLog.token_total_supply,
+				token_total_market_cap_usd: poolLog.token_total_market_cap_usd,
+				volume_1h: poolLog.pool_volume_1h,
+				volume_24h: poolLog.pool_volume_24h,
+				token_contract_verified: poolLog.token_contract_verified,
+				token_contract_renounced: poolLog.token_contract_renounced,
 			})
 		})
 
@@ -97,7 +102,7 @@ class MainContextProvider extends React.Component {
 			config[item.config_key] = item.config_value
 		}
 
-		this.setState({ config })
+		this.setState({ config, loadConfig: config })
 
 		return config
 	}

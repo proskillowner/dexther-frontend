@@ -51,22 +51,15 @@
   font-size: 12px !important;
 }
 
-.App-Label-Filter {
+.App-Label-Filter-Block {
+  display: inline-block;
   color: white !important;
   font-size: 12px !important;
-  float: left;
   width: 150px;
   vertical-align: middle !important;
 }
 
-.App-Label-Filter-Table {
-  color: white !important;
-  font-size: 12px !important;
-  width: 170px;
-  vertical-align: middle !important;
-}
-
-.App-Label-Filter-NoFloat {
+.App-Label-Filter-Inline {
   color: white !important;
   font-size: 12px !important;
   margin-left: 10px;

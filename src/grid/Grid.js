@@ -53,8 +53,8 @@ const formatDecimal = (value) => {
   return s
 }
 
-const formatDecimaOri = (value) => {
-  let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 12 });
+const formatCurrency = (value, maximumFractionDigits) => {
+  let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits });
   return value ? nf.format(value) : "-";
 }
 
@@ -86,623 +86,458 @@ const formatPct = (value) => {
   return value ? (nf.format(value * 100) + "%") : "0%";
 }
 
-const columns = [
-  {
-    field: 'id',
-    renderHeader: (params) => (
-      <strong>
-        {'NO'}
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    headerAlign: 'right',
-    align: "right",
-    width: 40,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    hideable: false,
-    sortable: false,
-    renderCell: (params) => (
-      <div>
-        {params.value}
-      </div>
-    ),
-  },
-
-  {
-    field: 'hist_chain',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_chain")}
-        <span id="arrowChainDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowChainUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 120,
-    hideable: false,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => (
-      <div>
-        Ethereum
-      </div>
-    ),
-  },
-  {
-    field: 'hist_name',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_name")}
-        <span id="arrowNameDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowNameUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 150,
-    headerAlign: 'left',
-    align: "left",
-    disableColumnMenu: true,
-    hideable: false,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => (
-      <div>
-        <div onClick={() => history(params)} className="App-link"><u>{/*params.value.replace("/", " / ")*/params.value + ' / WETH'}</u></div>
-        <div style={{ marginTop: 4 }}>
-          <img src={cgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_verified == 1 ? 'inline' : 'none' }} />
-          <img src={rgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_renounced == 1 ? 'inline' : 'none' }} />
-          {/* <img src={honeypot} style={{ marginLeft: params.row.hist_contract_verified == 1 || params.row.hist_contract_verified == 1 ? 6 : 0, width: 16, height: 16, display: params.row.hist_honey_pot == 1 ? 'inline' : 'none' }} /> */}
-        </div>
-        <div style={{ marginTop: 4, display: params.row.hist_buy_tax != null && params.row.hist_sell_tax != null ? "inline" : "none" }}>
-          <span>BT: {formatPct(params.row.hist_buy_tax)}</span>
-          &nbsp;&nbsp;
-          <span>ST: {formatPct(params.row.hist_sell_tax)}</span>
-        </div>
-      </div>
-    ),
-
-  },
-  {
-    field: 'hist_token_address',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_token_address")}
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 200,
-    disableColumnMenu: true,
-    filterable: false,
-    sortable: false,
-    hideSortIcons: true,
-    renderCell: (params) => (
-      <div>
-        {params.value.substring(0, 15)}...
-        <CopyAll onClick={() => copy(params)}
-          sx={{ width: 16, height: 16, cursor: "pointer" }}
-          aria-label="dclose"
-        >
-        </CopyAll>
-        <div>
-          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
-          <a href="#" onClick={() => tokensniffer(params.value)} className="App-link" style={{ marginLeft: 5 }} target="_blank">TOKENSNIFFER</a>
-        </div>
-      </div>
-    ),
-  },
-  {
-    field: 'hist_pair_address',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_pair_address")}
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 200,
-    disableColumnMenu: true,
-    sortable: false,
-    filterable: false,
-    hideSortIcons: true,
-    renderCell: (params) => (
-      <div>
-        {params.value.substring(0, 15)}...
-        <CopyAll onClick={() => copy(params)}
-          sx={{ width: 16, height: 16, cursor: "pointer" }}
-          aria-label="dclose"
-        >
-        </CopyAll>
-        <div>
-          <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
-          <a href="#" onClick={() => dextools(params.value)} className="App-link" style={{ marginLeft: 5 }} target="_blank">DEXTOOLS</a>
-        </div>
-      </div>
-    ),
-
-  },
-  {
-    headerAlign: 'center',
-    field: 'hist_creation',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_creation_time")}
-        <span id="arrowCreationDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowCreationUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    filterable: false,
-    headerClassName: 'super-app-theme--header',
-    width: 150,
-    align: "center",
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['desc', 'asc'],
-    renderCell: (params) => {
-      var mydate = new Date(params.value * 1000);
-      return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
-    }
-  },
-  {
-    type: 'number',
-    field: 'hist_price',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_price")}
-        <span id="arrowPriceDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowPriceUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 120,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => (
-      <div style={{ textAlign: "right" }}>
-        <div>
-          <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatDecimaOri(params.value)}</a>
-          {/* {params.value ? `${params.value} ETH` : '-'} */}
-        </div>
-      </div>
-    )
-  },
-  {
-    type: 'number',
-    field: 'hist_pool_amount',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_pool_amount")}
-        <span id="arrowLiquidityDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowLiquidityUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 140,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 6 });
-      return params.value ? nf.format(params.value) : "-";
-      // return params.value ? `${parseInt(params.value * 100) / 100} ETH` : '-'
-    }
-
-  },
-  {
-    type: 'number',
-    field: 'hist_total_liquidity',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_total_liquidity")}
-        <span id="arrowLiquidityDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowLiquidityUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 140,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      const nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-      return parseInt(params.value) ? nf.format(params.value) : "-";
-      // return params.value ? `${parseInt(params.value * 100) / 100} ETH` : '-'
-    }
-
-  },
-  {
-    type: 'number',
-    field: 'hist_holders',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_holders")}
-        <span id="arrowHoldersDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowHoldersUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 100,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      let nf = new Intl.NumberFormat('en-US');
-      return params.value ? (nf.format(params.value)) : "-";
-    }
-
-  },
-  {
-    type: 'number',
-    field: 'hist_total_tx',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_total_tx")}
-        <span id="arrowTxDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowTxUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 100,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      let nf = new Intl.NumberFormat('en-US');
-      return params.value ? nf.format(params.value) : "-";
-    }
-
-  },
-  {
-    type: 'number',
-    field: 'hist_volume_24h',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_volume_24h")}
-        <span id="arrowVolume24HDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowVolume24HUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 110,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      return params.value ? formatMoney(params.value) : "-";
-    }
-
-  },
-  {
-    field: 'hist_market_cap',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_total_market_cap")}
-        <span id="arrowMarketCapDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowMarketCapUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 180,
-    type: 'number',
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      return params.value ? formatMoney(params.value) : "-";
-    }
-  },
-  {
-    type: 'number',
-    field: 'hist_supply',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_total_supply")}
-        <span id="arrowSupplyDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowSupplyUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 140,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      return params.value ? formatDecimal(params.value) : "-";
-    }
-
-  },/*
-      {
-        type: 'number',
-        field: 'hist_buy_24h',
-        renderHeader: (params) => (
-          <strong>
-            {i18next.t("column_buy_24h")}
-            <span id="arrowBuy24HDown" style={{display: "none"}}>
-              <ArrowDown style={{verticalAlign: "middle"}}></ArrowDown>
-            </span>
-            <span id="arrowBuy24HUp" style={{display: "none"}}>
-              <ArrowUp style={{verticalAlign: "middle"}}></ArrowUp>
-            </span>
-          </strong>
-        ),
-        headerClassName: 'super-app-theme--header',
-        width: 100,
-        disableColumnMenu: true,
-        hideSortIcons: true,
-        sortingOrder: ['asc', 'desc'],
-        renderCell: (params) => {
-            let nf = new Intl.NumberFormat('en-US');
-            return params.value ? nf.format(params.value) : "-";
-        }        
-
-      },
-      {
-        type: 'number',
-        field: 'hist_sell_24h',
-        renderHeader: (params) => (
-          <strong>
-            {i18next.t("column_sell_24h")}
-            <span id="arrowSell24HDown" style={{display: "none"}}>
-              <ArrowDown style={{verticalAlign: "middle"}}></ArrowDown>
-            </span>
-            <span id="arrowSell24HUp" style={{display: "none"}}>
-              <ArrowUp style={{verticalAlign: "middle"}}></ArrowUp>
-            </span>
-          </strong>
-        ),
-        headerClassName: 'super-app-theme--header',
-        width: 100,
-        disableColumnMenu: true,
-        hideSortIcons: true,
-        sortingOrder: ['asc', 'desc'],
-        renderCell: (params) => {
-            let nf = new Intl.NumberFormat('en-US');
-            return params.value ? nf.format(params.value) : "-";
-        }        
-
-      },
-      {
-        type: 'number',
-        field: 'hist_swap_24h',
-        renderHeader: (params) => (
-          <strong>
-            {i18next.t("column_swap_24h")}
-            <span id="arrowSwap24HDown" style={{display: "none"}}>
-              <ArrowDown style={{verticalAlign: "middle"}}></ArrowDown>
-            </span>
-            <span id="arrowSwap24HUp" style={{display: "none"}}>
-              <ArrowUp style={{verticalAlign: "middle"}}></ArrowUp>
-            </span>
-          </strong>
-        ),
-        headerClassName: 'super-app-theme--header',
-        width: 100,
-        disableColumnMenu: true,
-        hideSortIcons: true,
-        sortingOrder: ['asc', 'desc'],
-        renderCell: (params) => {
-            let nf = new Intl.NumberFormat('en-US');
-            return params.value ? nf.format(params.value) : "-";
-        }        
-
-      },*/
-  {
-    type: 'number',
-    field: 'hist_dextscore',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_dexscore")}
-        <span id="arrowDextScoreDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowDextScoreUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 120,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      let nf = new Intl.NumberFormat('en-US');
-      return params.value ? nf.format(params.value) : "-";
-    }
-
-  },
-  {
-    type: 'number',
-    field: 'hist_volume_1h',
-    renderHeader: (params) => (
-      <strong>
-        {i18next.t("column_volume_1h")}
-        <span id="arrowVolume1HDown" style={{ display: "none" }}>
-          <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-        </span>
-        <span id="arrowVolume1HUp" style={{ display: "none" }}>
-          <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-        </span>
-      </strong>
-    ),
-    headerClassName: 'super-app-theme--header',
-    width: 120,
-    disableColumnMenu: true,
-    hideSortIcons: true,
-    sortingOrder: ['asc', 'desc'],
-    renderCell: (params) => {
-      return params.value ? formatMoney(params.value) : "-";
-    }
-
-  },/*
-      {
-        type: 'number',
-        field: 'hist_buy_1h',
-        hide: true,
-        renderHeader: (params) => (
-          <strong>
-            {i18next.t("column_buy_1h")}
-            <span id="arrowBuy1HDown" style={{display: "none"}}>
-              <ArrowDown style={{verticalAlign: "middle"}}></ArrowDown>
-            </span>
-            <span id="arrowBuy1HUp" style={{display: "none"}}>
-              <ArrowUp style={{verticalAlign: "middle"}}></ArrowUp>
-            </span>
-          </strong>
-        ),
-        headerClassName: 'super-app-theme--header',
-        width: 100,
-        disableColumnMenu: true,
-        hideSortIcons: true,
-        sortingOrder: ['asc', 'desc'],
-        renderCell: (params) => {
-            let nf = new Intl.NumberFormat('en-US');
-            return params.value ? nf.format(params.value) : "-";
-        }        
-
-      },
-      {
-        type: 'number',
-        field: 'hist_sell_1h',
-        renderHeader: (params) => (
-          <strong>
-            {i18next.t("column_sell_1h")}
-            <span id="arrowSell1HDown" style={{display: "none"}}>
-              <ArrowDown style={{verticalAlign: "middle"}}></ArrowDown>
-            </span>
-            <span id="arrowSell1HUp" style={{display: "none"}}>
-              <ArrowUp style={{verticalAlign: "middle"}}></ArrowUp>
-            </span>
-          </strong>
-        ),
-        headerClassName: 'super-app-theme--header',
-        width: 100,
-        disableColumnMenu: true,
-        hideSortIcons: true,
-        sortingOrder: ['asc', 'desc'],
-        renderCell: (params) => {
-            let nf = new Intl.NumberFormat('en-US');
-            return params.value ? nf.format(params.value) : "-";
-        }        
-
-      },
-      {
-        type: 'number',
-        field: 'hist_swap_1h',
-        renderHeader: (params) => (
-          <strong>
-            {i18next.t("column_swap_1h")}
-            <span id="arrowSwap1HDown" style={{display: "none"}}>
-              <ArrowDown style={{verticalAlign: "middle"}}></ArrowDown>
-            </span>
-            <span id="arrowSwap1HUp" style={{display: "none"}}>
-              <ArrowUp style={{verticalAlign: "middle"}}></ArrowUp>
-            </span>
-          </strong>
-        ),
-        headerClassName: 'super-app-theme--header',
-        width: 100,
-        disableColumnMenu: true,
-        hideSortIcons: true,
-        sortingOrder: ['asc', 'desc'],
-        renderCell: (params) => {
-            let nf = new Intl.NumberFormat('en-US');
-            return params.value ? nf.format(params.value) : "-";
-        }        
-
-      }*/
-
-];
-
-const historyColumns = []
-
-for (var i = 0; i < columns.length; i++) {
-  var column = columns[i]
-
-  if (column.field == "hist_chain" || column.field == "hist_name" || column.field == "hist_token_address"
-    || column.field == "hist_pair_address" || column.field == "hist_creation") {
-    continue;
-  }
-
-  historyColumns.push(columns[i])
-
-  if (column.field == "idx") {
-    historyColumns.push({
-      headerAlign: 'center',
-      field: 'hist_log_time',
-      renderHeader: (params) => (
-        <strong>
-          {i18next.t("column_history_time")}
-          <span id="arrowCreationDown" style={{ display: "none" }}>
-            <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-          </span>
-          <span id="arrowCreationUp" style={{ display: "none" }}>
-            <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-          </span>
-        </strong>
-      ),
-      filterable: false,
-      headerClassName: 'super-app-theme--header',
-      width: 150,
-      align: "center",
-      disableColumnMenu: true,
-      hideSortIcons: true,
-      sortingOrder: ['desc', 'asc'],
-      renderCell: (params) => {
-        var mydate = new Date(params.value * 1000);
-        return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
-      }
-    })
-  }
-
+const COLUMN_OPTIONS = {
+  headerClassName: 'super-app-theme--header',
+  filterable: true,
+  hideable: true,
+  sortable: true,
+  sortingOrder: ['asc', 'desc'],
+  disableColumnMenu: false,
 }
 
+const COLUMN_ID = {
+  ...COLUMN_OPTIONS,
+  field: 'id',
+  renderHeader: (params) => (
+    <strong>
+      {'NO'}
+    </strong>
+  ),
+  width: 50,
+  headerAlign: 'right',
+  align: "right",
+  filterable: false,
+  hideable: false,
+  sortable: false,
+  renderCell: (params) => (
+    <div>
+      {params.value}
+    </div>
+  ),
+}
 
+const COLUMN_CHAIN_NAME = {
+  ...COLUMN_OPTIONS,
+  field: 'chain_name',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_chain")}
+    </strong>
+  ),
+  width: 100,
+  sortable: false,
+  renderCell: (params) => (
+    <div>
+      Ethereum
+    </div>
+  ),
+}
+
+const COLUMN_PROTOCOL = {
+  ...COLUMN_OPTIONS,
+  field: 'token_symbol',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_name_protocol")}
+      <span id="arrowNameDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowNameUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => (
+    <div>
+      <div onClick={() => history(params)} className="App-link"><u>{params.value}</u></div>
+      <div style={{ marginTop: 4 }}>
+        <img src={cgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_verified == 1 ? 'inline' : 'none' }} />
+        <img src={rgreen} style={{ width: 16, height: 16, marginLeft: 5, display: params.row.hist_contract_renounced == 1 ? 'inline' : 'none' }} />
+        {/* <img src={honeypot} style={{ marginLeft: params.row.hist_contract_verified == 1 || params.row.hist_contract_verified == 1 ? 6 : 0, width: 16, height: 16, display: params.row.hist_honey_pot == 1 ? 'inline' : 'none' }} /> */}
+      </div>
+      <div style={{ marginTop: 4, display: params.row.hist_buy_tax != null && params.row.hist_sell_tax != null ? "inline" : "none" }}>
+        <span>BT: {formatPct(params.row.hist_buy_tax)}</span>
+        &nbsp;&nbsp;
+        <span>ST: {formatPct(params.row.hist_sell_tax)}</span>
+      </div>
+    </div>
+  ),
+}
+
+const COLUMN_POOL_INDEX = {
+  ...COLUMN_OPTIONS,
+  field: 'pool_index',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_pool_index")}
+      <span id="arrowNameDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowNameUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 100,
+  headerAlign: 'right',
+  align: "right",
+  renderCell: (params) => (
+    <div>
+      {params.value}
+    </div>
+  ),
+}
+
+const COLUMN_TOKEN_ADDRESS = {
+  ...COLUMN_OPTIONS,
+  field: 'token_address',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_token_address")}
+    </strong>
+  ),
+  width: 200,
+  sortable: false,
+  renderCell: (params) => (
+    <div>
+      {params.value.substring(0, 15)}...
+      <CopyAll onClick={() => copy(params)}
+        sx={{ width: 16, height: 16, cursor: "pointer" }}
+        aria-label="dclose"
+      >
+      </CopyAll>
+      <div>
+        <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
+        <a href="#" onClick={() => tokensniffer(params.value)} className="App-link" style={{ marginLeft: 5 }} target="_blank">TOKENSNIFFER</a>
+      </div>
+    </div>
+  ),
+}
+
+const COLUMN_POOL_ADDRESS = {
+  ...COLUMN_OPTIONS,
+  field: 'pool_address',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_pool_address")}
+    </strong>
+  ),
+  width: 200,
+  sortable: false,
+  renderCell: (params) => (
+    <div>
+      {params.value.substring(0, 15)}...
+      <CopyAll onClick={() => copy(params)}
+        sx={{ width: 16, height: 16, cursor: "pointer" }}
+        aria-label="dclose"
+      >
+      </CopyAll>
+      <div>
+        <a href="#" onClick={() => etherscan(params.value)} className="App-link" style={{ marginRight: 5 }} target="_blank">ETHERSCAN</a>
+        <a href="#" onClick={() => dextools(params)} className="App-link" style={{ marginLeft: 5 }} target="_blank">DEXTOOLS</a>
+      </div>
+    </div>
+  ),
+}
+
+const COLUMN_POOL_CREATION_TIME = {
+  ...COLUMN_OPTIONS,
+  field: 'pool_creation_time',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_creation_time")}
+      <span id="arrowCreationDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowCreationUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  headerAlign: 'center',
+  align: "center",
+  renderCell: (params) => {
+    var mydate = new Date(params.value * 1000);
+    return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
+  }
+}
+
+const COLUMN_LOG_TIME = {
+  ...COLUMN_OPTIONS,
+  field: 'log_time',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_history_time")}
+      <span id="arrowCreationDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowCreationUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  headerAlign: 'center',
+  align: "center",
+  renderCell: (params) => {
+    var mydate = new Date(params.value * 1000);
+    return mydate.toLocaleDateString("en-US") + " " + mydate.toLocaleTimeString("en-US")
+  }
+}
+
+const COLUMN_TOKEN_PRICE = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'token_price_usd',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_price")}
+      <span id="arrowPriceDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowPriceUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => (
+    <div style={{ textAlign: "right" }}>
+      <div>
+        <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatCurrency(params.row.pool_total_liquidity_usd > 1 ? params.value : 0, 12)}</a>
+      </div>
+    </div>
+  )
+}
+
+const COLUMN_POOL_AMOUNT = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'pool_initial_liquidity_usd',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_pool_amount")}
+      <span id="arrowLiquidityDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowLiquidityUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => {
+    return formatCurrency(params.value > 1 ? params.value : 0, 6);
+  }
+}
+
+const COLUMN_POOL_TOTAL_LIQUIDITY = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'pool_total_liquidity_usd',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_total_liquidity")}
+      <span id="arrowLiquidityDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowLiquidityUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => {
+    return formatCurrency(params.value > 1 ? params.value : 0, 0);
+  }
+}
+
+const COLUMN_POOL_TOTAL_TXS = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'pool_total_txs',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_total_tx")}
+      <span id="arrowTxDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowTxUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 100,
+  renderCell: (params) => {
+    let nf = new Intl.NumberFormat('en-US');
+    return params.value ? nf.format(params.value) : "-";
+  }
+}
+
+const COLUMN_TOKEN_TOTAL_HOLDERS = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'token_total_holders',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_holders")}
+      <span id="arrowHoldersDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowHoldersUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 100,
+  renderCell: (params) => {
+    let nf = new Intl.NumberFormat('en-US');
+    return params.value ? (nf.format(params.value)) : "-";
+  }
+}
+
+const COLUMN_TOKEN_TOTAL_SUPPLY = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'token_total_supply',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_total_supply")}
+      <span id="arrowSupplyDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowSupplyUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => {
+    return params.value ? formatDecimal(params.value) : "-";
+  }
+}
+
+const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
+  ...COLUMN_OPTIONS,
+  field: 'token_total_market_cap_usd',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_total_market_cap")}
+      <span id="arrowMarketCapDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowMarketCapUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => {
+    return params.value ? formatMoney(params.value) : "-";
+  }
+}
+
+const COLUMN_VOLUME_1H = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'volume_1h',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_volume_1h")}
+      <span id="arrowVolume1HDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowVolume1HUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => {
+    return params.value ? formatMoney(params.value) : "-";
+  }
+}
+
+const COLUMN_VOLUME_24H = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'volume_24h',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_volume_24h")}
+      <span id="arrowVolume24HDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowVolume24HUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 150,
+  renderCell: (params) => {
+    return params.value ? formatMoney(params.value) : "-";
+  }
+}
+
+const COLUMN_DEXTSCORE = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'dextscore',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_dexscore")}
+      <span id="arrowDextScoreDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowDextScoreUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 100,
+  renderCell: (params) => {
+    let nf = new Intl.NumberFormat('en-US');
+    return params.value ? nf.format(params.value) : "-";
+  }
+}
+
+const pool_columns = [
+  COLUMN_ID,
+  COLUMN_CHAIN_NAME,
+  COLUMN_PROTOCOL,
+  COLUMN_POOL_INDEX,
+  COLUMN_TOKEN_ADDRESS,
+  COLUMN_POOL_ADDRESS,
+  COLUMN_POOL_CREATION_TIME,
+  COLUMN_TOKEN_PRICE,
+  COLUMN_POOL_AMOUNT,
+  COLUMN_POOL_TOTAL_LIQUIDITY,
+  COLUMN_POOL_TOTAL_TXS,
+  COLUMN_TOKEN_TOTAL_HOLDERS,
+  COLUMN_TOKEN_TOTAL_SUPPLY,
+  COLUMN_TOKEN_TOTAL_MARKET_CAP,
+  COLUMN_VOLUME_1H,
+  COLUMN_VOLUME_24H,
+  COLUMN_DEXTSCORE,
+]
+
+const pool_log_columns = [
+  COLUMN_ID,
+  COLUMN_CHAIN_NAME,
+  COLUMN_LOG_TIME,
+  COLUMN_TOKEN_PRICE,
+  COLUMN_POOL_AMOUNT,
+  COLUMN_POOL_TOTAL_LIQUIDITY,
+  COLUMN_POOL_TOTAL_TXS,
+  COLUMN_TOKEN_TOTAL_HOLDERS,
+  COLUMN_TOKEN_TOTAL_SUPPLY,
+  COLUMN_TOKEN_TOTAL_MARKET_CAP,
+  COLUMN_VOLUME_1H,
+  COLUMN_VOLUME_24H,
+  COLUMN_DEXTSCORE,
+]
 
 const history = (params) => {
   window.gridComponent.history(params)
@@ -881,29 +716,27 @@ class Grid extends React.Component {
   }
 
   history(params) {
-    this.props.navigate("/history?token=" + params.row.hist_token_address + "&pair=" + params.row.hist_pair_address, { replace: false });
+    this.props.navigate("/history?token=" + params.row.token_address + "&pair=" + params.row.pool_address, { replace: false });
   }
 
   etherscan(address) {
     window.open("https://etherscan.io/address/" + address, '_blank', 'noopener,noreferrer')
   }
 
-  tokensniffer(token_address) {
-    window.open("https://tokensniffer.com/token/eth/" + token_address, '_blank', 'noopener,noreferrer')
+  tokensniffer(params) {
+    window.open("https://tokensniffer.com/token/eth/" + params.row.token_address, '_blank', 'noopener,noreferrer')
   }
 
-  dextools(pair_address) {
-    window.open("https://www.dextools.io/app/en/ether/pair-explorer/" + pair_address, '_blank', 'noopener,noreferrer')
+  dextools(params) {
+    window.open("https://www.dextools.io/app/en/ether/pair-explorer/" + params.row.pool_address, '_blank', 'noopener,noreferrer')
   }
 
   onCellClick(params) {
-    if (params.field == "hist_token_address" || params.field == "hist_pair_address") {
-      navigator.clipboard.writeText(params.value)
-      this.setState({
-        alertCopiedOpen: "block"
-      })
-      setTimeout(this.closeAlertCopiedOpen, 1000)
-    }
+    navigator.clipboard.writeText(params.value)
+    this.setState({
+      alertCopiedOpen: "block"
+    })
+    setTimeout(this.closeAlertCopiedOpen, 1000)
   }
 
   closeAlertCopiedOpen() {
@@ -959,28 +792,24 @@ class Grid extends React.Component {
     } else {
       if (this.props.hist === "true") {
         tableData = await this.context.loadTableData({
-          sortModel: {},
-          pageModel: {
-            page_number: pageModel.page,
-            page_size: pageModel.pageSize,
-          },
-          filterModel: {},
-          chain: 0,
+          chain_id: 1,
+          pool_address: this.props.pair,
+          filterModel: this.state.filterModel,
+          sortModel,
+          pageModel,
           token: '',
           trail: '',
-        }, GET_POOL_LOG, this.props.pair)
+        })
       } else {
         tableData = await this.context.loadTableData({
-          sortModel: {},
-          pageModel: {
-            page_number: pageModel.page,
-            page_size: pageModel.pageSize,
-          },
-          filterModel: {},
-          chain: 0,
+          chain_id: 1,
+          pool_address: null,
+          filterModel: this.state.filterModel,
+          sortModel,
+          pageModel,
           token: '',
           trail: '',
-        }, GET_POOL)
+        })
       }
     }
 
@@ -1253,7 +1082,7 @@ class Grid extends React.Component {
             }
           })}
           rows={this.state.rows}
-          columns={this.props.hist == "true" ? historyColumns : columns}
+          columns={this.props.hist == "true" ? pool_log_columns : pool_columns}
           initialState={{
             pagination: {
               paginationModel: {

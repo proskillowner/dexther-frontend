@@ -305,6 +305,7 @@ class DataSettings extends React.Component {
       <div >
         <div style={{ marginLeft: 16, marginRight: 16 }}>
           <div>
+            <span className="App-Label-Filter-Block">{t("chains")}</span>
             <CssSelect
               multiple
               value={selectedChains}
@@ -322,11 +323,11 @@ class DataSettings extends React.Component {
                 </MenuItem>
               ))}
             </CssSelect>
-            <span className="App-Label-Filter">{t("chains")}</span>
           </div>
 
           <div style={{ columnCount: 2 }}>
             <div style={{ clear: "both", marginTop: 6 }}>
+              <span className="App-Label-Filter-Block">{t("sync_interval")}</span>
               <CssTextField
                 type="number"
                 style={{ width: 125 }}
@@ -343,10 +344,10 @@ class DataSettings extends React.Component {
                 InputProps={{
                   className: "App-TextField-Filter"
                 }} />
-              <span style={{ marginTop: 4 }} className="App-Label-Filter-NoFloat">{t("minute")}</span>
-              <span className="App-Label-Filter">{t("sync_interval")}</span>
+              <span style={{ marginTop: 4 }} className="App-Label-Filter-Inline">{t("minute")}</span>
             </div>
             <div style={{ clear: "both", marginTop: 6 }}>
+              <span className="App-Label-Filter-Block">{t("scan_interval")}</span>
               <CssTextField
                 type="number"
                 style={{ width: 125 }}
@@ -363,8 +364,7 @@ class DataSettings extends React.Component {
                 InputProps={{
                   className: "App-TextField-Filter"
                 }} />
-              <span style={{ marginTop: 4 }} className="App-Label-Filter-NoFloat">{t("minute")}</span>
-              <span className="App-Label-Filter">{t("scan_interval")}</span>
+              <span style={{ marginTop: 4 }} className="App-Label-Filter-Inline">{t("minute")}</span>
             </div>
           </div>
         </div>

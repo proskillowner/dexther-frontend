@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.a585d447.css",
-    "main.js": "/static/js/main.d29c24a5.js",
+    "main.css": "/static/css/main.1576fdc8.css",
+    "main.js": "/static/js/main.e2efc83f.js",
     "static/js/787.6ce6ffd1.chunk.js": "/static/js/787.6ce6ffd1.chunk.js",
     "static/media/honeypot.png": "/static/media/honeypot.392803faa69396559831.png",
     "static/media/logo.jpeg": "/static/media/logo.d2345265f0bce2a17d03.jpeg",
-    "static/media/r_green.svg": "/static/media/r_green.09d496170d4f93740704873f156fef46.svg",
-    "static/media/c_green.svg": "/static/media/c_green.58b17492a3722c4dea0c9acc0b341b49.svg",
+    "static/media/r_green.svg": "/static/media/r_green.7b28f35542ae8eb256ed4eeea0b64e30.svg",
+    "static/media/c_green.svg": "/static/media/c_green.5586f961a2ea24fe62455653fb7b9e55.svg",
     "index.html": "/index.html",
-    "main.a585d447.css.map": "/static/css/main.a585d447.css.map",
-    "main.d29c24a5.js.map": "/static/js/main.d29c24a5.js.map",
+    "main.1576fdc8.css.map": "/static/css/main.1576fdc8.css.map",
+    "main.e2efc83f.js.map": "/static/js/main.e2efc83f.js.map",
     "787.6ce6ffd1.chunk.js.map": "/static/js/787.6ce6ffd1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a585d447.css",
-    "static/js/main.d29c24a5.js"
+    "static/css/main.1576fdc8.css",
+    "static/js/main.e2efc83f.js"
   ]
 }
