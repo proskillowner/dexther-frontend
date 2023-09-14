@@ -139,10 +139,10 @@ const COLUMN_PROTOCOL = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_name_protocol")}
-      <span id="arrowNameDown" style={{ display: "none" }}>
+      <span id="arrowTokenSymbolDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowNameUp" style={{ display: "none" }}>
+      <span id="arrowTokenSymbolUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -171,10 +171,10 @@ const COLUMN_POOL_INDEX = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_pool_index")}
-      <span id="arrowNameDown" style={{ display: "none" }}>
+      <span id="arrowPoolIndexDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowNameUp" style={{ display: "none" }}>
+      <span id="arrowPoolIndexUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -247,10 +247,10 @@ const COLUMN_POOL_CREATION_TIME = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_creation_time")}
-      <span id="arrowCreationDown" style={{ display: "none" }}>
+      <span id="arrowPoolCreationTimeDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowCreationUp" style={{ display: "none" }}>
+      <span id="arrowPoolCreationTimeUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -270,10 +270,10 @@ const COLUMN_LOG_TIME = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_history_time")}
-      <span id="arrowCreationDown" style={{ display: "none" }}>
+      <span id="arrowLogTimeDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowCreationUp" style={{ display: "none" }}>
+      <span id="arrowLogTimeUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -294,10 +294,10 @@ const COLUMN_TOKEN_PRICE = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_price")}
-      <span id="arrowPriceDown" style={{ display: "none" }}>
+      <span id="arrowTokenPriceDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowPriceUp" style={{ display: "none" }}>
+      <span id="arrowTokenPriceUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -319,10 +319,10 @@ const COLUMN_POOL_AMOUNT = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_pool_amount")}
-      <span id="arrowLiquidityDown" style={{ display: "none" }}>
+      <span id="arrowPoolInitialLiquidityDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowLiquidityUp" style={{ display: "none" }}>
+      <span id="arrowPoolInitialLiquidityUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -340,10 +340,10 @@ const COLUMN_POOL_TOTAL_LIQUIDITY = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_total_liquidity")}
-      <span id="arrowLiquidityDown" style={{ display: "none" }}>
+      <span id="arrowPoolTotalLiquidityDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowLiquidityUp" style={{ display: "none" }}>
+      <span id="arrowPoolTotalLiquidityUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -360,11 +360,11 @@ const COLUMN_POOL_TOTAL_TXS = {
   field: 'pool_total_txs',
   renderHeader: (params) => (
     <strong>
-      {i18next.t("column_total_tx")}
-      <span id="arrowTxDown" style={{ display: "none" }}>
+      {i18next.t("column_total_txs")}
+      <span id="arrowPoolTotalTxsDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowTxUp" style={{ display: "none" }}>
+      <span id="arrowPoolTotalTxsUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -383,10 +383,10 @@ const COLUMN_TOKEN_TOTAL_HOLDERS = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_holders")}
-      <span id="arrowHoldersDown" style={{ display: "none" }}>
+      <span id="arrowTokenTotalHoldersDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowHoldersUp" style={{ display: "none" }}>
+      <span id="arrowTokenTotalHoldersUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -405,10 +405,10 @@ const COLUMN_TOKEN_TOTAL_SUPPLY = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_total_supply")}
-      <span id="arrowSupplyDown" style={{ display: "none" }}>
+      <span id="arrowTokenTotalSupplyDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowSupplyUp" style={{ display: "none" }}>
+      <span id="arrowTokenTotalSupplyUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -425,10 +425,10 @@ const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_total_market_cap")}
-      <span id="arrowMarketCapDown" style={{ display: "none" }}>
+      <span id="arrowTokenTotalMarketCapDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowMarketCapUp" style={{ display: "none" }}>
+      <span id="arrowTokenTotalMarketCapUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
@@ -620,7 +620,7 @@ class Grid extends React.Component {
     this.state = {
       rows: [],
       rowCount: 0,
-      sortField: this.props.hist == "true" ? 'hist_created' : 'hist_creation',
+      sortField: this.props.hist != "true" ? 'pool_creation_time' : 'log_time',
       sortDir: "desc",
       page: 0,
       pageSize: 50,
@@ -787,6 +787,13 @@ class Grid extends React.Component {
       loading: true
     })
 
+    if (sortModel == null) {
+      sortModel = {
+        sortField: this.state.sortField,
+        sortDir: this.state.sortDir,
+      }
+    }
+
     if (pageModel == null) {
       pageModel = new Object()
       pageModel.page = 0
@@ -830,165 +837,141 @@ class Grid extends React.Component {
         loading: false,
       }
     )
+
+    // this.setSortIcon(sortModel)        
+    // this.props.updateData(data)
   }
-
+/*
   setSortIcon(data) {
-    // chain
-
-    var arrowChainDown = window.document.getElementById("arrowChainDown")
-    if (arrowChainDown) {
-      arrowChainDown.style.display = data.sortField == "hist_chain" && data.sortDir == "desc" ? "inline" : "none"
+    var arrowTokenSymbolDown = window.document.getElementById("arrowTokenSymbolDown")
+    if (arrowTokenSymbolDown) {
+      arrowTokenSymbolDown.style.display = data.sortField == "token_symbol" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowChainUp = window.document.getElementById("arrowChainUp")
-    if (arrowChainUp) {
-      arrowChainUp.style.display = data.sortField == "hist_chain" && data.sortDir == "asc" ? "inline" : "none"
+    var arrowTokenSymbolUp = window.document.getElementById("arrowTokenSymbolUp")
+    if (arrowTokenSymbolUp) {
+      arrowTokenSymbolUp.style.display = data.sortField == "token_symbol" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-
-    // name
-
-    var arrowNameDown = window.document.getElementById("arrowNameDown")
-    if (arrowNameDown) {
-      arrowNameDown.style.display = data.sortField == "hist_name" && data.sortDir == "desc" ? "inline" : "none"
+    var arrowPoolIndexDown = window.document.getElementById("arrowPoolIndexDown")
+    if (arrowPoolIndexDown) {
+      arrowPoolIndexDown.style.display = data.sortField == "pool_index" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowNameUp = window.document.getElementById("arrowNameUp")
-    if (arrowNameUp) {
-      arrowNameUp.style.display = data.sortField == "hist_name" && data.sortDir == "asc" ? "inline" : "none"
+    var arrowPoolIndexUp = window.document.getElementById("arrowPoolIndexUp")
+    if (arrowPoolIndexUp) {
+      arrowPoolIndexUp.style.display = data.sortField == "pool_index" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-    // creation
-
-    var arrowCreationDown = window.document.getElementById("arrowCreationDown")
-    if (arrowCreationDown) {
-      arrowCreationDown.style.display = (data.sortField == "hist_creation" || data.sortField == "hist_created") && data.sortDir == "desc" ? "inline" : "none"
+    var arrowPoolCreationTimeDown = window.document.getElementById("arrowPoolCreationTimeDown")
+    if (arrowPoolCreationTimeDown) {
+      arrowPoolCreationTimeDown.style.display = data.sortField == "pool_creation_time" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowCreationUp = window.document.getElementById("arrowCreationUp")
-    if (arrowCreationUp) {
-      arrowCreationUp.style.display = (data.sortField == "hist_creation" || data.sortField == "hist_created") && data.sortDir == "asc" ? "inline" : "none"
+    var arrowPoolCreationTimeUp = window.document.getElementById("arrowPoolCreationTimeUp")
+    if (arrowPoolCreationTimeUp) {
+      arrowPoolCreationTimeUp.style.display = data.sortField == "pool_creation_time" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-    // price
-
-    var arrowPricenDown = window.document.getElementById("arrowPriceDown")
-    if (arrowPricenDown) {
-      arrowPricenDown.style.display = data.sortField == "hist_price" && data.sortDir == "desc" ? "inline" : "none"
+    var arrowLogTimeDown = window.document.getElementById("arrowLogTimeDown")
+    if (arrowLogTimeDown) {
+      arrowLogTimeDown.style.display = data.sortField == "log_time" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowPricenUp = window.document.getElementById("arrowPriceUp")
-    if (arrowPricenUp) {
-      arrowPricenUp.style.display = data.sortField == "hist_price" && data.sortDir == "asc" ? "inline" : "none"
+    var arrowLogTimeUp = window.document.getElementById("arrowLogTimeUp")
+    if (arrowLogTimeUp) {
+      arrowLogTimeUp.style.display = data.sortField == "log_time" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-    // total liquidity
-
-    var arrowLiquidityDown = window.document.getElementById("arrowLiquidityDown")
-    if (arrowLiquidityDown) {
-      arrowLiquidityDown.style.display = data.sortField == "hist_total_liquidity" && data.sortDir == "desc" ? "inline" : "none"
+    var arrowTokenPricenDown = window.document.getElementById("arrowTokenPriceDown")
+    if (arrowTokenPricenDown) {
+      arrowTokenPricenDown.style.display = data.sortField == "token_price_usd" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowLiquidityUp = window.document.getElementById("arrowLiquidityUp")
-    if (arrowLiquidityUp) {
-      arrowLiquidityUp.style.display = data.sortField == "hist_total_liquidity" && data.sortDir == "asc" ? "inline" : "none"
+    var arrowTokenPricenUp = window.document.getElementById("arrowTokenPricenUp")
+    if (arrowTokenPricenUp) {
+      arrowTokenPricenUp.style.display = data.sortField == "token_price_usd" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-    // market cap
-
-    var arrowMarketCapDown = window.document.getElementById("arrowMarketCapDown")
-    if (arrowLiquidityUp) {
-      arrowLiquidityUp.style.display = data.sortField == "hist_market_cap" && data.sortDir == "desc" ? "inline" : "none"
+    var arrowPoolInitialLiquidityDown = window.document.getElementById("arrowPoolInitialLiquidityDown")
+    if (arrowPoolInitialLiquidityDown) {
+      arrowPoolInitialLiquidityDown.style.display = data.sortField == "pool_initial_liquidity_usd" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowMarketCapUp = window.document.getElementById("arrowMarketCapUp")
-    if (arrowMarketCapUp) {
-      arrowMarketCapUp.style.display = data.sortField == "hist_market_cap" && data.sortDir == "asc" ? "inline" : "none"
+    var arrowPoolInitialLiquidityUp = window.document.getElementById("arrowPoolInitialLiquidityUp")
+    if (arrowPoolInitialLiquidityUp) {
+      arrowPoolInitialLiquidityUp.style.display = data.sortField == "pool_initial_liquidity_usd" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-    // supply
-    var arrowSupplyDown = window.document.getElementById("arrowSupplyDown")
-    if (arrowSupplyDown) {
-      arrowSupplyDown.style.display = data.sortField == "hist_supply" && data.sortDir == "desc" ? "inline" : "none"
+    var arrowPoolTotalLiquidityDown = window.document.getElementById("arrowPoolTotalLiquidityDown")
+    if (arrowPoolTotalLiquidityDown) {
+      arrowPoolTotalLiquidityDown.style.display = data.sortField == "pool_total_liquidity_usd" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowSupplyUp = window.document.getElementById("arrowSupplyUp")
-    if (arrowSupplyUp) {
-      arrowSupplyUp.style.display = data.sortField == "hist_supply" && data.sortDir == "asc" ? "inline" : "none"
+    var arrowPoolTotalLiquidityUp = window.document.getElementById("arrowPoolTotalLiquidityUp")
+    if (arrowPoolTotalLiquidityUp) {
+      arrowPoolTotalLiquidityUp.style.display = data.sortField == "pool_total_liquidity_usd" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-    // holders
-
-    var arrowHoldersDown = window.document.getElementById("arrowHoldersDown")
-    if (arrowHoldersDown) {
-      arrowHoldersDown.style.display = data.sortField == "hist_holders" && data.sortDir == "desc" ? "inline" : "none"
+    var arrowPoolTotalTxsDown = window.document.getElementById("arrowPoolTotalTxsDown")
+    if (arrowPoolTotalTxsDown) {
+      arrowPoolTotalTxsDown.style.display = data.sortField == "pool_total_txs" && data.sortDir == "desc" ? "inline" : "none"
     }
 
-    var arrowHoldersUp = window.document.getElementById("arrowHoldersUp")
-    if (arrowHoldersUp) {
-      arrowHoldersUp.style.display = data.sortField == "hist_holders" && data.sortDir == "asc" ? "inline" : "none"
+    var arrowPoolTotalTxsUp = window.document.getElementById("arrowTxUp")
+    if (arrowPoolTotalTxsUp) {
+      arrowPoolTotalTxsUp.style.display = data.sortField == "pool_total_txs" && data.sortDir == "asc" ? "inline" : "none"
     }
 
-    // volume 24H
+    var arrowTokenTotalHoldersDown = window.document.getElementById("arrowTokenTotalHoldersDown")
+    if (arrowTokenTotalHoldersDown) {
+      arrowTokenTotalHoldersDown.style.display = data.sortField == "token_total_holders" && data.sortDir == "desc" ? "inline" : "none"
+    }
+
+    var arrowTokenTotalHoldersUp = window.document.getElementById("arrowTokenTotalHoldersUp")
+    if (arrowTokenTotalHoldersUp) {
+      arrowTokenTotalHoldersUp.style.display = data.sortField == "token_total_holders" && data.sortDir == "asc" ? "inline" : "none"
+    }
+
+    var arrowTokenTotalSupplyDown = window.document.getElementById("arrowTokenTotalSupplyDown")
+    if (arrowTokenTotalSupplyDown) {
+      arrowTokenTotalSupplyDown.style.display = data.sortField == "token_total_supply" && data.sortDir == "desc" ? "inline" : "none"
+    }
+
+    var arrowTokenTotalSupplyUp = window.document.getElementById("arrowTokenTotalSupplyUp")
+    if (arrowTokenTotalSupplyUp) {
+      arrowTokenTotalSupplyUp.style.display = data.sortField == "token_total_supply" && data.sortDir == "asc" ? "inline" : "none"
+    }
+
+    var arrowTokenTotalMarketCapDown = window.document.getElementById("arrowTokenTotalMarketCapDown")
+    if (arrowTokenTotalMarketCapDown) {
+      arrowTokenTotalMarketCapDown.style.display = data.sortField == "token_total_market_cap_usd" && data.sortDir == "desc" ? "inline" : "none"
+    }
+
+    var arrowTokenTotalMarketCapUp = window.document.getElementById("arrowTokenTotalMarketCapUp")
+    if (arrowTokenTotalMarketCapUp) {
+      arrowTokenTotalMarketCapUp.style.display = data.sortField == "token_total_market_cap_usd" && data.sortDir == "asc" ? "inline" : "none"
+    }
+
+    var arrowVolume1HDown = window.document.getElementById("arrowVolume1HDown")
+    if (arrowVolume1HDown) {
+      arrowVolume1HDown.style.display = data.sortField == "volume_1h" && data.sortDir == "desc" ? "inline" : "none"
+    }
+
+    var arrowVolume1HUp = window.document.getElementById("arrowVolume1HUp")
+    if (arrowVolume1HUp) {
+      arrowVolume1HUp.style.display = data.sortField == "volume_1h" && data.sortDir == "asc" ? "inline" : "none"
+    }
 
     var arrowVolume24HDown = window.document.getElementById("arrowVolume24HDown")
     if (arrowVolume24HDown) {
-      arrowVolume24HDown.style.display = data.sortField == "hist_volume_24h" && data.sortDir == "desc" ? "inline" : "none"
+      arrowVolume24HDown.style.display = data.sortField == "volume_24h" && data.sortDir == "desc" ? "inline" : "none"
     }
 
     var arrowVolume24HUp = window.document.getElementById("arrowVolume24HUp")
     if (arrowVolume24HUp) {
       arrowVolume24HUp.style.display = data.sortField == "hist_volume_24h" && data.sortDir == "asc" ? "inline" : "none"
     }
-
-    // buy 24H
-
-    var arrowBuy24HDown = window.document.getElementById("arrowBuy24HDown")
-    if (arrowBuy24HDown) {
-      arrowBuy24HDown.style.display = data.sortField == "hist_buy_24h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowBuy24HUp = window.document.getElementById("arrowBuy24HUp")
-    if (arrowBuy24HUp) {
-      arrowBuy24HUp.style.display = data.sortField == "hist_buy_24h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    // sell 24H
-
-    var arrowSell24HDown = window.document.getElementById("arrowSell24HDown")
-    if (arrowSell24HDown) {
-      arrowSell24HDown.style.display = data.sortField == "hist_sell_24h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowSell24HUp = window.document.getElementById("arrowSell24HUp")
-    if (arrowSell24HUp) {
-      arrowSell24HUp.style.display = data.sortField == "hist_sell_24h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    // swap 24H
-
-    var arrowSwap24HDown = window.document.getElementById("arrowSwap24HDown")
-    if (arrowSwap24HDown) {
-      arrowSwap24HDown.style.display = data.sortField == "hist_swap_24h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowSwap24HUp = window.document.getElementById("arrowSwap24HUp")
-    if (arrowSwap24HUp) {
-      arrowSwap24HUp.style.display = data.sortField == "hist_swap_24h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    // total tx
-    var arrowTxDown = window.document.getElementById("arrowTxDown")
-    if (arrowTxDown) {
-      arrowTxDown.style.display = data.sortField == "hist_total_tx" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowTxUp = window.document.getElementById("arrowTxUp")
-    if (arrowTxUp) {
-      arrowTxUp.style.display = data.sortField == "hist_total_tx" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    // dextscore
 
     var arrowDextScoreDown = window.document.getElementById("arrowDextScoreDown")
     if (arrowDextScoreDown) {
@@ -999,57 +982,8 @@ class Grid extends React.Component {
     if (arrowDextScoreUp) {
       arrowDextScoreUp.style.display = data.sortField == "hist_dextscore" && data.sortDir == "asc" ? "inline" : "none"
     }
-
-    // volume 1 h
-
-    var arrowVolume1HDown = window.document.getElementById("arrowVolume1HDown")
-    if (arrowVolume1HDown) {
-      arrowVolume1HDown.style.display = data.sortField == "hist_volume_1h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowVolume1HUp = window.document.getElementById("arrowVolume1HUp")
-    if (arrowVolume1HUp) {
-      arrowVolume1HUp.style.display = data.sortField == "hist_volume_1h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    // buy 1 h
-
-    var arrowBuy1HDown = window.document.getElementById("arrowBuy1HDown")
-    if (arrowBuy1HDown) {
-      arrowBuy1HDown.style.display = data.sortField == "hist_buy_1h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowBuy1HUp = window.document.getElementById("arrowBuy1HUp")
-    if (arrowBuy1HUp) {
-      arrowBuy1HUp.style.display = data.sortField == "hist_buy_1h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    // sell 1 h
-
-    var arrowSell1HDown = window.document.getElementById("arrowSell1HDown")
-    if (arrowSell1HDown) {
-      arrowSell1HDown.style.display = data.sortField == "hist_sell_1h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowSell1HUp = window.document.getElementById("arrowSell1HUp")
-    if (arrowSell1HUp) {
-      arrowSell1HUp.style.display = data.sortField == "hist_sell_1h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    // swap 1 h
-
-    var arrowSwap1HDown = window.document.getElementById("arrowSwap1HDown")
-    if (arrowSwap1HDown) {
-      arrowSwap1HDown.style.display = data.sortField == "hist_swap_1h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowSwap1HUp = window.document.getElementById("arrowSwap1HUp")
-    if (arrowSwap1HUp) {
-      arrowSwap1HUp.style.display = data.sortField == "hist_swap_1h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
   }
-
+*/
   render() {
     const { t } = this.props;
 

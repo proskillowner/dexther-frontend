@@ -39,6 +39,8 @@ class SearchFilter extends React.Component {
 
     this.state = {
       poolCreationTimeRange: this.props.data != null ? this.props.data.poolCreationTimeRange : null,
+      minTokenPriceUsd: this.props.data != null ? this.props.data.minTokenPriceUsd : null,
+      maxTokenPriceUsd: this.props.data != null ? this.props.data.maxTokenPriceUsd : null,
       minPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.minPoolInitialLiquidityUsd : null,
       maxPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.maxPoolInitialLiquidityUsd : null,
       minPoolTotalLiquidityUsd: this.props.data != null ? this.props.data.minPoolTotalLiquidityUsd : null,
@@ -47,9 +49,19 @@ class SearchFilter extends React.Component {
       maxPoolTotalTxs: this.props.data != null ? this.props.data.maxPoolTotalTxs : null,
       minTokenTotalHolders: this.props.data != null ? this.props.data.minTokenTotalHolders : null,
       maxTokenTotalHolders: this.props.data != null ? this.props.data.maxTokenTotalHolders : null,
+      minTokenTotalSupply: this.props.data != null ? this.props.data.minTokenTotalSupply : null,
+      maxTokenTotalSupply: this.props.data != null ? this.props.data.maxTokenTotalSupply : null,
+      minTokenTotalMarketCapUsd: this.props.data != null ? this.props.data.minTokenTotalMarketCapUsd : null,
+      maxTokenTotalMarketCapUsd: this.props.data != null ? this.props.data.maxTokenTotalMarketCapUsd : null,
+      minVolume1H: this.props.data != null ? this.props.data.minVolume1H : null,
+      maxVolume1H: this.props.data != null ? this.props.data.maxVolume1H : null,
+      minVolume24H: this.props.data != null ? this.props.data.minVolume24H : null,
+      maxVolume24H: this.props.data != null ? this.props.data.maxVolume24H : null,
     }
 
     this.setPoolCreationTimeRange = this.setPoolCreationTimeRange.bind(this)
+    this.setMinTokenPriceUsd = this.setMinTokenPriceUsd.bind(this)
+    this.setMaxTokenPriceUsd = this.setMaxTokenPriceUsd.bind(this)
     this.setMinPoolInitialLiquidityUsd = this.setMinPoolInitialLiquidityUsd.bind(this)
     this.setMaxPoolInitialLiquidityUsd = this.setMaxPoolInitialLiquidityUsd.bind(this)
     this.setMinPoolTotalLiquidityUsd = this.setMinPoolTotalLiquidityUsd.bind(this)
@@ -58,6 +70,14 @@ class SearchFilter extends React.Component {
     this.setMaxPoolTotalTxs = this.setMaxPoolTotalTxs.bind(this)
     this.setMinTokenTotalHolders = this.setMinTokenTotalHolders.bind(this)
     this.setMaxTokenTotalHolders = this.setMaxTokenTotalHolders.bind(this)
+    this.setMinTokenTotalSupply = this.setMinTokenTotalSupply.bind(this)
+    this.setMaxTokenTotalSupply = this.setMaxTokenTotalSupply.bind(this)
+    this.setMinTokenTotalMarketCapUsd = this.setMinTokenTotalMarketCapUsd.bind(this)
+    this.setMaxTokenTotalMarketCapUsd = this.setMaxTokenTotalMarketCapUsd.bind(this)
+    this.setMinVolume1H = this.setMinVolume1H.bind(this)
+    this.setMaxVolume1H = this.setMaxVolume1H.bind(this)
+    this.setMinVolume24H = this.setMinVolume24H.bind(this)
+    this.setMaxVolume24H = this.setMaxVolume24H.bind(this)
 
     this.loadConfig = this.loadConfig.bind(this)
     this.saveConfig = this.saveConfig.bind(this)
@@ -71,6 +91,18 @@ class SearchFilter extends React.Component {
   setPoolCreationTimeRange(value) {
     this.setState({
       poolCreationTimeRange: value
+    })
+  }
+
+  setMinTokenPriceUsd(value) {
+    this.setState({
+      minTokenPriceUsd: value
+    })
+  }
+
+  setMaxTokenPriceUsd(value) {
+    this.setState({
+      maxTokenPriceUsd: value
     })
   }
 
@@ -122,6 +154,54 @@ class SearchFilter extends React.Component {
     })
   }
 
+  setMinTokenTotalSupply(value) {
+    this.setState({
+      minTokenTotalSupply: value
+    })
+  }
+
+  setMaxTokenTotalSupply(value) {
+    this.setState({
+      maxTokenTotalSupply: value
+    })
+  }
+
+  setMinTokenTotalMarketCapUsd(value) {
+    this.setState({
+      minTokenTotalMarketCapUsd: value
+    })
+  }
+
+  setMaxTokenTotalMarketCapUsd(value) {
+    this.setState({
+      maxTokenTotalMarketCapUsd: value
+    })
+  }
+
+  setMinVolume1H(value) {
+    this.setState({
+      minVolume1H: value
+    })
+  }
+
+  setMaxVolume1H(value) {
+    this.setState({
+      maxVolume1H: value
+    })
+  }
+
+  setMinVolume24H(value) {
+    this.setState({
+      minVolume24H: value
+    })
+  }
+
+  setMaxVolume24H(value) {
+    this.setState({
+      maxVolume24H: value
+    })
+  }
+
   async loadConfig() {
     try {
       const config = await this.context.loadConfig()
@@ -136,6 +216,14 @@ class SearchFilter extends React.Component {
         maxPoolTotalTxs: config['max_pool_total_txs'],
         minTokenTotalHolders: config['min_token_total_holders'],
         maxTokenTotalHolders: config['max_token_total_holders'],
+        minTokenTotalSupply: config['min_token_total_supply'],
+        maxTokenTotalSupply: config['max_token_total_supply'],
+        minTokenTotalMarketCapUsd: config['min_token_total_market_cap_usd'],
+        maxTokenTotalMarketCapUsd: config['max_token_total_market_cap_usd'],
+        minVolume1H: config['min_volume_1h'],
+        maxVolume1H: config['max_volume_1h'],
+        minVolume24H: config['min_volume_24h'],
+        maxVolume24H: config['max_volume_24h'],
       })
     } catch (error) {
       alert(error.message)
@@ -148,6 +236,7 @@ class SearchFilter extends React.Component {
 
       const config = {
         pool_creation_time_range: this.state.poolCreationTimeRange ? this.state.poolCreationTimeRange * (60 * 60) : null,
+        min_token_price_usd: this.state.minTokenPriceUsd ? this.state.minTokenPriceUsd : null,
         min_pool_initial_liquidity_usd: this.state.minPoolInitialLiquidityUsd ? this.state.minPoolInitialLiquidityUsd : null,
         max_pool_initial_liquidity_usd: this.state.maxPoolInitialLiquidityUsd ? this.state.maxPoolInitialLiquidityUsd : null,
         min_pool_total_liquidity_usd: this.state.minPoolTotalLiquidityUsd ? this.state.minPoolTotalLiquidityUsd : null,
@@ -156,6 +245,14 @@ class SearchFilter extends React.Component {
         max_pool_total_txs: this.state.maxPoolTotalTxs ? this.state.maxPoolTotalTxs : null,
         min_token_total_holders: this.state.minTokenTotalHolders ? this.state.minTokenTotalHolders : null,
         max_token_total_holders: this.state.maxTokenTotalHolders ? this.state.maxTokenTotalHolders : null,
+        min_token_total_supply: this.state.minTokenTotalSupply ? this.state.minTokenTotalSupply : null,
+        max_token_total_supply: this.state.maxTokenTotalSupply ? this.state.maxTokenTotalSupply : null,
+        min_token_total_market_cap_usd: this.state.minTokenTotalMarketCapUsd ? this.state.minTokenTotalMarketCapUsd : null,
+        max_token_total_market_cap_usd: this.state.maxTokenTotalMarketCapUsd ? this.state.maxTokenTotalMarketCapUsd : null,
+        min_volume_1h: this.state.minVolume1H ? this.state.minVolume1H : null,
+        max_volume_1h: this.state.maxVolume1H ? this.state.maxVolume1H : null,
+        min_volume_24h: this.state.minVolume24H ? this.state.minVolume24H : null,
+        max_volume_24h: this.state.maxVolume24H ? this.state.maxVolume24H : null,
       }
 
       await this.context.saveConfig(config)
@@ -198,27 +295,27 @@ class SearchFilter extends React.Component {
               ))}
             </CssSelect>
           </div>
-          <div style={{ clear: "both", marginTop: 6 }}>
-            <span className="App-Label-Filter-Block">{t("listed_since")}</span>
-            <CssTextField
-              type="number"
-              style={{ width: 125 }}
-              size="small"
-              variant="outlined"
-              value={this.state.poolCreationTimeRange ? this.state.poolCreationTimeRange : ""}
-              onChange={(event) => {
-                this.setPoolCreationTimeRange(event.target.value);
-              }}
-              InputLabelProps={{
-                shrink: false,
-                className: "App-TextField-Filter"
-              }}
-              InputProps={{
-                className: "App-TextField-Filter"
-              }} />
-            <span className="App-Label-Filter-Inline">{t("hours_before_now")}</span>
-          </div>
           <div style={{ columnCount: 2 }}>
+            <div style={{ clear: "both", marginTop: 6 }}>
+              <span className="App-Label-Filter-Block">{t("listed_since")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.poolCreationTimeRange ? this.state.poolCreationTimeRange : ""}
+                onChange={(event) => {
+                  this.setPoolCreationTimeRange(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+              <span className="App-Label-Filter-Inline">{t("hours_before_now")}</span>
+            </div>
             <div style={{ clear: "both", marginTop: 6 }}>
               <span className="App-Label-Filter-Block">{t("initial_liquidity_usd")}</span>
               <CssTextField
@@ -292,7 +389,7 @@ class SearchFilter extends React.Component {
                 }} />
             </div>
             <div style={{ clear: "both", marginTop: 6 }}>
-              <span className="App-Label-Filter-Block">{t("total_tx")}</span>
+              <span className="App-Label-Filter-Block">{t("total_txs")}</span>
               <CssTextField
                 type="number"
                 style={{ width: 125 }}
@@ -328,7 +425,7 @@ class SearchFilter extends React.Component {
                 }} />
             </div>
             <div style={{ clear: "both", marginTop: 6 }}>
-              <span className="App-Label-Filter-Block">{t("token_holder")}</span>
+              <span className="App-Label-Filter-Block">{t("token_holders")}</span>
               <CssTextField
                 type="number"
                 style={{ width: 125 }}
@@ -354,6 +451,150 @@ class SearchFilter extends React.Component {
                 value={this.state.maxTokenTotalHolders ? this.state.maxTokenTotalHolders : ""}
                 onChange={(event) => {
                   this.setMaxTokenTotalHolders(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+            </div>
+            <div style={{ clear: "both", marginTop: 6 }}>
+              <span className="App-Label-Filter-Block">{t("total_supply")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.minTokenTotalSupply ? this.state.minTokenTotalSupply : ""}
+                onChange={(event) => {
+                  this.setMinTokenTotalSupply(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+              <span className="App-Label-Filter-Inline">{t("to")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.maxTokenTotalSupply ? this.state.maxTokenTotalSupply : ""}
+                onChange={(event) => {
+                  this.setMaxTokenTotalSupply(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+            </div>
+            <div style={{ clear: "both", marginTop: 6 }}>
+              <span className="App-Label-Filter-Block">{t("total_market_cap_usd")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.minTokenTotalMarketCapUsd ? this.state.minTokenTotalMarketCapUsd : ""}
+                onChange={(event) => {
+                  this.setMinTokenTotalMarketCapUsd(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+              <span className="App-Label-Filter-Inline">{t("to")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.maxTokenTotalMarketCapUsd ? this.state.maxTokenTotalMarketCapUsd : ""}
+                onChange={(event) => {
+                  this.setMaxTokenTotalMarketCapUsd(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+            </div>
+            <div style={{ clear: "both", marginTop: 6 }}>
+              <span className="App-Label-Filter-Block">{t("volume_1h")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.minVolume1H ? this.state.minVolume1H : ""}
+                onChange={(event) => {
+                  this.setMinVolume1H(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+              <span className="App-Label-Filter-Inline">{t("to")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.maxVolume1H ? this.state.maxVolume1H : ""}
+                onChange={(event) => {
+                  this.setMaxVolume1H(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+            </div>
+            <div style={{ clear: "both", marginTop: 6 }}>
+              <span className="App-Label-Filter-Block">{t("volume_24h")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.minVolume24H ? this.state.minVolume24H : ""}
+                onChange={(event) => {
+                  this.setMinVolume24H(event.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: "App-TextField-Filter"
+                }}
+                InputProps={{
+                  className: "App-TextField-Filter"
+                }} />
+              <span className="App-Label-Filter-Inline">{t("to")}</span>
+              <CssTextField
+                type="number"
+                style={{ width: 125 }}
+                size="small"
+                variant="outlined"
+                value={this.state.maxVolume24H ? this.state.maxVolume24H : ""}
+                onChange={(event) => {
+                  this.setMaxVolume24H(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
