@@ -97,6 +97,7 @@ const COLUMN_OPTIONS = {
 
 const COLUMN_ID = {
   ...COLUMN_OPTIONS,
+  type: 'number',
   field: 'id',
   renderHeader: (params) => (
     <strong>
@@ -104,8 +105,6 @@ const COLUMN_ID = {
     </strong>
   ),
   width: 50,
-  headerAlign: 'right',
-  align: "right",
   filterable: false,
   hideable: false,
   sortable: false,
@@ -168,6 +167,7 @@ const COLUMN_PROTOCOL = {
 const COLUMN_POOL_INDEX = {
   ...COLUMN_OPTIONS,
   field: 'pool_index',
+  type: 'number',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_pool_index")}
@@ -180,8 +180,6 @@ const COLUMN_POOL_INDEX = {
     </strong>
   ),
   width: 100,
-  headerAlign: 'right',
-  align: "right",
   renderCell: (params) => (
     <div>
       {params.value}
@@ -837,153 +835,8 @@ class Grid extends React.Component {
         loading: false,
       }
     )
-
-    // this.setSortIcon(sortModel)        
-    // this.props.updateData(data)
   }
-/*
-  setSortIcon(data) {
-    var arrowTokenSymbolDown = window.document.getElementById("arrowTokenSymbolDown")
-    if (arrowTokenSymbolDown) {
-      arrowTokenSymbolDown.style.display = data.sortField == "token_symbol" && data.sortDir == "desc" ? "inline" : "none"
-    }
 
-    var arrowTokenSymbolUp = window.document.getElementById("arrowTokenSymbolUp")
-    if (arrowTokenSymbolUp) {
-      arrowTokenSymbolUp.style.display = data.sortField == "token_symbol" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowPoolIndexDown = window.document.getElementById("arrowPoolIndexDown")
-    if (arrowPoolIndexDown) {
-      arrowPoolIndexDown.style.display = data.sortField == "pool_index" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowPoolIndexUp = window.document.getElementById("arrowPoolIndexUp")
-    if (arrowPoolIndexUp) {
-      arrowPoolIndexUp.style.display = data.sortField == "pool_index" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowPoolCreationTimeDown = window.document.getElementById("arrowPoolCreationTimeDown")
-    if (arrowPoolCreationTimeDown) {
-      arrowPoolCreationTimeDown.style.display = data.sortField == "pool_creation_time" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowPoolCreationTimeUp = window.document.getElementById("arrowPoolCreationTimeUp")
-    if (arrowPoolCreationTimeUp) {
-      arrowPoolCreationTimeUp.style.display = data.sortField == "pool_creation_time" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowLogTimeDown = window.document.getElementById("arrowLogTimeDown")
-    if (arrowLogTimeDown) {
-      arrowLogTimeDown.style.display = data.sortField == "log_time" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowLogTimeUp = window.document.getElementById("arrowLogTimeUp")
-    if (arrowLogTimeUp) {
-      arrowLogTimeUp.style.display = data.sortField == "log_time" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowTokenPricenDown = window.document.getElementById("arrowTokenPriceDown")
-    if (arrowTokenPricenDown) {
-      arrowTokenPricenDown.style.display = data.sortField == "token_price_usd" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowTokenPricenUp = window.document.getElementById("arrowTokenPricenUp")
-    if (arrowTokenPricenUp) {
-      arrowTokenPricenUp.style.display = data.sortField == "token_price_usd" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowPoolInitialLiquidityDown = window.document.getElementById("arrowPoolInitialLiquidityDown")
-    if (arrowPoolInitialLiquidityDown) {
-      arrowPoolInitialLiquidityDown.style.display = data.sortField == "pool_initial_liquidity_usd" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowPoolInitialLiquidityUp = window.document.getElementById("arrowPoolInitialLiquidityUp")
-    if (arrowPoolInitialLiquidityUp) {
-      arrowPoolInitialLiquidityUp.style.display = data.sortField == "pool_initial_liquidity_usd" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowPoolTotalLiquidityDown = window.document.getElementById("arrowPoolTotalLiquidityDown")
-    if (arrowPoolTotalLiquidityDown) {
-      arrowPoolTotalLiquidityDown.style.display = data.sortField == "pool_total_liquidity_usd" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowPoolTotalLiquidityUp = window.document.getElementById("arrowPoolTotalLiquidityUp")
-    if (arrowPoolTotalLiquidityUp) {
-      arrowPoolTotalLiquidityUp.style.display = data.sortField == "pool_total_liquidity_usd" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowPoolTotalTxsDown = window.document.getElementById("arrowPoolTotalTxsDown")
-    if (arrowPoolTotalTxsDown) {
-      arrowPoolTotalTxsDown.style.display = data.sortField == "pool_total_txs" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowPoolTotalTxsUp = window.document.getElementById("arrowTxUp")
-    if (arrowPoolTotalTxsUp) {
-      arrowPoolTotalTxsUp.style.display = data.sortField == "pool_total_txs" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowTokenTotalHoldersDown = window.document.getElementById("arrowTokenTotalHoldersDown")
-    if (arrowTokenTotalHoldersDown) {
-      arrowTokenTotalHoldersDown.style.display = data.sortField == "token_total_holders" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowTokenTotalHoldersUp = window.document.getElementById("arrowTokenTotalHoldersUp")
-    if (arrowTokenTotalHoldersUp) {
-      arrowTokenTotalHoldersUp.style.display = data.sortField == "token_total_holders" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowTokenTotalSupplyDown = window.document.getElementById("arrowTokenTotalSupplyDown")
-    if (arrowTokenTotalSupplyDown) {
-      arrowTokenTotalSupplyDown.style.display = data.sortField == "token_total_supply" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowTokenTotalSupplyUp = window.document.getElementById("arrowTokenTotalSupplyUp")
-    if (arrowTokenTotalSupplyUp) {
-      arrowTokenTotalSupplyUp.style.display = data.sortField == "token_total_supply" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowTokenTotalMarketCapDown = window.document.getElementById("arrowTokenTotalMarketCapDown")
-    if (arrowTokenTotalMarketCapDown) {
-      arrowTokenTotalMarketCapDown.style.display = data.sortField == "token_total_market_cap_usd" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowTokenTotalMarketCapUp = window.document.getElementById("arrowTokenTotalMarketCapUp")
-    if (arrowTokenTotalMarketCapUp) {
-      arrowTokenTotalMarketCapUp.style.display = data.sortField == "token_total_market_cap_usd" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowVolume1HDown = window.document.getElementById("arrowVolume1HDown")
-    if (arrowVolume1HDown) {
-      arrowVolume1HDown.style.display = data.sortField == "volume_1h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowVolume1HUp = window.document.getElementById("arrowVolume1HUp")
-    if (arrowVolume1HUp) {
-      arrowVolume1HUp.style.display = data.sortField == "volume_1h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowVolume24HDown = window.document.getElementById("arrowVolume24HDown")
-    if (arrowVolume24HDown) {
-      arrowVolume24HDown.style.display = data.sortField == "volume_24h" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowVolume24HUp = window.document.getElementById("arrowVolume24HUp")
-    if (arrowVolume24HUp) {
-      arrowVolume24HUp.style.display = data.sortField == "hist_volume_24h" && data.sortDir == "asc" ? "inline" : "none"
-    }
-
-    var arrowDextScoreDown = window.document.getElementById("arrowDextScoreDown")
-    if (arrowDextScoreDown) {
-      arrowDextScoreDown.style.display = data.sortField == "hist_dextscore" && data.sortDir == "desc" ? "inline" : "none"
-    }
-
-    var arrowDextScoreUp = window.document.getElementById("arrowDextScoreUp")
-    if (arrowDextScoreUp) {
-      arrowDextScoreUp.style.display = data.sortField == "hist_dextscore" && data.sortDir == "asc" ? "inline" : "none"
-    }
-  }
-*/
   render() {
     const { t } = this.props;
 
@@ -1028,7 +881,7 @@ class Grid extends React.Component {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 50,
+                pageSize: this.state.pageSize,
                 page: this.state.page
               },
             },

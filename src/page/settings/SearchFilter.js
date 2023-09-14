@@ -295,8 +295,8 @@ class SearchFilter extends React.Component {
               ))}
             </CssSelect>
           </div>
-          <div style={{ columnCount: 2 }}>
-            <div style={{ clear: "both", marginTop: 6 }}>
+          <div style={{ columnCount: 2, marginTop: 10 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("listed_since")}</span>
               <CssTextField
                 type="number"
@@ -316,7 +316,7 @@ class SearchFilter extends React.Component {
                 }} />
               <span className="App-Label-Filter-Inline">{t("hours_before_now")}</span>
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("initial_liquidity_usd")}</span>
               <CssTextField
                 type="number"
@@ -352,7 +352,7 @@ class SearchFilter extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("total_liquidity_usd")}</span>
               <CssTextField
                 type="number"
@@ -388,7 +388,7 @@ class SearchFilter extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("total_txs")}</span>
               <CssTextField
                 type="number"
@@ -424,7 +424,7 @@ class SearchFilter extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("token_holders")}</span>
               <CssTextField
                 type="number"
@@ -460,7 +460,7 @@ class SearchFilter extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("total_supply")}</span>
               <CssTextField
                 type="number"
@@ -496,7 +496,7 @@ class SearchFilter extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("total_market_cap_usd")}</span>
               <CssTextField
                 type="number"
@@ -532,7 +532,7 @@ class SearchFilter extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("volume_1h")}</span>
               <CssTextField
                 type="number"
@@ -568,7 +568,7 @@ class SearchFilter extends React.Component {
                   className: "App-TextField-Filter"
                 }} />
             </div>
-            <div style={{ clear: "both", marginTop: 6 }}>
+            <div style={{ clear: "both", height: 50 }}>
               <span className="App-Label-Filter-Block">{t("volume_24h")}</span>
               <CssTextField
                 type="number"
