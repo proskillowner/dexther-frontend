@@ -44,52 +44,56 @@ class Filter extends React.Component {
     const { cookies } = this.props;
 
     this.state = {
-      subTokenSymbol: this.props.data != null ? this.props.data.sub_token_symbol : null,
-      subTokenAddress: this.props.data != null ? this.props.data.sub_token_address : null,
-      subPoolAddress: this.props.data != null ? this.props.data.sub_pool_address : null,
-      poolCreationTimeRange: this.props.data != null ? this.props.data.pool_creation_time_range : null,
-      minTokenPriceUsd: this.props.data != null ? this.props.data.min_token_price_usd : null,
-      maxTokenPriceUsd: this.props.data != null ? this.props.data.max_token_price_usd : null,
-      minPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.min_pool_initial_liquidity_usd : null,
-      maxPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.max_pool_initial_liquidity_usd : null,
-      minPoolTotalLiquidityUsd: this.props.data != null ? this.props.data.min_pool_total_liquidity_usd : null,
-      maxPoolTotalLiquidityUsd: this.props.data != null ? this.props.data.max_pool_total_liquidity_usd : null,
-      minPoolTotalTxs: this.props.data != null ? this.props.data.min_pool_total_txs : null,
-      maxPoolTotalTxs: this.props.data != null ? this.props.data.max_pool_total_txs : null,
-      minTokenTotalHolders: this.props.data != null ? this.props.data.min_token_total_holders : null,
-      maxTokenTotalHolders: this.props.data != null ? this.props.data.max_token_total_holders : null,
-      minTokenTotalSupply: this.props.data != null ? this.props.data.min_token_total_supply : null,
-      maxTokenTotalSupply: this.props.data != null ? this.props.data.max_token_total_supply : null,
-      minTokenTotalMarketCapUsd: this.props.data != null ? this.props.data.min_token_total_market_cap_usd : null,
-      maxTokenTotalMarketCapUsd: this.props.data != null ? this.props.data.max_token_total_market_cap_usd : null,
-      minVolume1H: this.props.data != null ? this.props.data.min_volume_1h : null,
-      maxVolume1H: this.props.data != null ? this.props.data.max_volume_1h : null,
-      minVolume24H: this.props.data != null ? this.props.data.min_volume_24h : null,
-      maxVolume24H: this.props.data != null ? this.props.data.max_volume_24h : null,
+      searchSubTokenSymbol: this.props.data != null ? this.props.data.keyword_search_sub_token_symbol : null,
+      searchSubTokenAddress: this.props.data != null ? this.props.data.keyword_search_sub_token_address : null,
+      searchSubPoolAddress: this.props.data != null ? this.props.data.keyword_search_sub_pool_address : null,
+      searchPoolCreationTimestampRange: this.props.data != null ? this.props.data.search_pool_creation_timestamp_range : null,
+      searchMinTokenPrice: this.props.data != null ? this.props.data.keyword_search_min_token_price : null,
+      searchMaxTokenPrice: this.props.data != null ? this.props.data.keyword_search_max_token_price : null,
+      searchMinPoolInitialLiquidity: this.props.data != null ? this.props.data.keyword_search_min_pool_initial_liquidity : null,
+      searchMaxPoolInitialLiquidity: this.props.data != null ? this.props.data.keyword_search_max_pool_initial_liquidity : null,
+      searchMinPoolTotalLiquidity: this.props.data != null ? this.props.data.keyword_search_min_pool_total_liquidity : null,
+      searchMaxPoolTotalLiquidity: this.props.data != null ? this.props.data.keyword_search_max_pool_total_liquidity : null,
+      searchMinPoolTotalTxs: this.props.data != null ? this.props.data.keyword_search_min_pool_total_txs : null,
+      searchMaxPoolTotalTxs: this.props.data != null ? this.props.data.keyword_search_max_pool_total_txs : null,
+      searchMinTokenTotalHolders: this.props.data != null ? this.props.data.keyword_search_min_token_total_holders : null,
+      searchMaxTokenTotalHolders: this.props.data != null ? this.props.data.keyword_search_max_token_total_holders : null,
+      searchMinTokenTotalSupply: this.props.data != null ? this.props.data.keyword_search_min_token_total_supply : null,
+      searchMaxTokenTotalSupply: this.props.data != null ? this.props.data.keyword_search_max_token_total_supply : null,
+      searchMinTokenTotalMarketCap: this.props.data != null ? this.props.data.keyword_search_min_token_total_market_cap : null,
+      searchMaxTokenTotalMarketCap: this.props.data != null ? this.props.data.keyword_search_max_token_total_market_cap : null,
+      searchMinVolume1H: this.props.data != null ? this.props.data.keyword_search_min_volume_1h : null,
+      searchMaxVolume1H: this.props.data != null ? this.props.data.keyword_search_max_volume_1h : null,
+      searchMinVolume24H: this.props.data != null ? this.props.data.keyword_search_min_volume_24h : null,
+      searchMaxVolume24H: this.props.data != null ? this.props.data.keyword_search_max_volume_24h : null,
+      searchValueTokenContractVerified: this.props.data != null ? this.props.data.search_contract_verified : null,
+      searchValueTokenContractRenounced: this.props.data != null ? this.props.data.search_contract_renounced : null,
     }
 
-    this.setSubTokenSymbol = this.setSubTokenSymbol.bind(this)
-    this.setSubTokenAddress = this.setSubTokenAddress.bind(this)
-    this.setSubPoolAddress = this.setSubPoolAddress.bind(this)
-    this.setPoolCreationTimeRange = this.setPoolCreationTimeRange.bind(this)
-    this.setMinTokenPriceUsd = this.setMinTokenPriceUsd.bind(this)
-    this.setMaxTokenPriceUsd = this.setMaxTokenPriceUsd.bind(this)
-    this.setMinPoolInitialLiquidityUsd = this.setMinPoolInitialLiquidityUsd.bind(this)
-    this.setMaxPoolInitialLiquidityUsd = this.setMaxPoolInitialLiquidityUsd.bind(this)
-    this.setMinPoolTotalLiquidityUsd = this.setMinPoolTotalLiquidityUsd.bind(this)
-    this.setMaxPoolTotalLiquidityUsd = this.setMaxPoolTotalLiquidityUsd.bind(this)
-    this.setMinPoolTotalTxs = this.setMinPoolTotalTxs.bind(this)
-    this.setMaxPoolTotalTxs = this.setMaxPoolTotalTxs.bind(this)
-    this.setMinTokenTotalHolders = this.setMinTokenTotalHolders.bind(this)
-    this.setMaxTokenTotalHolders = this.setMaxTokenTotalHolders.bind(this)
-    this.setMinTokenTotalSupply = this.setMinTokenTotalSupply.bind(this)
-    this.setMaxTokenTotalSupply = this.setMaxTokenTotalSupply.bind(this)
-    this.setMinTokenTotalMarketCapUsd = this.setMinTokenTotalMarketCapUsd.bind(this)
-    this.setMaxTokenTotalMarketCapUsd = this.setMaxTokenTotalMarketCapUsd.bind(this)
-    this.setMinPoolVolume1H = this.setMinVolume1H.bind(this)
-    this.setMaxPoolVolume1H = this.setMaxVolume1H.bind(this)
-    this.setMinPoolVolume24H = this.setMinVolume24H.bind(this)
-    this.setMaxPoolVolume24H = this.setMaxVolume24H.bind(this)
+    this.setSearchSubTokenSymbol = this.setSearchSubTokenSymbol.bind(this)
+    this.setSearchSubTokenAddress = this.setSearchSubTokenAddress.bind(this)
+    this.setSearchSubPoolAddress = this.setSearchSubPoolAddress.bind(this)
+    this.setSearchPoolCreationTimestampRange = this.setSearchPoolCreationTimestampRange.bind(this)
+    this.setSearchMinTokenPrice = this.setSearchMinTokenPrice.bind(this)
+    this.setSearchMaxTokenPrice = this.setSearchMaxTokenPrice.bind(this)
+    this.setSearchMinPoolInitialLiquidity = this.setSearchMinPoolInitialLiquidity.bind(this)
+    this.setSearchMaxPoolInitialLiquidity = this.setSearchMaxPoolInitialLiquidity.bind(this)
+    this.setSearchMinPoolTotalLiquidity = this.setSearchMinPoolTotalLiquidity.bind(this)
+    this.setSearchMaxPoolTotalLiquidity = this.setSearchMaxPoolTotalLiquidity.bind(this)
+    this.setSearchMinPoolTotalTxs = this.setSearchMinPoolTotalTxs.bind(this)
+    this.setSearchMaxPoolTotalTxs = this.setSearchMaxPoolTotalTxs.bind(this)
+    this.setSearchMinTokenTotalHolders = this.setSearchMinTokenTotalHolders.bind(this)
+    this.setSearchMaxTokenTotalHolders = this.setSearchMaxTokenTotalHolders.bind(this)
+    this.setSearchMinTokenTotalSupply = this.setSearchMinTokenTotalSupply.bind(this)
+    this.setSearchMaxTokenTotalSupply = this.setSearchMaxTokenTotalSupply.bind(this)
+    this.setSearchMinTokenTotalMarketCap = this.setSearchMinTokenTotalMarketCap.bind(this)
+    this.setSearchMaxTokenTotalMarketCap = this.setSearchMaxTokenTotalMarketCap.bind(this)
+    this.setSearchMinPoolVolume1H = this.setSearchMinVolume1H.bind(this)
+    this.setSearchMaxPoolVolume1H = this.setSearchMaxVolume1H.bind(this)
+    this.setSearchMinPoolVolume24H = this.setSearchMinVolume24H.bind(this)
+    this.setSearchMaxPoolVolume24H = this.setSearchMaxVolume24H.bind(this)
+    this.setSearchValueTokenContractVerified = this.setSearchValueTokenContractVerified.bind(this)
+    this.setSearchValueTokenContractRenounced = this.setSearchValueTokenContractRenounced.bind(this)
 
     this.loadConfig = this.loadConfig.bind(this)
     this.applyFilter = this.applyFilter.bind(this)
@@ -100,163 +104,177 @@ class Filter extends React.Component {
     this.loadConfig()
   }
 
-  setSubTokenSymbol(value) {
+  setSearchSubTokenSymbol(value) {
     this.setState({
-      subTokenSymbol: value
+      searchSubTokenSymbol: value
     })
   }
 
-  setSubTokenAddress(value) {
+  setSearchSubTokenAddress(value) {
     this.setState({
-      subTokenAddress: value
+      searchSubTokenAddress: value
     })
   }
 
-  setSubPoolAddress(value) {
+  setSearchSubPoolAddress(value) {
     this.setState({
-      subPoolAddress: value
+      searchSubPoolAddress: value
     })
   }
 
-  setPoolCreationTimeRange(value) {
+  setSearchPoolCreationTimestampRange(value) {
     this.setState({
-      poolCreationTimeRange: value
+      searchPoolCreationTimestampRange: value
     })
   }
 
-  setMinTokenPriceUsd(value) {
+  setSearchMinTokenPrice(value) {
     this.setState({
-      minTokenPriceUsd: value
+      searchMinTokenPrice: value
     })
   }
 
-  setMaxTokenPriceUsd(value) {
+  setSearchMaxTokenPrice(value) {
     this.setState({
-      maxTokenPriceUsd: value
+      searchMaxTokenPrice: value
     })
   }
 
-  setMinPoolInitialLiquidityUsd(value) {
+  setSearchMinPoolInitialLiquidity(value) {
     this.setState({
-      minPoolInitialLiquidityUsd: value
+      searchMinPoolInitialLiquidity: value
     })
   }
 
-  setMaxPoolInitialLiquidityUsd(value) {
+  setSearchMaxPoolInitialLiquidity(value) {
     this.setState({
-      maxPoolInitialLiquidityUsd: value
+      searchMaxPoolInitialLiquidity: value
     })
   }
 
-  setMinPoolTotalLiquidityUsd(value) {
+  setSearchMinPoolTotalLiquidity(value) {
     this.setState({
-      minPoolTotalLiquidityUsd: value
+      searchMinPoolTotalLiquidity: value
     })
   }
 
-  setMaxPoolTotalLiquidityUsd(value) {
+  setSearchMaxPoolTotalLiquidity(value) {
     this.setState({
-      maxPoolTotalLiquidityUsd: value
+      searchMaxPoolTotalLiquidity: value
     })
   }
 
-  setMinPoolTotalTxs(value) {
+  setSearchMinPoolTotalTxs(value) {
     this.setState({
-      minPoolTotalTxs: value
+      searchMinPoolTotalTxs: value
     })
   }
 
-  setMaxPoolTotalTxs(value) {
+  setSearchMaxPoolTotalTxs(value) {
     this.setState({
-      maxPoolTotalTxs: value
+      searchMaxPoolTotalTxs: value
     })
   }
 
-  setMinTokenTotalHolders(value) {
+  setSearchMinTokenTotalHolders(value) {
     this.setState({
-      minTokenTotalHolders: value
+      searchMinTokenTotalHolders: value
     })
   }
 
-  setMaxTokenTotalHolders(value) {
+  setSearchMaxTokenTotalHolders(value) {
     this.setState({
-      maxTokenTotalHolders: value
+      searchMaxTokenTotalHolders: value
     })
   }
 
-  setMinTokenTotalSupply(value) {
+  setSearchMinTokenTotalSupply(value) {
     this.setState({
-      minTokenTotalSupply: value
+      searchMinTokenTotalSupply: value
     })
   }
 
-  setMaxTokenTotalSupply(value) {
+  setSearchMaxTokenTotalSupply(value) {
     this.setState({
-      maxTokenTotalSupply: value
+      searchMaxTokenTotalSupply: value
     })
   }
 
-  setMinTokenTotalMarketCapUsd(value) {
+  setSearchMinTokenTotalMarketCap(value) {
     this.setState({
-      minTokenTotalMarketCapUsd: value
+      searchMinTokenTotalMarketCap: value
     })
   }
 
-  setMaxTokenTotalMarketCapUsd(value) {
+  setSearchMaxTokenTotalMarketCap(value) {
     this.setState({
-      maxTokenTotalMarketCapUsd: value
+      searchMaxTokenTotalMarketCap: value
     })
   }
 
-  setMinVolume1H(value) {
+  setSearchMinVolume1H(value) {
     this.setState({
-      minVolume1H: value
+      searchMinVolume1H: value
     })
   }
 
-  setMaxVolume1H(value) {
+  setSearchMaxVolume1H(value) {
     this.setState({
-      maxVolume1H: value
+      searchMaxVolume1H: value
     })
   }
 
-  setMinVolume24H(value) {
+  setSearchMinVolume24H(value) {
     this.setState({
-      minVolume24H: value
+      searchMinVolume24H: value
     })
   }
 
-  setMaxVolume24H(value) {
+  setSearchMaxVolume24H(value) {
     this.setState({
-      maxVolume24H: value
+      searchMaxVolume24H: value
+    })
+  }
+
+  setSearchValueTokenContractVerified(value) {
+    this.setState({
+      searchValueTokenContractVerified: value
+    })
+  }
+
+  setSearchValueTokenContractRenounced(value) {
+    this.setState({
+      searchValueTokenContractRenounced: value
     })
   }
 
   clearFilter() {
     this.setState(
       {
-        subTokenSymbol: null,
-        subTokenAddress: null,
-        subPoolAddress: null,
-        poolCreationTimeRange: null,
-        minTokenPriceUsd: null,
-        maxTokenPriceUsd: null,
-        minPoolInitialLiquidityUsd: null,
-        maxPoolInitialLiquidityUsd: null,
-        minPoolTotalLiquidityUsd: null,
-        maxPoolTotalLiquidityUsd: null,
-        minPoolTotalTxs: null,
-        maxPoolTotalTxs: null,
-        minTokenTotalHolders: null,
-        maxTokenTotalHolders: null,
-        minTokenTotalSupply: null,
-        maxTokenTotalSupply: null,
-        minTokenTotalMarketCapUsd: null,
-        maxTokenTotalMarketCapUsd: null,
-        minVolume1H: null,
-        maxVolume1H: null,
-        minVolume24H: null,
-        maxVolume24H: null,
+        searchSubTokenSymbol: null,
+        searchSubTokenAddress: null,
+        searchSubPoolAddress: null,
+        searchPoolCreationTimestampRange: null,
+        searchMinTokenPrice: null,
+        searchMaxTokenPrice: null,
+        searchMinPoolInitialLiquidity: null,
+        searchMaxPoolInitialLiquidity: null,
+        searchMinPoolTotalLiquidity: null,
+        searchMaxPoolTotalLiquidity: null,
+        searchMinPoolTotalTxs: null,
+        searchMaxPoolTotalTxs: null,
+        searchMinTokenTotalHolders: null,
+        searchMaxTokenTotalHolders: null,
+        searchMinTokenTotalSupply: null,
+        searchMaxTokenTotalSupply: null,
+        searchMinTokenTotalMarketCap: null,
+        searchMaxTokenTotalMarketCap: null,
+        searchMinVolume1H: null,
+        searchMaxVolume1H: null,
+        searchMinVolume24H: null,
+        searchMaxVolume24H: null,
+        searchValueTokenContractVerified: null,
+        searchValueTokenContractRenounced: null,
       }
     )
   }
@@ -266,15 +284,25 @@ class Filter extends React.Component {
       const config = await this.context.loadConfig()
 
       this.setState({
-        poolCreationTimeRange: config['pool_creation_time_range'],
-        minPoolInitialLiquidityUsd: config['min_pool_initial_liquidity_usd'],
-        maxPoolInitialLiquidityUsd: config['max_pool_initial_liquidity_usd'],
-        minPoolTotalLiquidityUsd: config['min_pool_total_liquidity_usd'],
-        maxPoolTotalLiquidityUsd: config['max_pool_total_liquidity_usd'],
-        minPoolTotalTxs: config['min_pool_total_txs'],
-        maxPoolTotalTxs: config['max_pool_total_txs'],
-        minTokenTotalHolders: config['min_token_total_holders'],
-        maxTokenTotalHolders: config['max_token_total_holders'],
+        searchPoolCreationTimestampRange: config['search_pool_creation_timestamp_range'] / (60 * 60),
+        searchMinPoolInitialLiquidity: config['keyword_search_min_pool_initial_liquidity'],
+        searchMaxPoolInitialLiquidity: config['keyword_search_max_pool_initial_liquidity'],
+        searchMinPoolTotalLiquidity: config['keyword_search_min_pool_total_liquidity'],
+        searchMaxPoolTotalLiquidity: config['keyword_search_max_pool_total_liquidity'],
+        searchMinPoolTotalTxs: config['keyword_search_min_pool_total_txs'],
+        searchMaxPoolTotalTxs: config['keyword_search_max_pool_total_txs'],
+        searchMinTokenTotalHolders: config['keyword_search_min_token_total_holders'],
+        searchMaxTokenTotalHolders: config['keyword_search_max_token_total_holders'],
+        searchMinTokenTotalSupply: config['keyword_search_min_token_total_supply'],
+        searchMaxTokenTotalSupply: config['keyword_search_max_token_total_supply'],
+        searchMinTokenTotalMarketCap: config['keyword_search_min_token_total_market_cap'],
+        searchMaxTokenTotalMarketCap: config['keyword_search_max_token_total_market_cap'],
+        serachMinVolume1H: config['keyword_search_min_volume_1h'],
+        searchMaxVolume1H: config['keyword_search_max_volume_1h'],
+        searchMinVolume24H: config['keyword_search_min_volume_24h'],
+        searchMaxVolume24H: config['keyword_search_max_volume_24h'],
+        searchValueTokenContractVerified: config['keyword_search_value_token_contract_verified'] ? true : false,
+        searchValueTokenContractRenounced: config['keyword_search_value_token_contract_renounced'] ? true : false,
       })
     } catch (error) {
       alert(error.message)
@@ -285,29 +313,31 @@ class Filter extends React.Component {
     const { cookies } = this.props;
 
     const filter = {
-      sub_token_symbol: this.state.subTokenSymbol ? this.state.subTokenSymbol : null,
-      sub_token_address: this.state.subTokenAddress ? this.state.subTokenAddress : null,
-      sub_pool_address: this.state.subPoolAddress ? this.state.subPoolAddress : null,
-      min_pool_creation_time: this.state.poolCreationTimeRange ? (Date.now() - this.state.poolCreationTimeRange) / 1000 : null,
-      max_pool_creation_time: this.state.maxPoolCreationTime ? Date.now() / 1000 : null,
-      min_token_price_usd: this.state.minTokenPriceUsd ? this.state.minTokenPriceUsd : null,
-      max_token_price_usd: this.state.maxTokenPriceUsd ? this.state.maxTokenPriceUsd : null,
-      min_pool_initial_liquidity_usd: this.state.minPoolInitialLiquidityUsd ? this.state.minPoolInitialLiquidityUsd : null,
-      max_pool_initial_liquidity_usd: this.state.maxPoolInitialLiquidityUsd ? this.state.maxPoolInitialLiquidityUsd : null,
-      min_pool_total_liquidity_usd: this.state.minPoolTotalLiquidityUsd ? this.state.minPoolTotalLiquidityUsd : null,
-      max_pool_total_liquidity_usd: this.state.maxPoolTotalLiquidityUsd ? this.state.maxPoolTotalLiquidityUsd : null,
-      min_pool_total_txs: this.state.minPoolTotalTxs ? this.state.minPoolTotalTxs : null,
-      max_pool_total_txs: this.state.maxPoolTotalTxs ? this.state.maxPoolTotalTxs : null,
-      min_token_total_holders: this.state.minTokenTotalHolders ? this.state.minTokenTotalHolders : null,
-      max_token_total_holders: this.state.maxTokenTotalHolders ? this.state.maxTokenTotalHolders : null,
-      min_token_total_supply: this.state.minTokenTotalSupply ? this.state.minTokenTotalSupply : null,
-      max_token_total_supply: this.state.maxTokenTotalSupply ? this.state.maxTokenTotalSupply : null,
-      min_token_total_market_cap_usd: this.state.minTokenTotalMarketCapUsd ? this.state.minTokenTotalMarketCapUsd : null,
-      max_token_total_market_cap_usd: this.state.maxTokenTotalMarketCapUsd ? this.state.maxTokenTotalMarketCapUsd : null,
-      min_volume_1h: this.state.minVolume1H ? this.state.minVolume1H : null,
-      max_volume_1h: this.state.maxVolume1H ? this.state.maxVolume1H : null,
-      min_volume_24h: this.state.minVolume24H ? this.state.minVolume24H : null,
-      max_volume_24h: this.state.maxVolume24H ? this.state.maxVolume24H : null,
+      keyword_search_sub_token_symbol: this.state.searchSubTokenSymbol ? this.state.searchSubTokenSymbol : null,
+      keyword_search_sub_token_address: this.state.searchSubTokenAddress ? this.state.searchSubTokenAddress : null,
+      keyword_search_sub_pool_address: this.state.searchSubPoolAddress ? this.state.searchSubPoolAddress : null,
+      keyword_search_min_pool_creation_timestamp: this.state.searchPoolCreationTimestampRange ? Date.now() / 1000 - this.state.searchPoolCreationTimestampRange * 60 * 60 : null,
+      keyword_search_max_pool_creation_timestamp: this.state.searchPoolCreationTimestampRange ? Date.now() / 1000 : null,
+      keyword_search_min_token_price: this.state.searchMinTokenPrice ? this.state.searchMinTokenPrice : null,
+      keyword_search_max_token_price: this.state.searchMaxTokenPrice ? this.state.searchMaxTokenPrice : null,
+      keyword_search_min_pool_initial_liquidity: this.state.searchMinPoolInitialLiquidity ? this.state.searchMinPoolInitialLiquidity : null,
+      keyword_search_max_pool_initial_liquidity: this.state.searchMaxPoolInitialLiquidity ? this.state.searchMaxPoolInitialLiquidity : null,
+      keyword_search_min_pool_total_liquidity: this.state.searchMinPoolTotalLiquidity ? this.state.searchMinPoolTotalLiquidity : null,
+      keyword_search_max_pool_total_liquidity: this.state.searchMaxPoolTotalLiquidity ? this.state.searchMaxPoolTotalLiquidity : null,
+      keyword_search_min_pool_total_txs: this.state.searchMinPoolTotalTxs ? this.state.searchMinPoolTotalTxs : null,
+      keyword_search_max_pool_total_txs: this.state.searchMaxPoolTotalTxs ? this.state.searchMaxPoolTotalTxs : null,
+      keyword_search_min_token_total_holders: this.state.searchMinTokenTotalHolders ? this.state.searchMinTokenTotalHolders : null,
+      keyword_search_max_token_total_holders: this.state.searchMaxTokenTotalHolders ? this.state.searchMaxTokenTotalHolders : null,
+      keyword_search_min_token_total_supply: this.state.searchMinTokenTotalSupply ? this.state.searchMinTokenTotalSupply : null,
+      keyword_search_max_token_total_supply: this.state.searchMaxTokenTotalSupply ? this.state.searchMaxTokenTotalSupply : null,
+      keyword_search_min_token_total_market_cap: this.state.searchMinTokenTotalMarketCap ? this.state.searchMinTokenTotalMarketCap : null,
+      keyword_search_max_token_total_market_cap: this.state.searchMaxTokenTotalMarketCap ? this.state.searchMaxTokenTotalMarketCap : null,
+      keyword_search_min_volume_1h: this.state.searchMinVolume1H ? this.state.searchMinVolume1H : null,
+      keyword_search_max_volume_1h: this.state.searchMaxVolume1H ? this.state.searchMaxVolume1H : null,
+      keyword_search_min_volume_24h: this.state.searchMinVolume24H ? this.state.searchMinVolume24H : null,
+      keyword_search_max_volume_24h: this.state.searchMaxVolume24H ? this.state.searchMaxVolume24H : null,
+      keyword_search_value_token_contract_verified: this.state.searchValueTokenContractVerified ? this.state.searchValueTokenContractVerified : null,
+      keyword_search_value_token_contract_renounced: this.state.searchValueTokenContractRenounced ? this.state.searchValueTokenContractRenounced : null,
     }
 
     this.props.onFilter(filter)
@@ -355,9 +385,9 @@ class Filter extends React.Component {
                     style={{ width: 300 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.subTokenSymbol ? this.state.subTokenSymbol : ""}
+                    value={this.state.searchSubTokenSymbol ? this.state.searchSubTokenSymbol : ""}
                     onChange={(event) => {
-                      this.setSubTokenSymbol(event.target.value);
+                      this.setSearchSubTokenSymbol(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -373,9 +403,9 @@ class Filter extends React.Component {
                     style={{ width: 300 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.subTokenAddress ? this.state.subTokenAddress : ""}
+                    value={this.state.searchSubTokenAddress ? this.state.searchSubTokenAddress : ""}
                     onChange={(event) => {
-                      this.setSubTokenAddress(event.target.value);
+                      this.setSearchSubTokenAddress(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -391,9 +421,9 @@ class Filter extends React.Component {
                     style={{ width: 300 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.subPoolAddress ? this.state.subPoolAddress : ""}
+                    value={this.state.searchSubPoolAddress ? this.state.searchSubPoolAddress : ""}
                     onChange={(event) => {
-                      this.setSubPoolAddress(event.target.value);
+                      this.setSearchSubPoolAddress(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -410,9 +440,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.poolCreationTimeRange ? this.state.poolCreationTimeRange : ""}
+                    value={this.state.searchPoolCreationTimestampRange ? this.state.searchPoolCreationTimestampRange : ""}
                     onChange={(event) => {
-                      this.setPoolCreationTimeRange(event.target.value);
+                      this.setSearchPoolCreationTimestampRange(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -430,9 +460,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minTokenPriceUsd ? this.state.minTokenPriceUsd : ""}
+                    value={this.state.searchMinTokenPrice ? this.state.searchMinTokenPrice : ""}
                     onChange={(event) => {
-                      this.setMinTokenPriceUsd(event.target.value);
+                      this.setSearchMinTokenPrice(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -447,9 +477,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.maxTokenPriceUsd ? this.state.maxTokenPriceUsd : ""}
+                    value={this.state.searchMaxTokenPrice ? this.state.searchMaxTokenPrice : ""}
                     onChange={(event) => {
-                      this.setMaxTokenPriceUsd(event.target.value);
+                      this.setSearchMaxTokenPrice(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -466,9 +496,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minPoolInitialLiquidityUsd ? this.state.minPoolInitialLiquidityUsd : ""}
+                    value={this.state.searchMinPoolInitialLiquidity ? this.state.searchMinPoolInitialLiquidity : ""}
                     onChange={(event) => {
-                      this.setMinPoolInitialLiquidityUsd(event.target.value);
+                      this.setSearchMinPoolInitialLiquidity(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -482,9 +512,9 @@ class Filter extends React.Component {
                     type="number"
                     style={{ width: 125 }}
                     size="small"
-                    value={this.state.maxPoolInitialLiquidityUsd ? this.state.maxPoolInitialLiquidityUsd : ""}
+                    value={this.state.searchMaxPoolInitialLiquidity ? this.state.searchMaxPoolInitialLiquidity : ""}
                     onChange={(event) => {
-                      this.setMaxPoolInitialLiquidityUsd(event.target.value);
+                      this.setSearchMaxPoolInitialLiquidity(event.target.value);
                     }}
                     variant="outlined"
                     InputLabelProps={{
@@ -502,9 +532,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minPoolTotalLiquidityUsd ? this.state.minPoolTotalLiquidityUsd : ""}
+                    value={this.state.searchMinPoolTotalLiquidity ? this.state.searchMinPoolTotalLiquidity : ""}
                     onChange={(event) => {
-                      this.setMinPoolTotalLiquidityUsd(event.target.value);
+                      this.setSearchMinPoolTotalLiquidity(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -518,9 +548,9 @@ class Filter extends React.Component {
                     type="number"
                     style={{ width: 125 }}
                     size="small"
-                    value={this.state.maxPoolTotalLiquidityUsd ? this.state.maxPoolTotalLiquidityUsd : ""}
+                    value={this.state.searchMaxPoolTotalLiquidity ? this.state.searchMaxPoolTotalLiquidity : ""}
                     onChange={(event) => {
-                      this.setMaxPoolTotalLiquidityUsd(event.target.value);
+                      this.setSearchMaxPoolTotalLiquidity(event.target.value);
                     }}
                     variant="outlined"
                     InputLabelProps={{
@@ -538,9 +568,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minPoolTotalTxs ? this.state.minPoolTotalTxs : ""}
+                    value={this.state.searchMinPoolTotalTxs ? this.state.searchMinPoolTotalTxs : ""}
                     onChange={(event) => {
-                      this.setMinPoolTotalTxs(event.target.value);
+                      this.setSearchMinPoolTotalTxs(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -555,9 +585,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.maxPoolTotalTxs ? this.state.maxPoolTotalTxs : ""}
+                    value={this.state.searchMaxPoolTotalTxs ? this.state.searchMaxPoolTotalTxs : ""}
                     onChange={(event) => {
-                      this.setMaxPoolTotalTxs(event.target.value);
+                      this.setSearchMaxPoolTotalTxs(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -574,9 +604,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minTokenTotalHolders ? this.state.minTokenTotalHolders : ""}
+                    value={this.state.searchMinTokenTotalHolders ? this.state.searchMinTokenTotalHolders : ""}
                     onChange={(event) => {
-                      this.setMinTokenTotalHolders(event.target.value);
+                      this.setSearchMinTokenTotalHolders(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -591,9 +621,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.maxTokenTotalHolders ? this.state.maxTokenTotalHolders : ""}
+                    value={this.state.searchMaxTokenTotalHolders ? this.state.searchMaxTokenTotalHolders : ""}
                     onChange={(event) => {
-                      this.setMaxTokenTotalHolders(event.target.value);
+                      this.setSearchMaxTokenTotalHolders(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -610,9 +640,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minTokenTotalSupply ? this.state.minTokenTotalSupply : ""}
+                    value={this.state.searchMinTokenTotalSupply ? this.state.searchMinTokenTotalSupply : ""}
                     onChange={(event) => {
-                      this.setMinTokenTotalSupply(event.target.value);
+                      this.setSearchMinTokenTotalSupply(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -627,9 +657,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.maxTokenTotalSupply ? this.state.maxTokenTotalSupply : ""}
+                    value={this.state.searchMaxTokenTotalSupply ? this.state.searchMaxTokenTotalSupply : ""}
                     onChange={(event) => {
-                      this.setMaxTokenTotalSupply(event.target.value);
+                      this.setSearchMaxTokenTotalSupply(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -646,9 +676,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minTokenTotalMarketCapUsd ? this.state.minTokenTotalMarketCapUsd : ""}
+                    value={this.state.searchMinTokenTotalMarketCap ? this.state.searchMinTokenTotalMarketCap : ""}
                     onChange={(event) => {
-                      this.setMinTokenTotalMarketCapUsd(event.target.value);
+                      this.setSearchMinTokenTotalMarketCap(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -663,9 +693,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.maxTokenTotalMarketCapUsd ? this.state.maxTokenTotalMarketCapUsd : ""}
+                    value={this.state.searchMaxTokenTotalMarketCap ? this.state.searchMaxTokenTotalMarketCap : ""}
                     onChange={(event) => {
-                      this.setMaxTokenTotalMarketCapUsd(event.target.value);
+                      this.setSearchMaxTokenTotalMarketCap(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -682,9 +712,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minVolume1H ? this.state.minVolume1H : ""}
+                    value={this.state.searchMinVolume1H ? this.state.searchMinVolume1H : ""}
                     onChange={(event) => {
-                      this.setMinVolume1H(event.target.value);
+                      this.setSearchMinVolume1H(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -699,9 +729,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.maxVolume1H ? this.state.maxVolume1H : ""}
+                    value={this.state.searchMaxVolume1H ? this.state.searchMaxVolume1H : ""}
                     onChange={(event) => {
-                      this.setMaxVolume1H(event.target.value);
+                      this.setSearchMaxVolume1H(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -718,9 +748,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.minVolume24H ? this.state.minVolume24H : ""}
+                    value={this.state.searchMinVolume24H ? this.state.searchMinVolume24H : ""}
                     onChange={(event) => {
-                      this.setMinVolume24H(event.target.value);
+                      this.setSearchMinVolume24H(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -735,9 +765,9 @@ class Filter extends React.Component {
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.maxVolume24H ? this.state.maxVolume24H : ""}
+                    value={this.state.searchMaxVolume24H ? this.state.searchMaxVolume24H : ""}
                     onChange={(event) => {
-                      this.setMaxVolume24H(event.target.value);
+                      this.setSearchMaxVolume24H(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -745,6 +775,28 @@ class Filter extends React.Component {
                     }}
                     InputProps={{
                       className: "App-TextField-Filter"
+                    }} />
+                </div>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("contract_verified")}</span>
+                  <Checkbox
+                    checked={this.state.searchValueTokenContractVerified}
+                    onChange={(event) => {
+                      this.setSearchValueTokenContractVerified(event.target.checked);
+                    }}
+                    style={{
+                      color: "#ffffff",
+                    }} />
+                </div>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("contract_renounced")}</span>
+                  <Checkbox
+                    checked={this.state.searchValueTokenContractRenounced}
+                    onChange={(event) => {
+                      this.setSearchValueTokenContractRenounced(event.target.checked);
+                    }}
+                    style={{
+                      color: "#ffffff",
                     }} />
                 </div>
               </div>

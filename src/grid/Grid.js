@@ -30,7 +30,14 @@ export const withNavigation = (Component) => {
   return props => <Component {...props} navigate={useNavigate()} />;
 }
 
+const formatCurrency = (value, maximumFractionDigits) => {
+  let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits });
+  return value ? nf.format(value) : "-";
+}
+
 const formatDecimal = (value) => {
+  if (!value) return "-"
+
   let nf = new Intl.NumberFormat('en-US');
 
   var s = ""
@@ -53,12 +60,9 @@ const formatDecimal = (value) => {
   return s
 }
 
-const formatCurrency = (value, maximumFractionDigits) => {
-  let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits });
-  return value ? nf.format(value) : "-";
-}
-
 const formatMoney = (value) => {
+  if (!value) return "-"
+
   let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
 
   var s = ""
@@ -132,12 +136,12 @@ const COLUMN_CHAIN_NAME = {
   ),
 }
 
-const COLUMN_PROTOCOL = {
+const COLUMN_SYMBOL = {
   ...COLUMN_OPTIONS,
   field: 'token_symbol',
   renderHeader: (params) => (
     <strong>
-      {i18next.t("column_name_protocol")}
+      {i18next.t("column_token_symbol")}
       <span id="arrowTokenSymbolDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
@@ -239,9 +243,9 @@ const COLUMN_POOL_ADDRESS = {
   ),
 }
 
-const COLUMN_POOL_CREATION_TIME = {
+const COLUMN_POOL_CREATION_TIMESTAMP = {
   ...COLUMN_OPTIONS,
-  field: 'pool_creation_time',
+  field: 'pool_creation_timestamp',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_creation_time")}
@@ -262,9 +266,9 @@ const COLUMN_POOL_CREATION_TIME = {
   }
 }
 
-const COLUMN_LOG_TIME = {
+const COLUMN_LOG_TIMESTAMP = {
   ...COLUMN_OPTIONS,
-  field: 'log_time',
+  field: 'log_timestamp',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_history_time")}
@@ -288,7 +292,7 @@ const COLUMN_LOG_TIME = {
 const COLUMN_TOKEN_PRICE = {
   ...COLUMN_OPTIONS,
   type: 'number',
-  field: 'token_price_usd',
+  field: 'token_price',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_price")}
@@ -304,7 +308,7 @@ const COLUMN_TOKEN_PRICE = {
   renderCell: (params) => (
     <div style={{ textAlign: "right" }}>
       <div>
-        <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatCurrency(params.row.pool_total_liquidity_usd > 1 ? params.value : 0, 12)}</a>
+        <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatCurrency(params.row.pool_total_liquidity > 1 ? params.value : 0, 12)}</a>
       </div>
     </div>
   )
@@ -313,7 +317,7 @@ const COLUMN_TOKEN_PRICE = {
 const COLUMN_POOL_AMOUNT = {
   ...COLUMN_OPTIONS,
   type: 'number',
-  field: 'pool_initial_liquidity_usd',
+  field: 'pool_initial_liquidity',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_pool_amount")}
@@ -334,7 +338,7 @@ const COLUMN_POOL_AMOUNT = {
 const COLUMN_POOL_TOTAL_LIQUIDITY = {
   ...COLUMN_OPTIONS,
   type: 'number',
-  field: 'pool_total_liquidity_usd',
+  field: 'pool_total_liquidity',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_total_liquidity")}
@@ -419,7 +423,7 @@ const COLUMN_TOKEN_TOTAL_SUPPLY = {
 
 const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
   ...COLUMN_OPTIONS,
-  field: 'token_total_market_cap_usd',
+  field: 'token_total_market_cap',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_total_market_cap")}
@@ -433,7 +437,7 @@ const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
   ),
   width: 150,
   renderCell: (params) => {
-    return params.value ? formatMoney(params.value) : "-";
+    return params.value ? formatMoney(params.row.pool_total_liquidity > 1 ? params.value : 0) : "-";
   }
 }
 
@@ -504,11 +508,11 @@ const COLUMN_DEXTSCORE = {
 const pool_columns = [
   COLUMN_ID,
   COLUMN_CHAIN_NAME,
-  COLUMN_PROTOCOL,
+  COLUMN_SYMBOL,
   COLUMN_POOL_INDEX,
   COLUMN_TOKEN_ADDRESS,
   COLUMN_POOL_ADDRESS,
-  COLUMN_POOL_CREATION_TIME,
+  COLUMN_POOL_CREATION_TIMESTAMP,
   COLUMN_TOKEN_PRICE,
   COLUMN_POOL_AMOUNT,
   COLUMN_POOL_TOTAL_LIQUIDITY,
@@ -524,7 +528,7 @@ const pool_columns = [
 const pool_log_columns = [
   COLUMN_ID,
   COLUMN_CHAIN_NAME,
-  COLUMN_LOG_TIME,
+  COLUMN_LOG_TIMESTAMP,
   COLUMN_TOKEN_PRICE,
   COLUMN_POOL_AMOUNT,
   COLUMN_POOL_TOTAL_LIQUIDITY,
@@ -618,7 +622,7 @@ class Grid extends React.Component {
     this.state = {
       rows: [],
       rowCount: 0,
-      sortField: this.props.hist != "true" ? 'pool_creation_time' : 'log_time',
+      sortField: this.props.hist != "true" ? 'pool_creation_timestamp' : 'log_timestamp',
       sortDir: "desc",
       page: 0,
       pageSize: 50,

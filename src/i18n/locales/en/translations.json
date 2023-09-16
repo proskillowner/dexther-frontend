@@ -43,6 +43,7 @@
     "total_txs": "Total Txs",
     "volume_1h": "Volume 1H",
     "volume_24h": "Volume 24H",
+    "contract_verified": "Contract Verified",
     "contract_renounced": "Contract Renounced",
     "data_settings": "Data Settings",
     "save_data_settings_success": "Data settings has been saved",
@@ -75,7 +76,7 @@
     "description": "Description",
 
     "column_chain": "CHAIN",
-    "column_name_protocol": "NAME / PROTOCOL",
+    "column_token_symbol": "NAME / PROTOCOL",
     "column_pool_index": "PAIR INDEX",
     "column_token_address": "TOKEN ADDRESS",
     "column_pool_address": "PAIR ADDRESS",

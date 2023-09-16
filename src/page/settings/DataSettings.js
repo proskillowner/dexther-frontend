@@ -60,7 +60,7 @@ const columns = [
 
   {
     ...COLUMN_OPTIONS,
-    field: 'operation_start_time',
+    field: 'operation_start_timestamp',
     renderHeader: (params) => (
       <strong>
         {i18next.t("start_time")}
@@ -159,19 +159,19 @@ class DataSettings extends React.Component {
       syncInterval: this.props.data ? this.props.data.syncInterval : null,
       scanInterval: this.props.data ? this.props.data.scanInterval : null,
       scanMaxPoolCount: this.props.data ? this.props.data.scanMaxPoolCount : null,
-      scanPoolCreationTimeRange: this.props.data != null ? this.props.data.scanPoolCreationTimeRange : null,
-      scanMinTokenPriceUsd: this.props.data != null ? this.props.data.scanMinTokenPriceUsd : null,
-      scanMaxTokenPriceUsd: this.props.data != null ? this.props.data.scanMaxTokenPriceUsd : null,
-      scanMinPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.scanMinPoolInitialLiquidityUsd : null,
-      scanMaxPoolInitialLiquidityUsd: this.props.data != null ? this.props.data.scanMaxPoolInitialLiquidityUsd : null,
-      scanMinPoolTotalLiquidityUsd: this.props.data != null ? this.props.data.scanMinPoolTotalLiquidityUsd : null,
-      scanMaxPoolTotalLiquidityUsd: this.props.data != null ? this.props.data.scanMaxPoolTotalLiquidityUsd : null,
+      scanPoolCreationTimestampRange: this.props.data != null ? this.props.data.scanPoolCreationTimestampRange : null,
+      scanMinTokenPrice: this.props.data != null ? this.props.data.scanMinTokenPrice : null,
+      scanMaxTokenPrice: this.props.data != null ? this.props.data.scanMaxTokenPrice : null,
+      scanMinPoolInitialLiquidity: this.props.data != null ? this.props.data.scanMinPoolInitialLiquidity : null,
+      scanMaxPoolInitialLiquidity: this.props.data != null ? this.props.data.scanMaxPoolInitialLiquidity : null,
+      scanMinPoolTotalLiquidity: this.props.data != null ? this.props.data.scanMinPoolTotalLiquidity : null,
+      scanMaxPoolTotalLiquidity: this.props.data != null ? this.props.data.scanMaxPoolTotalLiquidity : null,
       scanMinPoolTotalTxs: this.props.data != null ? this.props.data.scanMinPoolTotalTxs : null,
       scanMaxPoolTotalTxs: this.props.data != null ? this.props.data.scanMaxPoolTotalTxs : null,
       scanMinTokenTotalHolders: this.props.data != null ? this.props.data.scanMinTokenTotalHolders : null,
       scanMaxTokenTotalHolders: this.props.data != null ? this.props.data.scanMaxTokenTotalHolders : null,
-      scanMinTokenTotalMarketCapUsd: this.props.data != null ? this.props.data.scanMinTokenTotalMarketCapUsd : null,
-      scanMaxTokenTotalMarketCapUsd: this.props.data != null ? this.props.data.scanMaxTokenTotalMarketCapUsd : null,
+      scanMinTokenTotalMarketCap: this.props.data != null ? this.props.data.scanMinTokenTotalMarketCap : null,
+      scanMaxTokenTotalMarketCap: this.props.data != null ? this.props.data.scanMaxTokenTotalMarketCap : null,
       scanMinVolume24H: this.props.data != null ? this.props.data.scanMinVolume24H : null,
       scanMaxVolume24H: this.props.data != null ? this.props.data.scanMaxVolume24H : null,
       dialogCronLog: false,
@@ -182,19 +182,19 @@ class DataSettings extends React.Component {
     this.setSyncInterval = this.setSyncInterval.bind(this)
     this.setScanInterval = this.setScanInterval.bind(this)
     this.setScanMaxPoolCount = this.setScanMaxPoolCount.bind(this)
-    this.setScanPoolCreationTimeRange = this.setScanPoolCreationTimeRange.bind(this)
-    this.setScanMinTokenPriceUsd = this.setScanMinTokenPriceUsd.bind(this)
-    this.setScanMaxTokenPriceUsd = this.setScanMaxTokenPriceUsd.bind(this)
-    this.setScanMinPoolInitialLiquidityUsd = this.setScanMinPoolInitialLiquidityUsd.bind(this)
-    this.setScanMaxPoolInitialLiquidityUsd = this.setScanMaxPoolInitialLiquidityUsd.bind(this)
-    this.setScanMinPoolTotalLiquidityUsd = this.setScanMinPoolTotalLiquidityUsd.bind(this)
-    this.setScanMaxPoolTotalLiquidityUsd = this.setScanMaxPoolTotalLiquidityUsd.bind(this)
+    this.setScanPoolCreationTimestampRange = this.setScanPoolCreationTimestampRange.bind(this)
+    this.setScanMinTokenPrice = this.setScanMinTokenPrice.bind(this)
+    this.setScanMaxTokenPrice = this.setScanMaxTokenPrice.bind(this)
+    this.setScanMinPoolInitialLiquidity = this.setScanMinPoolInitialLiquidity.bind(this)
+    this.setScanMaxPoolInitialLiquidity = this.setScanMaxPoolInitialLiquidity.bind(this)
+    this.setScanMinPoolTotalLiquidity = this.setScanMinPoolTotalLiquidity.bind(this)
+    this.setScanMaxPoolTotalLiquidity = this.setScanMaxPoolTotalLiquidity.bind(this)
     this.setScanMinPoolTotalTxs = this.setScanMinPoolTotalTxs.bind(this)
     this.setScanMaxPoolTotalTxs = this.setScanMaxPoolTotalTxs.bind(this)
     this.setScanMinTokenTotalHolders = this.setScanMinTokenTotalHolders.bind(this)
     this.setScanMaxTokenTotalHolders = this.setScanMaxTokenTotalHolders.bind(this)
-    this.setScanMinTokenTotalMarketCapUsd = this.setScanMinTokenTotalMarketCapUsd.bind(this)
-    this.setScanMaxTokenTotalMarketCapUsd = this.setScanMaxTokenTotalMarketCapUsd.bind(this)
+    this.setScanMinTokenTotalMarketCap = this.setScanMinTokenTotalMarketCap.bind(this)
+    this.setScanMaxTokenTotalMarketCap = this.setScanMaxTokenTotalMarketCap.bind(this)
     this.setScanMinVolume24H = this.setScanMinVolume24H.bind(this)
     this.setScanMaxVolume24H = this.setScanMaxVolume24H.bind(this)
 
@@ -228,45 +228,45 @@ class DataSettings extends React.Component {
     })
   };
 
-  setScanPoolCreationTimeRange(value) {
+  setScanPoolCreationTimestampRange(value) {
     this.setState({
-      scanPoolCreationTimeRange: value
+      scanPoolCreationTimestampRange: value
     })
   }
 
-  setScanMinTokenPriceUsd(value) {
+  setScanMinTokenPrice(value) {
     this.setState({
-      scanMinTokenPriceUsd: value
+      scanMinTokenPrice: value
     })
   }
 
-  setScanMaxTokenPriceUsd(value) {
+  setScanMaxTokenPrice(value) {
     this.setState({
-      scanMaxTokenPriceUsd: value
+      scanMaxTokenPrice: value
     })
   }
 
-  setScanMinPoolInitialLiquidityUsd(value) {
+  setScanMinPoolInitialLiquidity(value) {
     this.setState({
-      scanMinPoolInitialLiquidityUsd: value
+      scanMinPoolInitialLiquidity: value
     })
   }
 
-  setScanMaxPoolInitialLiquidityUsd(value) {
+  setScanMaxPoolInitialLiquidity(value) {
     this.setState({
-      scanMaxPoolInitialLiquidityUsd: value
+      scanMaxPoolInitialLiquidity: value
     })
   }
 
-  setScanMinPoolTotalLiquidityUsd(value) {
+  setScanMinPoolTotalLiquidity(value) {
     this.setState({
-      scanMinPoolTotalLiquidityUsd: value
+      scanMinPoolTotalLiquidity: value
     })
   }
 
-  setScanMaxPoolTotalLiquidityUsd(value) {
+  setScanMaxPoolTotalLiquidity(value) {
     this.setState({
-      scanMaxPoolTotalLiquidityUsd: value
+      scanMaxPoolTotalLiquidity: value
     })
   }
 
@@ -294,15 +294,15 @@ class DataSettings extends React.Component {
     })
   }
 
-  setScanMinTokenTotalMarketCapUsd(value) {
+  setScanMinTokenTotalMarketCap(value) {
     this.setState({
-      scanMinTokenTotalMarketCapUsd: value
+      scanMinTokenTotalMarketCap: value
     })
   }
 
-  setScanMaxTokenTotalMarketCapUsd(value) {
+  setScanMaxTokenTotalMarketCap(value) {
     this.setState({
-      scanMaxTokenTotalMarketCapUsd: value
+      scanMaxTokenTotalMarketCap: value
     })
   }
 
@@ -326,19 +326,19 @@ class DataSettings extends React.Component {
         syncInterval: config['sync_interval'] / 60,
         scanInterval: config['scan_interval'] / 60,
         scanMaxPoolCount: config['scan_max_pool_count'],
-        scanPoolCreationTimeRange: config['scan_pool_creation_time_range'] / (60 * 60),
-        scanMinPoolInitialLiquidityUsd: config['scan_min_pool_initial_liquidity_usd'],
-        scanMaxPoolInitialLiquidityUsd: config['scan_max_pool_initial_liquidity_usd'],
-        scanMinPoolTotalLiquidityUsd: config['scan_min_pool_total_liquidity_usd'],
-        scanMaxPoolTotalLiquidityUsd: config['scan_max_pool_total_liquidity_usd'],
-        scanMinPoolTotalTxs: config['scan_min_pool_total_txs'],
-        scanMaxPoolTotalTxs: config['scan_max_pool_total_txs'],
-        scanMinTokenTotalHolders: config['scan_min_token_total_holders'],
-        scanMaxTokenTotalHolders: config['scan_max_token_total_holders'],
-        scanMinTokenTotalMarketCapUsd: config['scan_min_token_total_market_cap_usd'],
-        scanMaxTokenTotalMarketCapUsd: config['scan_max_token_total_market_cap_usd'],
-        scanMinVolume24H: config['scan_min_volume_24h'],
-        scanMaxVolume24H: config['scan_max_volume_24h'],
+        scanPoolCreationTimestampRange: config['scan_pool_creation_timestamp_range'] / (60 * 60),
+        scanMinPoolInitialLiquidity: config['keyword_scan_min_pool_initial_liquidity'],
+        scanMaxPoolInitialLiquidity: config['keyword_scan_max_pool_initial_liquidity'],
+        scanMinPoolTotalLiquidity: config['keyword_scan_min_pool_total_liquidity'],
+        scanMaxPoolTotalLiquidity: config['keyword_scan_max_pool_total_liquidity'],
+        scanMinPoolTotalTxs: config['keyword_scan_min_pool_total_txs'],
+        scanMaxPoolTotalTxs: config['keyword_scan_max_pool_total_txs'],
+        scanMinTokenTotalHolders: config['keyword_scan_min_token_total_holders'],
+        scanMaxTokenTotalHolders: config['keyword_scan_max_token_total_holders'],
+        scanMinTokenTotalMarketCap: config['keyword_scan_min_token_total_market_cap'],
+        scanMaxTokenTotalMarketCap: config['keyword_scan_max_token_total_market_cap'],
+        scanMinVolume24H: config['keyword_scan_min_volume_24h'],
+        scanMaxVolume24H: config['keyword_scan_max_volume_24h'],
       })
     } catch (error) {
       console.error(error.message)
@@ -353,20 +353,21 @@ class DataSettings extends React.Component {
         sync_interval: this.state.syncInterval ? this.state.syncInterval * 60 : null,
         scan_interval: this.state.scanInterval ? this.state.scanInterval * 60 : null,
         scan_max_pool_count: this.state.scanMaxPoolCount ? this.state.scanMaxPoolCount : null,
-        scan_pool_creation_time_range: this.state.scanPoolCreationTimeRange ? this.state.scanPoolCreationTimeRange * (60 * 60) : null,
-        scan_min_token_price_usd: this.state.scanMinTokenPriceUsd ? this.state.scanMinTokenPriceUsd : null,
-        scan_min_pool_initial_liquidity_usd: this.state.scanMinPoolInitialLiquidityUsd ? this.state.scanMinPoolInitialLiquidityUsd : null,
-        scan_max_pool_initial_liquidity_usd: this.state.scanMaxPoolInitialLiquidityUsd ? this.state.scanMaxPoolInitialLiquidityUsd : null,
-        scan_min_pool_total_liquidity_usd: this.state.scanMinPoolTotalLiquidityUsd ? this.state.scanMinPoolTotalLiquidityUsd : null,
-        scan_max_pool_total_liquidity_usd: this.state.scanMaxPoolTotalLiquidityUsd ? this.state.scanMaxPoolTotalLiquidityUsd : null,
-        scan_min_pool_total_txs: this.state.scanMinPoolTotalTxs ? this.state.scanMinPoolTotalTxs : null,
-        scan_max_pool_total_txs: this.state.scanMaxPoolTotalTxs ? this.state.scanMaxPoolTotalTxs : null,
-        scan_min_token_total_holders: this.state.scanMinTokenTotalHolders ? this.state.scanMinTokenTotalHolders : null,
-        scan_max_token_total_holders: this.state.scanMaxTokenTotalHolders ? this.state.scanMaxTokenTotalHolders : null,
-        scan_min_token_total_market_cap_usd: this.state.scanMinTokenTotalMarketCapUsd ? this.state.scanMinTokenTotalMarketCapUsd : null,
-        scan_max_token_total_market_cap_usd: this.state.scanMaxTokenTotalMarketCapUsd ? this.state.scanMaxTokenTotalMarketCapUsd : null,
-        scan_min_volume_24h: this.state.scanMinVolume24H ? this.state.scanMinVolume24H : null,
-        scan_max_volume_24h: this.state.scanMaxVolume24H ? this.state.scanMaxVolume24H : null,
+        scan_pool_creation_timestamp_range: this.state.scanPoolCreationTimestampRange ? this.state.scanPoolCreationTimestampRange * (60 * 60) : null,
+        keyword_scan_min_token_price: this.state.scanMinTokenPrice ? this.state.scanMinTokenPrice : null,
+        keyword_scan_max_token_price: this.state.scanMaxTokenPrice ? this.state.scanMaxTokenPrice : null,
+        keyword_scan_min_pool_initial_liquidity: this.state.scanMinPoolInitialLiquidity ? this.state.scanMinPoolInitialLiquidity : null,
+        keyword_scan_max_pool_initial_liquidity: this.state.scanMaxPoolInitialLiquidity ? this.state.scanMaxPoolInitialLiquidity : null,
+        keyword_scan_min_pool_total_liquidity: this.state.scanMinPoolTotalLiquidity ? this.state.scanMinPoolTotalLiquidity : null,
+        keyword_scan_max_pool_total_liquidity: this.state.scanMaxPoolTotalLiquidity ? this.state.scanMaxPoolTotalLiquidity : null,
+        keyword_scan_min_pool_total_txs: this.state.scanMinPoolTotalTxs ? this.state.scanMinPoolTotalTxs : null,
+        keyword_scan_max_pool_total_txs: this.state.scanMaxPoolTotalTxs ? this.state.scanMaxPoolTotalTxs : null,
+        keyword_scan_min_token_total_holders: this.state.scanMinTokenTotalHolders ? this.state.scanMinTokenTotalHolders : null,
+        keyword_scan_max_token_total_holders: this.state.scanMaxTokenTotalHolders ? this.state.scanMaxTokenTotalHolders : null,
+        keyword_scan_min_token_total_market_cap: this.state.scanMinTokenTotalMarketCap ? this.state.scanMinTokenTotalMarketCap : null,
+        keyword_scan_max_token_total_market_cap: this.state.scanMaxTokenTotalMarketCap ? this.state.scanMaxTokenTotalMarketCap : null,
+        keyword_scan_min_volume_24h: this.state.scanMinVolume24H ? this.state.scanMinVolume24H : null,
+        keyword_scan_max_volume_24h: this.state.scanMaxVolume24H ? this.state.scanMaxVolume24H : null,
       }
 
       this.context.saveConfig(config)
@@ -401,7 +402,7 @@ class DataSettings extends React.Component {
         data.map((row, index) => {
           tableData.push({
             id: index + 1,
-            operation_start_time: row.operation_start_time,
+            operation_start_timestamp: row.operation_start_timestamp,
             operation_type: row.operation_type,
             operation_duration: row.operation_duration,
             operation_status: row.operation_status,
@@ -507,9 +508,9 @@ class DataSettings extends React.Component {
                 style={{ width: 125 }}
                 size="small"
                 variant="outlined"
-                value={this.state.poolCreationTimeRange ? this.state.poolCreationTimeRange : ""}
+                value={this.state.scanMaxPoolCount ? this.state.scanMaxPoolCount : ""}
                 onChange={(event) => {
-                  this.setPoolCreationTimeRange(event.target.value);
+                  this.setScanMaxPoolCount(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -526,9 +527,9 @@ class DataSettings extends React.Component {
                 style={{ width: 125 }}
                 size="small"
                 variant="outlined"
-                value={this.state.poolCreationTimeRange ? this.state.poolCreationTimeRange : ""}
+                value={this.state.scanPoolCreationTimestampRange ? this.state.scanPoolCreationTimestampRange : ""}
                 onChange={(event) => {
-                  this.setPoolCreationTimeRange(event.target.value);
+                  this.setScanPoolCreationTimestampRange(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -546,9 +547,9 @@ class DataSettings extends React.Component {
                 style={{ width: 125 }}
                 size="small"
                 variant="outlined"
-                value={this.state.scanMinPoolInitialLiquidityUsd ? this.state.scanMinPoolInitialLiquidityUsd : ""}
+                value={this.state.scanMinPoolInitialLiquidity ? this.state.scanMinPoolInitialLiquidity : ""}
                 onChange={(event) => {
-                  this.setMinPoolInitialLiquidityUsd(event.target.value);
+                  this.setMinPoolInitialLiquidity(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -562,9 +563,9 @@ class DataSettings extends React.Component {
                 type="number"
                 style={{ width: 125 }}
                 size="small"
-                value={this.state.scanMaxPoolInitialLiquidityUsd ? this.state.scanMaxPoolInitialLiquidityUsd : ""}
+                value={this.state.scanMaxPoolInitialLiquidity ? this.state.scanMaxPoolInitialLiquidity : ""}
                 onChange={(event) => {
-                  this.setMaxPoolInitialLiquidityUsd(event.target.value);
+                  this.setMaxPoolInitialLiquidity(event.target.value);
                 }}
                 variant="outlined"
                 InputLabelProps={{
@@ -582,9 +583,9 @@ class DataSettings extends React.Component {
                 style={{ width: 125 }}
                 size="small"
                 variant="outlined"
-                value={this.state.scanMinPoolTotalLiquidityUsd ? this.state.scanMinPoolTotalLiquidityUsd : ""}
+                value={this.state.scanMinPoolTotalLiquidity ? this.state.scanMinPoolTotalLiquidity : ""}
                 onChange={(event) => {
-                  this.setMinPoolTotalLiquidityUsd(event.target.value);
+                  this.setMinPoolTotalLiquidity(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -598,9 +599,9 @@ class DataSettings extends React.Component {
                 type="number"
                 style={{ width: 125 }}
                 size="small"
-                value={this.state.scanMaxPoolTotalLiquidityUsd ? this.state.scanMaxPoolTotalLiquidityUsd : ""}
+                value={this.state.scanMaxPoolTotalLiquidity ? this.state.scanMaxPoolTotalLiquidity : ""}
                 onChange={(event) => {
-                  this.setMaxPoolTotalLiquidityUsd(event.target.value);
+                  this.setMaxPoolTotalLiquidity(event.target.value);
                 }}
                 variant="outlined"
                 InputLabelProps={{
@@ -690,9 +691,9 @@ class DataSettings extends React.Component {
                 style={{ width: 125 }}
                 size="small"
                 variant="outlined"
-                value={this.state.scanMinTokenTotalMarketCapUsd ? this.state.scanMinTokenTotalMarketCapUsd : ""}
+                value={this.state.scanMinTokenTotalMarketCap ? this.state.scanMinTokenTotalMarketCap : ""}
                 onChange={(event) => {
-                  this.setMinTokenTotalMarketCapUsd(event.target.value);
+                  this.setMinTokenTotalMarketCap(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -707,9 +708,9 @@ class DataSettings extends React.Component {
                 style={{ width: 125 }}
                 size="small"
                 variant="outlined"
-                value={this.state.scanMaxTokenTotalMarketCapUsd ? this.state.scanMaxTokenTotalMarketCapUsd : ""}
+                value={this.state.scanMaxTokenTotalMarketCap ? this.state.scanMaxTokenTotalMarketCap : ""}
                 onChange={(event) => {
-                  this.setMaxTokenTotalMarketCapUsd(event.target.value);
+                  this.setMaxTokenTotalMarketCap(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
