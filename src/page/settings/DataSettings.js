@@ -549,7 +549,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMinPoolInitialLiquidity ? this.state.scanMinPoolInitialLiquidity : ""}
                 onChange={(event) => {
-                  this.setMinPoolInitialLiquidity(event.target.value);
+                  this.setScanMinPoolInitialLiquidity(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -565,7 +565,7 @@ class DataSettings extends React.Component {
                 size="small"
                 value={this.state.scanMaxPoolInitialLiquidity ? this.state.scanMaxPoolInitialLiquidity : ""}
                 onChange={(event) => {
-                  this.setMaxPoolInitialLiquidity(event.target.value);
+                  this.setScanMaxPoolInitialLiquidity(event.target.value);
                 }}
                 variant="outlined"
                 InputLabelProps={{
@@ -585,7 +585,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMinPoolTotalLiquidity ? this.state.scanMinPoolTotalLiquidity : ""}
                 onChange={(event) => {
-                  this.setMinPoolTotalLiquidity(event.target.value);
+                  this.setScanMinPoolTotalLiquidity(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -601,7 +601,7 @@ class DataSettings extends React.Component {
                 size="small"
                 value={this.state.scanMaxPoolTotalLiquidity ? this.state.scanMaxPoolTotalLiquidity : ""}
                 onChange={(event) => {
-                  this.setMaxPoolTotalLiquidity(event.target.value);
+                  this.setScanMaxPoolTotalLiquidity(event.target.value);
                 }}
                 variant="outlined"
                 InputLabelProps={{
@@ -621,7 +621,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMinPoolTotalTxs ? this.state.scanMinPoolTotalTxs : ""}
                 onChange={(event) => {
-                  this.setMinPoolTotalTxs(event.target.value);
+                  this.setScanMinPoolTotalTxs(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -638,7 +638,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMaxPoolTotalTxs ? this.state.scanMaxPoolTotalTxs : ""}
                 onChange={(event) => {
-                  this.setMaxPoolTotalTxs(event.target.value);
+                  this.setScanMaxPoolTotalTxs(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -657,7 +657,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMinTokenTotalHolders ? this.state.scanMinTokenTotalHolders : ""}
                 onChange={(event) => {
-                  this.setMinTokenTotalHolders(event.target.value);
+                  this.setScanMinTokenTotalHolders(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -674,7 +674,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMaxTokenTotalHolders ? this.state.scanMaxTokenTotalHolders : ""}
                 onChange={(event) => {
-                  this.setMaxTokenTotalHolders(event.target.value);
+                  this.setScanMaxTokenTotalHolders(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -693,7 +693,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMinTokenTotalMarketCap ? this.state.scanMinTokenTotalMarketCap : ""}
                 onChange={(event) => {
-                  this.setMinTokenTotalMarketCap(event.target.value);
+                  this.setScanMinTokenTotalMarketCap(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -710,7 +710,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMaxTokenTotalMarketCap ? this.state.scanMaxTokenTotalMarketCap : ""}
                 onChange={(event) => {
-                  this.setMaxTokenTotalMarketCap(event.target.value);
+                  this.setScanMaxTokenTotalMarketCap(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -729,7 +729,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMinVolume24H ? this.state.scanMinVolume24H : ""}
                 onChange={(event) => {
-                  this.setMinVolume24H(event.target.value);
+                  this.setScanMinVolume24H(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
@@ -746,7 +746,7 @@ class DataSettings extends React.Component {
                 variant="outlined"
                 value={this.state.scanMaxVolume24H ? this.state.scanMaxVolume24H : ""}
                 onChange={(event) => {
-                  this.setMaxVolume24H(event.target.value);
+                  this.setScanMaxVolume24H(event.target.value);
                 }}
                 InputLabelProps={{
                   shrink: false,
