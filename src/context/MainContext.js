@@ -74,6 +74,7 @@ class MainContextProvider extends React.Component {
 				volume_24h: /*poolLog.pool_volume_24h*/0,
 				token_contract_verified: poolLog.token_contract_verified,
 				token_contract_renounced: poolLog.token_contract_renounced,
+				pool_scan_score: poolLog.pool_scan_score,
 			})
 		})
 

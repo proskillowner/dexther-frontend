@@ -191,6 +191,29 @@ const COLUMN_POOL_INDEX = {
   ),
 }
 
+const COLUMN_POOL_SCAN_SCORE = {
+  ...COLUMN_OPTIONS,
+  field: 'pool_scan_score',
+  type: 'number',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_pool_scan_score")}
+      <span id="arrowPoolIndexDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowPoolIndexUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  width: 100,
+  renderCell: (params) => (
+    <div>
+      {params.value}
+    </div>
+  ),
+}
+
 const COLUMN_TOKEN_ADDRESS = {
   ...COLUMN_OPTIONS,
   field: 'token_address',
@@ -510,6 +533,7 @@ const pool_columns = [
   COLUMN_CHAIN_NAME,
   COLUMN_SYMBOL,
   COLUMN_POOL_INDEX,
+  COLUMN_POOL_SCAN_SCORE,
   COLUMN_TOKEN_ADDRESS,
   COLUMN_POOL_ADDRESS,
   COLUMN_POOL_CREATION_TIMESTAMP,
