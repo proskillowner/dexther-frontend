@@ -470,6 +470,9 @@ class DataSettings extends React.Component {
                 }} />
             </div>
             <div style={{ clear: "both", height: 50 }}>
+              <div>
+                <span>OR</span>
+              </div>
               <span className="App-Label-Filter-Block">{t("listed_since")}</span>
               <CssTextField
                 type="number"
@@ -490,6 +493,9 @@ class DataSettings extends React.Component {
               <span className="App-Label-Filter-Inline">{t("hours_before_now")}</span>
             </div>
             <div style={{ clear: "both", height: 50 }}>
+              <div>
+                <span>OR</span>
+              </div>
               <span className="App-Label-Filter-Block">{t("total_liquidity_usd")}</span>
               <CssTextField
                 type="number"
@@ -526,6 +532,9 @@ class DataSettings extends React.Component {
                 }} />
             </div>
             <div style={{ clear: "both", height: 50 }}>
+              <div>
+                <span>OR</span>
+              </div>
               <span className="App-Label-Filter-Block">{t("total_txs")}</span>
               <CssTextField
                 type="number"
@@ -562,6 +571,9 @@ class DataSettings extends React.Component {
                 }} />
             </div>
             <div style={{ clear: "both", height: 50 }}>
+              <div>
+                <span>OR</span>
+              </div>
               <span className="App-Label-Filter-Block">{t("token_holders")}</span>
               <CssTextField
                 type="number"
@@ -598,6 +610,9 @@ class DataSettings extends React.Component {
                 }} />
             </div>
             <div style={{ clear: "both", height: 50 }}>
+              <div>
+                <span>OR</span>
+              </div>
               <span className="App-Label-Filter-Block">{t("total_market_cap_usd")}</span>
               <CssTextField
                 type="number"
