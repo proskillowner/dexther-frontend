@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { withTranslation } from 'react-i18next';
-import i18next from 'i18next';
+import i18next, { t } from 'i18next';
 import Box from '@mui/material/Box';
 import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
-import { DataGrid, gridPageSizeSelector, gridPaginationModelSelector, gridRowCountSelector, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, gridPageSizeSelector, gridPaginationModelSelector, gridRowCountSelector, gridClasses, useGridApiRef, GridCellEditStopReasons } from '@mui/x-data-grid';
 import CopyAll from '@mui/icons-material/CopyAll';
 import ArrowDown from '@mui/icons-material/ArrowDownward';
 import ArrowUp from '@mui/icons-material/ArrowUpward';
@@ -15,9 +15,9 @@ import { useNavigate } from 'react-router-dom';
 import cgreen from "../media/c_green.svg"
 import rgreen from "../media/r_green.svg"
 import honeypot from "../media/honeypot.png"
-import { SERVER_URL, API_GET_CHAIN } from '../Api.js'
+import { SERVER_URL, API_GET_CHAIN, API_GET_SCAN_SCORE, API_SET_SCAN_SCORE } from '../Api.js'
 
-import MainContext, { GET_POOL, GET_POOL_LOG } from "../context/MainContext";
+import MainContext from "../context/MainContext";
 
 import {
   useGridApiContext,
@@ -108,7 +108,7 @@ const COLUMN_ID = {
       {'NO'}
     </strong>
   ),
-  width: 50,
+  minWidth: 40,
   filterable: false,
   hideable: false,
   sortable: false,
@@ -127,7 +127,7 @@ const COLUMN_CHAIN_NAME = {
       {i18next.t("column_chain")}
     </strong>
   ),
-  width: 100,
+  minWidth: 80,
   sortable: false,
   renderCell: (params) => (
     <div>
@@ -150,7 +150,8 @@ const COLUMN_SYMBOL = {
       </span>
     </strong>
   ),
-  width: 150,
+  maxWidth: 200,
+  minWidth: 120,
   renderCell: (params) => (
     <div>
       <div onClick={() => history(params)} className="App-link"><u>{params.value}</u></div>
@@ -183,7 +184,7 @@ const COLUMN_POOL_INDEX = {
       </span>
     </strong>
   ),
-  width: 100,
+  minWidth: 80,
   renderCell: (params) => (
     <div>
       {params.value}
@@ -191,13 +192,13 @@ const COLUMN_POOL_INDEX = {
   ),
 }
 
-const COLUMN_POOL_SCAN_SCORE = {
+const COLUMN_SCAN_SCORE = {
   ...COLUMN_OPTIONS,
-  field: 'pool_scan_score',
+  field: 'scan_score',
   type: 'number',
   renderHeader: (params) => (
     <strong>
-      {i18next.t("column_pool_scan_score")}
+      {i18next.t("column_scan_score")}
       <span id="arrowPoolIndexDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
@@ -206,12 +207,63 @@ const COLUMN_POOL_SCAN_SCORE = {
       </span>
     </strong>
   ),
-  width: 100,
+  minWidth: 80,
+  editable: true,
   renderCell: (params) => (
     <div>
       {params.value}
+      <a onClick={() => editScanScore(params)} className="App-link" style={{ marginLeft: 5 }}>EDIT</a>
     </div>
   ),
+  renderEditCell: (params) => {
+    return (
+      <div style={{ width: '100%' }}>
+        <input style={{ width: '100%' }} value={params.value} onChange={e => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })} />
+        <input type="button" value={'OK'} style={{ width: '40%' }} onClick={async () => {
+          if (params.value < -1 || params.value > 10) {
+            alert('Scan score MUST between -1 and 10')
+            return
+          }
+
+          const requestBody = {
+            chain_id: 1,
+            pool_address: params.row.pool_address,
+            scan_score: params.value,
+          }
+
+          await fetch(`${SERVER_URL}${API_SET_SCAN_SCORE}`, {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+            },
+          })
+
+          params.api.stopCellEditMode({ id: params.id, field: params.field })
+        }} />
+        <input type="button" value={'Cancel'} style={{ width: '60%' }} onClick={async () => {
+          const requestBody = {
+            chain_id: 1,
+            pool_address: params.row.pool_address,
+          }
+
+          let response = await fetch(`${SERVER_URL}${API_GET_SCAN_SCORE}`, {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+            },
+          })
+
+          response = await response.json()
+
+          params.api.setEditCellValue({ id: params.id, field: params.field, value: response.scan_score })
+
+          params.api.stopCellEditMode({ id: params.id, field: params.field })
+        }} />
+      </div>
+    )
+  }
 }
 
 const COLUMN_TOKEN_ADDRESS = {
@@ -222,7 +274,7 @@ const COLUMN_TOKEN_ADDRESS = {
       {i18next.t("column_token_address")}
     </strong>
   ),
-  width: 200,
+  minWidth: 200,
   sortable: false,
   renderCell: (params) => (
     <div>
@@ -248,7 +300,7 @@ const COLUMN_POOL_ADDRESS = {
       {i18next.t("column_pool_address")}
     </strong>
   ),
-  width: 200,
+  minWidth: 160,
   sortable: false,
   renderCell: (params) => (
     <div>
@@ -280,7 +332,7 @@ const COLUMN_POOL_CREATION_TIMESTAMP = {
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 140,
   headerAlign: 'center',
   align: "center",
   renderCell: (params) => {
@@ -303,7 +355,7 @@ const COLUMN_LOG_TIMESTAMP = {
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 140,
   headerAlign: 'center',
   align: "center",
   renderCell: (params) => {
@@ -327,7 +379,7 @@ const COLUMN_TOKEN_PRICE = {
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 120,
   renderCell: (params) => (
     <div style={{ textAlign: "right" }}>
       <div>
@@ -340,19 +392,19 @@ const COLUMN_TOKEN_PRICE = {
 const COLUMN_POOL_AMOUNT = {
   ...COLUMN_OPTIONS,
   type: 'number',
-  field: 'pool_initial_liquidity',
+  field: 'pool_initial_amount',
   renderHeader: (params) => (
     <strong>
       {i18next.t("column_pool_amount")}
-      <span id="arrowPoolInitialLiquidityDown" style={{ display: "none" }}>
+      <span id="arrowPoolInitialAmountDown" style={{ display: "none" }}>
         <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
       </span>
-      <span id="arrowPoolInitialLiquidityUp" style={{ display: "none" }}>
+      <span id="arrowPoolInitialAmountUp" style={{ display: "none" }}>
         <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 120,
   renderCell: (params) => {
     return formatCurrency(params.value > 1 ? params.value : 0, 6);
   }
@@ -373,7 +425,7 @@ const COLUMN_POOL_TOTAL_LIQUIDITY = {
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 120,
   renderCell: (params) => {
     return formatCurrency(params.value > 1 ? params.value : 0, 0);
   }
@@ -394,7 +446,7 @@ const COLUMN_POOL_TOTAL_TXS = {
       </span>
     </strong>
   ),
-  width: 100,
+  minWidth: 80,
   renderCell: (params) => {
     let nf = new Intl.NumberFormat('en-US');
     return params.value ? nf.format(params.value) : "-";
@@ -416,7 +468,7 @@ const COLUMN_TOKEN_TOTAL_HOLDERS = {
       </span>
     </strong>
   ),
-  width: 100,
+  minWidth: 80,
   renderCell: (params) => {
     let nf = new Intl.NumberFormat('en-US');
     return params.value ? (nf.format(params.value)) : "-";
@@ -438,7 +490,7 @@ const COLUMN_TOKEN_TOTAL_SUPPLY = {
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 120,
   renderCell: (params) => {
     return params.value ? formatDecimal(params.value) : "-";
   }
@@ -446,6 +498,7 @@ const COLUMN_TOKEN_TOTAL_SUPPLY = {
 
 const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
   ...COLUMN_OPTIONS,
+  type: 'number',
   field: 'token_total_market_cap',
   renderHeader: (params) => (
     <strong>
@@ -458,30 +511,9 @@ const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 140,
   renderCell: (params) => {
     return params.value ? formatMoney(params.row.pool_total_liquidity > 1 ? params.value : 0) : "-";
-  }
-}
-
-const COLUMN_VOLUME_1H = {
-  ...COLUMN_OPTIONS,
-  type: 'number',
-  field: 'volume_1h',
-  renderHeader: (params) => (
-    <strong>
-      {i18next.t("column_volume_1h")}
-      <span id="arrowVolume1HDown" style={{ display: "none" }}>
-        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-      </span>
-      <span id="arrowVolume1HUp" style={{ display: "none" }}>
-        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-      </span>
-    </strong>
-  ),
-  width: 150,
-  renderCell: (params) => {
-    return params.value ? formatMoney(params.value) : "-";
   }
 }
 
@@ -500,31 +532,9 @@ const COLUMN_VOLUME_24H = {
       </span>
     </strong>
   ),
-  width: 150,
+  minWidth: 120,
   renderCell: (params) => {
     return params.value ? formatMoney(params.value) : "-";
-  }
-}
-
-const COLUMN_DEXTSCORE = {
-  ...COLUMN_OPTIONS,
-  type: 'number',
-  field: 'dextscore',
-  renderHeader: (params) => (
-    <strong>
-      {i18next.t("column_dexscore")}
-      <span id="arrowDextScoreDown" style={{ display: "none" }}>
-        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-      </span>
-      <span id="arrowDextScoreUp" style={{ display: "none" }}>
-        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-      </span>
-    </strong>
-  ),
-  width: 100,
-  renderCell: (params) => {
-    let nf = new Intl.NumberFormat('en-US');
-    return params.value ? nf.format(params.value) : "-";
   }
 }
 
@@ -533,7 +543,7 @@ const pool_columns = [
   COLUMN_CHAIN_NAME,
   COLUMN_SYMBOL,
   COLUMN_POOL_INDEX,
-  COLUMN_POOL_SCAN_SCORE,
+  COLUMN_SCAN_SCORE,
   COLUMN_TOKEN_ADDRESS,
   COLUMN_POOL_ADDRESS,
   COLUMN_POOL_CREATION_TIMESTAMP,
@@ -544,9 +554,7 @@ const pool_columns = [
   COLUMN_TOKEN_TOTAL_HOLDERS,
   COLUMN_TOKEN_TOTAL_SUPPLY,
   COLUMN_TOKEN_TOTAL_MARKET_CAP,
-  COLUMN_VOLUME_1H,
   COLUMN_VOLUME_24H,
-  COLUMN_DEXTSCORE,
 ]
 
 const pool_log_columns = [
@@ -560,9 +568,7 @@ const pool_log_columns = [
   COLUMN_TOKEN_TOTAL_HOLDERS,
   COLUMN_TOKEN_TOTAL_SUPPLY,
   COLUMN_TOKEN_TOTAL_MARKET_CAP,
-  COLUMN_VOLUME_1H,
   COLUMN_VOLUME_24H,
-  COLUMN_DEXTSCORE,
 ]
 
 const history = (params) => {
@@ -595,6 +601,10 @@ const tokensniffer = (params) => {
 
 const dextools = (params) => {
   window.gridComponent.dextools(params)
+}
+
+const editScanScore = (params) => {
+  window.gridComponent.editScanScore(params)
 }
 
 var sortModel = null
@@ -634,6 +644,13 @@ export function CustomPagination() {
   );
 }
 
+const withApiRef = (Componnet) => {
+  return (props) => {
+    const apiRef = useGridApiRef()
+    return <Componnet apiRef={apiRef} {...props} />
+  }
+}
+
 class Grid extends React.Component {
   static contextType = MainContext
   static propTypes = {
@@ -657,7 +674,9 @@ class Grid extends React.Component {
       filterOpen: "none",
       filterModel: null,
       chains: [],
-      filterKey: 'filterKey'
+      filterKey: 'filterKey',
+      poolLogCount: 0,
+      timerId: null,
     }
 
     this.onCellClick = this.onCellClick.bind(this)
@@ -666,14 +685,40 @@ class Grid extends React.Component {
     this.history = this.history.bind(this)
     this.listenToScroll = this.listenToScroll.bind(this)
     this.onSrollStop = this.onSrollStop.bind(this)
+    this.loadFilter = this.loadFilter.bind(this)
     this.showFilter = this.showFilter.bind(this)
     this.hideFilter = this.hideFilter.bind(this)
     this.onFilter = this.onFilter.bind(this)
   }
 
-  componentDidMount() {
-    this.loadData()
+  async componentDidMount() {
+    // this.loadData()
+    const filter = await this.loadFilter()
+    this.onFilter(filter)
     window.addEventListener("scroll", this.listenToScroll);
+
+    const timerId = setInterval(async () => {
+      const pool_address = this.props.pair
+      const filter = await this.loadFilter()
+
+      const poolLogCount = this.context.getPoolLogCount({ pool_address, filterModel: filter })
+
+      if (poolLogCount != this.state.poolLogCount) {
+        this.setState({
+          poolLogCount
+        })
+
+        this.onFilter(filter)
+      }
+    }, 60 * 1000)
+
+    this.setState({
+      timerId
+    })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.timerId)
   }
 
   showFilter() {
@@ -695,7 +740,6 @@ class Grid extends React.Component {
       filterOpen: "none",
       filterModel: model
     }, this.loadData)
-
   }
 
   listenToScroll(e) {
@@ -765,6 +809,10 @@ class Grid extends React.Component {
     window.open("https://www.dextools.io/app/en/ether/pair-explorer/" + params.row.pool_address, '_blank', 'noopener,noreferrer')
   }
 
+  editScanScore(params) {
+    this.props.apiRef.current.startCellEditMode({ id: params.id, field: 'scan_score' })
+  }
+
   onCellClick(params) {
     navigator.clipboard.writeText(params.value)
     this.setState({
@@ -806,6 +854,64 @@ class Grid extends React.Component {
       })
       .catch((err) => {
       })
+  }
+
+  async loadFilter() {
+    const config = await this.context.loadConfig()
+
+    const filter = {
+      searchPoolCreationTimestampRange: config['search_pool_creation_timestamp_range'] / (60 * 60),
+      searchMinTokenPrice: config['keyword_search_min_token_price'],
+      searchMaxTokenPrice: config['keyword_search_max_token_price'],
+      searchMinPoolInitialAmount: config['keyword_search_min_pool_initial_amount'],
+      searchMaxPoolInitialAmount: config['keyword_search_max_pool_initial_amount'],
+      searchMinPoolTotalLiquidity: config['keyword_search_min_pool_total_liquidity'],
+      searchMaxPoolTotalLiquidity: config['keyword_search_max_pool_total_liquidity'],
+      searchMinPoolTotalTxs: config['keyword_search_min_pool_total_txs'],
+      searchMaxPoolTotalTxs: config['keyword_search_max_pool_total_txs'],
+      searchMinTokenTotalHolders: config['keyword_search_min_token_total_holders'],
+      searchMaxTokenTotalHolders: config['keyword_search_max_token_total_holders'],
+      searchMinTokenTotalSupply: config['keyword_search_min_token_total_supply'],
+      searchMaxTokenTotalSupply: config['keyword_search_max_token_total_supply'],
+      searchMinTokenTotalMarketCap: config['keyword_search_min_token_total_market_cap'],
+      searchMaxTokenTotalMarketCap: config['keyword_search_max_token_total_market_cap'],
+      searchMinVolume24H: config['keyword_search_min_volume_24h'],
+      searchMaxVolume24H: config['keyword_search_max_volume_24h'],
+      searchMinScanScore: config['keyword_search_min_scan_score'],
+      searchMaxScanScore: config['keyword_search_max_scan_score'],
+      searchValueTokenContractVerified: config['keyword_search_value_token_contract_verified'] ? true : false,
+      searchValueTokenContractRenounced: config['keyword_search_value_token_contract_renounced'] ? true : false,
+    }
+
+    const newFilter = {
+      keyword_search_sub_token_symbol: filter.searchSubTokenSymbol ? filter.searchSubTokenSymbol : null,
+      keyword_search_sub_token_address: filter.searchSubTokenAddress ? filter.searchSubTokenAddress : null,
+      keyword_search_sub_pool_address: filter.searchSubPoolAddress ? filter.searchSubPoolAddress : null,
+      keyword_search_min_pool_creation_timestamp: filter.searchPoolCreationTimestampRange ? Date.now() / 1000 - filter.searchPoolCreationTimestampRange * 60 * 60 : null,
+      keyword_search_max_pool_creation_timestamp: filter.searchPoolCreationTimestampRange ? Date.now() / 1000 : null,
+      keyword_search_min_token_price: filter.searchMinTokenPrice ? filter.searchMinTokenPrice : null,
+      keyword_search_max_token_price: filter.searchMaxTokenPrice ? filter.searchMaxTokenPrice : null,
+      keyword_search_min_pool_initial_amount: filter.searchMinPoolInitialAmount ? filter.searchMinPoolInitialAmount : null,
+      keyword_search_max_pool_initial_amount: filter.searchMaxPoolInitialAmount ? filter.searchMaxPoolInitialAmount : null,
+      keyword_search_min_pool_total_liquidity: filter.searchMinPoolTotalLiquidity ? filter.searchMinPoolTotalLiquidity : null,
+      keyword_search_max_pool_total_liquidity: filter.searchMaxPoolTotalLiquidity ? filter.searchMaxPoolTotalLiquidity : null,
+      keyword_search_min_pool_total_txs: filter.searchMinPoolTotalTxs ? filter.searchMinPoolTotalTxs : null,
+      keyword_search_max_pool_total_txs: filter.searchMaxPoolTotalTxs ? filter.searchMaxPoolTotalTxs : null,
+      keyword_search_min_token_total_holders: filter.searchMinTokenTotalHolders ? filter.searchMinTokenTotalHolders : null,
+      keyword_search_max_token_total_holders: filter.searchMaxTokenTotalHolders ? filter.searchMaxTokenTotalHolders : null,
+      keyword_search_min_token_total_supply: filter.searchMinTokenTotalSupply ? filter.searchMinTokenTotalSupply : null,
+      keyword_search_max_token_total_supply: filter.searchMaxTokenTotalSupply ? filter.searchMaxTokenTotalSupply : null,
+      keyword_search_min_token_total_market_cap: filter.searchMinTokenTotalMarketCap ? filter.searchMinTokenTotalMarketCap : null,
+      keyword_search_max_token_total_market_cap: filter.searchMaxTokenTotalMarketCap ? filter.searchMaxTokenTotalMarketCap : null,
+      keyword_search_min_volume_24h: filter.searchMinVolume24H ? filter.searchMinVolume24H : null,
+      keyword_search_max_volume_24h: filter.searchMaxVolume24H ? filter.searchMaxVolume24H : null,
+      keyword_search_min_scan_score: filter.searchMinScanScore ? filter.searchMinScanScore : null,
+      keyword_search_max_scan_score: filter.searchMaxScanScore ? filter.searchMaxScanScore : null,
+      keyword_search_value_token_contract_verified: filter.searchValueTokenContractVerified ? filter.searchValueTokenContractVerified : null,
+      keyword_search_value_token_contract_renounced: filter.searchValueTokenContractRenounced ? filter.searchValueTokenContractRenounced : null,
+    }
+
+    return newFilter
   }
 
   async loadData(keepPage = false) {
@@ -935,6 +1041,12 @@ class Grid extends React.Component {
           components={{
             Pagination: CustomPagination
           }}
+          apiRef={this.props.apiRef}
+          onCellEditStop={async (params, event) => {
+            if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+              event.defaultMuiPrevented = true;
+            }
+          }}
         />
       </Box>
       <div style={{ position: "absolute", left: "50%", top: "80%", display: this.state.alertCopiedOpen }}><Alert sx={{ background: "#282c34", color: "#ffffff" }} severity="info">{t("text_copied")}</Alert></div>
@@ -956,4 +1068,4 @@ class Grid extends React.Component {
   }
 }
 
-export default withNavigation(withCookies(withTranslation()(Grid)));
+export default withNavigation(withCookies(withTranslation()(withApiRef(Grid))));

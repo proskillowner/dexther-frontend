@@ -6,7 +6,6 @@ import i18next from 'i18next';
 import Grid from '../grid/Grid';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { API_GET_CONFIG, SERVER_URL } from '../Api';
 
 function Dashboard(props) {
   const [gridKey, setGridKey] = useState(0);
@@ -17,31 +16,31 @@ function Dashboard(props) {
   }
 
   const checkRequestData = async () => {
-    await fetch(`${SERVER_URL}${API_GET_CONFIG}`, {
-      method: 'POST',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        var found = false
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].name == "data_request") {
-            found = true
-            break
-          }
-        }
+    // await fetch(`${SERVER_URL}${API_GET_CONFIG}`, {
+    //   method: 'POST',
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     var found = false
+    //     for (let i = 0; i < data.length; i++) {
+    //       if (data[i].name == "data_request") {
+    //         found = true
+    //         break
+    //       }
+    //     }
 
-        if (found) {
-          scheduleCheckData()
-        }
-        else {
-          alert("Reload data berhasil")
-          setGridKey(gridKey + 1)
+    //     if (found) {
+    //       scheduleCheckData()
+    //     }
+    //     else {
+    //       alert("Reload data berhasil")
+    //       setGridKey(gridKey + 1)
 
-        }
-      })
-      .catch((err) => {
+    //     }
+    //   })
+    //   .catch((err) => {
 
-      })
+    //   })
   }
 
   const onReloadData = async () => {

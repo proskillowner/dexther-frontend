@@ -50,8 +50,8 @@ class Filter extends React.Component {
       searchPoolCreationTimestampRange: this.props.data != null ? this.props.data.search_pool_creation_timestamp_range : null,
       searchMinTokenPrice: this.props.data != null ? this.props.data.keyword_search_min_token_price : null,
       searchMaxTokenPrice: this.props.data != null ? this.props.data.keyword_search_max_token_price : null,
-      searchMinPoolInitialLiquidity: this.props.data != null ? this.props.data.keyword_search_min_pool_initial_liquidity : null,
-      searchMaxPoolInitialLiquidity: this.props.data != null ? this.props.data.keyword_search_max_pool_initial_liquidity : null,
+      searchMinPoolInitialAmount: this.props.data != null ? this.props.data.keyword_search_min_pool_initial_amount : null,
+      searchMaxPoolInitialAmount: this.props.data != null ? this.props.data.keyword_search_max_pool_initial_amount : null,
       searchMinPoolTotalLiquidity: this.props.data != null ? this.props.data.keyword_search_min_pool_total_liquidity : null,
       searchMaxPoolTotalLiquidity: this.props.data != null ? this.props.data.keyword_search_max_pool_total_liquidity : null,
       searchMinPoolTotalTxs: this.props.data != null ? this.props.data.keyword_search_min_pool_total_txs : null,
@@ -62,10 +62,10 @@ class Filter extends React.Component {
       searchMaxTokenTotalSupply: this.props.data != null ? this.props.data.keyword_search_max_token_total_supply : null,
       searchMinTokenTotalMarketCap: this.props.data != null ? this.props.data.keyword_search_min_token_total_market_cap : null,
       searchMaxTokenTotalMarketCap: this.props.data != null ? this.props.data.keyword_search_max_token_total_market_cap : null,
-      searchMinVolume1H: this.props.data != null ? this.props.data.keyword_search_min_volume_1h : null,
-      searchMaxVolume1H: this.props.data != null ? this.props.data.keyword_search_max_volume_1h : null,
       searchMinVolume24H: this.props.data != null ? this.props.data.keyword_search_min_volume_24h : null,
       searchMaxVolume24H: this.props.data != null ? this.props.data.keyword_search_max_volume_24h : null,
+      searchMinScanScore: this.props.data != null ? this.props.data.keyword_search_min_scan_score : null,
+      searchMaxScanScore: this.props.data != null ? this.props.data.keyword_search_max_scan_score : null,
       searchValueTokenContractVerified: this.props.data != null ? this.props.data.search_contract_verified : null,
       searchValueTokenContractRenounced: this.props.data != null ? this.props.data.search_contract_renounced : null,
     }
@@ -76,8 +76,8 @@ class Filter extends React.Component {
     this.setSearchPoolCreationTimestampRange = this.setSearchPoolCreationTimestampRange.bind(this)
     this.setSearchMinTokenPrice = this.setSearchMinTokenPrice.bind(this)
     this.setSearchMaxTokenPrice = this.setSearchMaxTokenPrice.bind(this)
-    this.setSearchMinPoolInitialLiquidity = this.setSearchMinPoolInitialLiquidity.bind(this)
-    this.setSearchMaxPoolInitialLiquidity = this.setSearchMaxPoolInitialLiquidity.bind(this)
+    this.setSearchMinPoolInitialAmount = this.setSearchMinPoolInitialAmount.bind(this)
+    this.setSearchMaxPoolInitialAmount = this.setSearchMaxPoolInitialAmount.bind(this)
     this.setSearchMinPoolTotalLiquidity = this.setSearchMinPoolTotalLiquidity.bind(this)
     this.setSearchMaxPoolTotalLiquidity = this.setSearchMaxPoolTotalLiquidity.bind(this)
     this.setSearchMinPoolTotalTxs = this.setSearchMinPoolTotalTxs.bind(this)
@@ -88,10 +88,10 @@ class Filter extends React.Component {
     this.setSearchMaxTokenTotalSupply = this.setSearchMaxTokenTotalSupply.bind(this)
     this.setSearchMinTokenTotalMarketCap = this.setSearchMinTokenTotalMarketCap.bind(this)
     this.setSearchMaxTokenTotalMarketCap = this.setSearchMaxTokenTotalMarketCap.bind(this)
-    this.setSearchMinPoolVolume1H = this.setSearchMinVolume1H.bind(this)
-    this.setSearchMaxPoolVolume1H = this.setSearchMaxVolume1H.bind(this)
-    this.setSearchMinPoolVolume24H = this.setSearchMinVolume24H.bind(this)
-    this.setSearchMaxPoolVolume24H = this.setSearchMaxVolume24H.bind(this)
+    this.setSearchMinVolume24H = this.setSearchMinVolume24H.bind(this)
+    this.setSearchMaxVolume24H = this.setSearchMaxVolume24H.bind(this)
+    this.setSearchMinScanScore = this.setSearchMinScanScore.bind(this)
+    this.setSearchMaxScanScore = this.setSearchMaxScanScore.bind(this)
     this.setSearchValueTokenContractVerified = this.setSearchValueTokenContractVerified.bind(this)
     this.setSearchValueTokenContractRenounced = this.setSearchValueTokenContractRenounced.bind(this)
 
@@ -140,15 +140,15 @@ class Filter extends React.Component {
     })
   }
 
-  setSearchMinPoolInitialLiquidity(value) {
+  setSearchMinPoolInitialAmount(value) {
     this.setState({
-      searchMinPoolInitialLiquidity: value
+      searchMinPoolInitialAmount: value
     })
   }
 
-  setSearchMaxPoolInitialLiquidity(value) {
+  setSearchMaxPoolInitialAmount(value) {
     this.setState({
-      searchMaxPoolInitialLiquidity: value
+      searchMaxPoolInitialAmount: value
     })
   }
 
@@ -212,18 +212,6 @@ class Filter extends React.Component {
     })
   }
 
-  setSearchMinVolume1H(value) {
-    this.setState({
-      searchMinVolume1H: value
-    })
-  }
-
-  setSearchMaxVolume1H(value) {
-    this.setState({
-      searchMaxVolume1H: value
-    })
-  }
-
   setSearchMinVolume24H(value) {
     this.setState({
       searchMinVolume24H: value
@@ -233,6 +221,18 @@ class Filter extends React.Component {
   setSearchMaxVolume24H(value) {
     this.setState({
       searchMaxVolume24H: value
+    })
+  }
+
+  setSearchMinScanScore(value) {
+    this.setState({
+      searchMinScanScore: value
+    })
+  }
+
+  setSearchMaxScanScore(value) {
+    this.setState({
+      searchMaxScanScore: value
     })
   }
 
@@ -257,8 +257,8 @@ class Filter extends React.Component {
         searchPoolCreationTimestampRange: null,
         searchMinTokenPrice: null,
         searchMaxTokenPrice: null,
-        searchMinPoolInitialLiquidity: null,
-        searchMaxPoolInitialLiquidity: null,
+        searchMinPoolInitialAmount: null,
+        searchMaxPoolInitialAmount: null,
         searchMinPoolTotalLiquidity: null,
         searchMaxPoolTotalLiquidity: null,
         searchMinPoolTotalTxs: null,
@@ -269,10 +269,10 @@ class Filter extends React.Component {
         searchMaxTokenTotalSupply: null,
         searchMinTokenTotalMarketCap: null,
         searchMaxTokenTotalMarketCap: null,
-        searchMinVolume1H: null,
-        searchMaxVolume1H: null,
         searchMinVolume24H: null,
         searchMaxVolume24H: null,
+        searchMinScanScore: null,
+        searchMaxScanScore: null,
         searchValueTokenContractVerified: null,
         searchValueTokenContractRenounced: null,
       }
@@ -285,8 +285,10 @@ class Filter extends React.Component {
 
       this.setState({
         searchPoolCreationTimestampRange: config['search_pool_creation_timestamp_range'] / (60 * 60),
-        searchMinPoolInitialLiquidity: config['keyword_search_min_pool_initial_liquidity'],
-        searchMaxPoolInitialLiquidity: config['keyword_search_max_pool_initial_liquidity'],
+        searchMinTokenPrice: config['keyword_search_min_token_price'],
+        searchMaxTokenPrice: config['keyword_search_max_token_price'],
+        searchMinPoolInitialAmount: config['keyword_search_min_pool_initial_amount'],
+        searchMaxPoolInitialAmount: config['keyword_search_max_pool_initial_amount'],
         searchMinPoolTotalLiquidity: config['keyword_search_min_pool_total_liquidity'],
         searchMaxPoolTotalLiquidity: config['keyword_search_max_pool_total_liquidity'],
         searchMinPoolTotalTxs: config['keyword_search_min_pool_total_txs'],
@@ -297,10 +299,10 @@ class Filter extends React.Component {
         searchMaxTokenTotalSupply: config['keyword_search_max_token_total_supply'],
         searchMinTokenTotalMarketCap: config['keyword_search_min_token_total_market_cap'],
         searchMaxTokenTotalMarketCap: config['keyword_search_max_token_total_market_cap'],
-        serachMinVolume1H: config['keyword_search_min_volume_1h'],
-        searchMaxVolume1H: config['keyword_search_max_volume_1h'],
         searchMinVolume24H: config['keyword_search_min_volume_24h'],
         searchMaxVolume24H: config['keyword_search_max_volume_24h'],
+        searchMinScanScore: config['keyword_search_min_scan_score'],
+        searchMaxScanScore: config['keyword_search_max_scan_score'],
         searchValueTokenContractVerified: config['keyword_search_value_token_contract_verified'] ? true : false,
         searchValueTokenContractRenounced: config['keyword_search_value_token_contract_renounced'] ? true : false,
       })
@@ -320,8 +322,8 @@ class Filter extends React.Component {
       keyword_search_max_pool_creation_timestamp: this.state.searchPoolCreationTimestampRange ? Date.now() / 1000 : null,
       keyword_search_min_token_price: this.state.searchMinTokenPrice ? this.state.searchMinTokenPrice : null,
       keyword_search_max_token_price: this.state.searchMaxTokenPrice ? this.state.searchMaxTokenPrice : null,
-      keyword_search_min_pool_initial_liquidity: this.state.searchMinPoolInitialLiquidity ? this.state.searchMinPoolInitialLiquidity : null,
-      keyword_search_max_pool_initial_liquidity: this.state.searchMaxPoolInitialLiquidity ? this.state.searchMaxPoolInitialLiquidity : null,
+      keyword_search_min_pool_initial_amount: this.state.searchMinPoolInitialAmount ? this.state.searchMinPoolInitialAmount : null,
+      keyword_search_max_pool_initial_amount: this.state.searchMaxPoolInitialAmount ? this.state.searchMaxPoolInitialAmount : null,
       keyword_search_min_pool_total_liquidity: this.state.searchMinPoolTotalLiquidity ? this.state.searchMinPoolTotalLiquidity : null,
       keyword_search_max_pool_total_liquidity: this.state.searchMaxPoolTotalLiquidity ? this.state.searchMaxPoolTotalLiquidity : null,
       keyword_search_min_pool_total_txs: this.state.searchMinPoolTotalTxs ? this.state.searchMinPoolTotalTxs : null,
@@ -332,10 +334,10 @@ class Filter extends React.Component {
       keyword_search_max_token_total_supply: this.state.searchMaxTokenTotalSupply ? this.state.searchMaxTokenTotalSupply : null,
       keyword_search_min_token_total_market_cap: this.state.searchMinTokenTotalMarketCap ? this.state.searchMinTokenTotalMarketCap : null,
       keyword_search_max_token_total_market_cap: this.state.searchMaxTokenTotalMarketCap ? this.state.searchMaxTokenTotalMarketCap : null,
-      keyword_search_min_volume_1h: this.state.searchMinVolume1H ? this.state.searchMinVolume1H : null,
-      keyword_search_max_volume_1h: this.state.searchMaxVolume1H ? this.state.searchMaxVolume1H : null,
       keyword_search_min_volume_24h: this.state.searchMinVolume24H ? this.state.searchMinVolume24H : null,
       keyword_search_max_volume_24h: this.state.searchMaxVolume24H ? this.state.searchMaxVolume24H : null,
+      keyword_search_min_scan_score: this.state.searchMinScanScore ? this.state.searchMinScanScore : null,
+      keyword_search_max_scan_score: this.state.searchMaxScanScore ? this.state.searchMaxScanScore : null,
       keyword_search_value_token_contract_verified: this.state.searchValueTokenContractVerified ? this.state.searchValueTokenContractVerified : null,
       keyword_search_value_token_contract_renounced: this.state.searchValueTokenContractRenounced ? this.state.searchValueTokenContractRenounced : null,
     }
@@ -490,15 +492,15 @@ class Filter extends React.Component {
                     }} />
                 </div>
                 <div style={{ clear: "both", height: 50 }}>
-                  <span className="App-Label-Filter-Block">{t("initial_liquidity_usd")}</span>
+                  <span className="App-Label-Filter-Block">{t("pool_amount_usd")}</span>
                   <CssTextField
                     type="number"
                     style={{ width: 125 }}
                     size="small"
                     variant="outlined"
-                    value={this.state.searchMinPoolInitialLiquidity ? this.state.searchMinPoolInitialLiquidity : ""}
+                    value={this.state.searchMinPoolInitialAmount ? this.state.searchMinPoolInitialAmount : ""}
                     onChange={(event) => {
-                      this.setSearchMinPoolInitialLiquidity(event.target.value);
+                      this.setSearchMinPoolInitialAmount(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,
@@ -512,9 +514,9 @@ class Filter extends React.Component {
                     type="number"
                     style={{ width: 125 }}
                     size="small"
-                    value={this.state.searchMaxPoolInitialLiquidity ? this.state.searchMaxPoolInitialLiquidity : ""}
+                    value={this.state.searchMaxPoolInitialAmount ? this.state.searchMaxPoolInitialAmount : ""}
                     onChange={(event) => {
-                      this.setSearchMaxPoolInitialLiquidity(event.target.value);
+                      this.setSearchMaxPoolInitialAmount(event.target.value);
                     }}
                     variant="outlined"
                     InputLabelProps={{
@@ -706,42 +708,6 @@ class Filter extends React.Component {
                     }} />
                 </div>
                 <div style={{ clear: "both", height: 50 }}>
-                  <span className="App-Label-Filter-Block">{t("volume_1h")}</span>
-                  <CssTextField
-                    type="number"
-                    style={{ width: 125 }}
-                    size="small"
-                    variant="outlined"
-                    value={this.state.searchMinVolume1H ? this.state.searchMinVolume1H : ""}
-                    onChange={(event) => {
-                      this.setSearchMinVolume1H(event.target.value);
-                    }}
-                    InputLabelProps={{
-                      shrink: false,
-                      className: "App-TextField-Filter"
-                    }}
-                    InputProps={{
-                      className: "App-TextField-Filter"
-                    }} />
-                  <span className="App-Label-Filter-Inline">{t("to")}</span>
-                  <CssTextField
-                    type="number"
-                    style={{ width: 125 }}
-                    size="small"
-                    variant="outlined"
-                    value={this.state.searchMaxVolume1H ? this.state.searchMaxVolume1H : ""}
-                    onChange={(event) => {
-                      this.setSearchMaxVolume1H(event.target.value);
-                    }}
-                    InputLabelProps={{
-                      shrink: false,
-                      className: "App-TextField-Filter"
-                    }}
-                    InputProps={{
-                      className: "App-TextField-Filter"
-                    }} />
-                </div>
-                <div style={{ clear: "both", height: 50 }}>
                   <span className="App-Label-Filter-Block">{t("volume_24h")}</span>
                   <CssTextField
                     type="number"
@@ -768,6 +734,42 @@ class Filter extends React.Component {
                     value={this.state.searchMaxVolume24H ? this.state.searchMaxVolume24H : ""}
                     onChange={(event) => {
                       this.setSearchMaxVolume24H(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                </div>
+                <div style={{ clear: "both", height: 50 }}>
+                  <span className="App-Label-Filter-Block">{t("scan_score")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.searchMinScanScore ? this.state.searchMinScanScore : ""}
+                    onChange={(event) => {
+                      this.setSearchMinScanScore(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.searchMaxScanScore ? this.state.searchMaxScanScore : ""}
+                    onChange={(event) => {
+                      this.setSearchMaxScanScore(event.target.value);
                     }}
                     InputLabelProps={{
                       shrink: false,

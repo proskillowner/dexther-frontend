@@ -1,5 +1,13 @@
 import React, { createContext, useEffect, useState } from "react";
-import { SERVER_URL, API_GET_CONFIG, API_SET_CONFIG, API_GET_POOL, API_GET_POOL_LOG } from "../Api";
+import {
+	SERVER_URL,
+	API_GET_CONFIG,
+	API_SET_CONFIG,
+	API_GET_POOL_LOG,
+	API_GET_POOL_LOG_COUNT,
+	API_GET_SCAN_SCORE,
+	API_SET_SCAN_SCORE
+} from "../Api";
 
 const MainContext = createContext()
 
@@ -14,8 +22,36 @@ class MainContextProvider extends React.Component {
 		localConfig: null,
 	}
 
+	getPoolLogCount = async ({ pool_address, filterModel }) => {
+		const requestBody = {}
+
+		requestBody.chain_id = 1
+
+		if (pool_address) {
+			requestBody.pool_address = pool_address
+		}
+
+		if (filterModel) {
+			requestBody.where = filterModel
+		}
+
+		let response = await fetch(`${SERVER_URL}${API_GET_POOL_LOG_COUNT}`, {
+			method: 'POST',
+			body: JSON.stringify(requestBody),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		})
+
+		response = await response.json()
+
+		return response.pool_log_count ? response.pool_log_count : 0
+	}
+
 	loadTableData = async ({ sortModel, pageModel, filterModel, chain, token, trail, pool_address }) => {
 		const requestBody = {}
+
+		requestBody.chain_id = 1
 
 		if (pool_address) {
 			requestBody.pool_address = pool_address
@@ -64,17 +100,16 @@ class MainContextProvider extends React.Component {
 				pool_creation_timestamp: poolLog.pool_creation_timestamp,
 				log_timestamp: poolLog.log_timestamp,
 				token_price: poolLog.token_price,
-				pool_initial_liquidity: poolLog.pool_initial_liquidity,
+				pool_initial_amount: poolLog.pool_initial_amount,
 				pool_total_liquidity: poolLog.pool_total_liquidity,
 				pool_total_txs: poolLog.pool_total_txs,
 				token_total_holders: poolLog.token_total_holders,
 				token_total_supply: poolLog.token_total_supply,
 				token_total_market_cap: poolLog.token_total_market_cap,
-				volume_1h: /*poolLog.pool_volume_1h*/0,
 				volume_24h: /*poolLog.pool_volume_24h*/0,
+				scan_score: poolLog.scan_score,
 				token_contract_verified: poolLog.token_contract_verified,
 				token_contract_renounced: poolLog.token_contract_renounced,
-				pool_scan_score: poolLog.pool_scan_score,
 			})
 		})
 
@@ -131,6 +166,41 @@ class MainContextProvider extends React.Component {
 		})
 	}
 
+	getScanScore = async ({ pool_address }) => {
+		const requestBody = {
+			chain_id: 1,
+			pool_address
+		}
+
+		let response = await fetch(`${SERVER_URL}${API_GET_SCAN_SCORE}`, {
+			method: 'POST',
+			body: JSON.stringify(requestBody),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		})
+
+		response = await response.json()
+
+		return response.scan_score ? response.scan_score : 0
+	}
+
+	setScanScore = async ({ pool_address, scan_score }) => {
+		const requestBody = {
+			chain_id: 1,
+			pool_address,
+			scan_score,
+		}
+
+		await fetch(`${SERVER_URL}${API_SET_SCAN_SCORE}`, {
+			method: 'POST',
+			body: JSON.stringify(requestBody),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		})
+	}
+
 	render() {
 		const { children } = this.props
 		const { tableData } = this.state
@@ -139,8 +209,11 @@ class MainContextProvider extends React.Component {
 			<MainContext.Provider value={{
 				tableData,
 				loadTableData: this.loadTableData,
+				getPoolLogCount: this.getPoolLogCount,
 				loadConfig: this.loadConfig,
 				saveConfig: this.saveConfig,
+				getScanScore: this.getScanScore,
+				setScanScore: this.setScanScore,
 			}}>
 				{children}
 			</MainContext.Provider>
