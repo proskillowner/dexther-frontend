@@ -160,7 +160,7 @@ const columns = [
     renderCell: (params) => {
       return (
         <div>
-          <Tooltip title={<span style={{ whiteSpace: "pre-line" }}>{params.value}</span>} style={{ whiteSpace: "pre-line" }}>
+          <Tooltip title={<span style={{ whiteSpace: "pre-line", maxWidth: 600 }}>{params.value}</span>}>
             <span style={{ whiteSpace: "pre-line" }}>{params.value.substring(0, 100) + (params.value.length > 100 ? '...' : '')}</span>
           </Tooltip>
         </div>
@@ -184,6 +184,7 @@ class DataSettings extends React.Component {
       scanInterval: this.props.data ? this.props.data.scanInterval : null,
       scanMaxPoolCount: this.props.data ? this.props.data.scanMaxPoolCount : null,
       scanPoolCreationTimestampRange: this.props.data != null ? this.props.data.scanPoolCreationTimestampRange : null,
+      scanPoolCreationTimestampRange2: this.props.data != null ? this.props.data.scanPoolCreationTimestampRange2 : null,
       scanMinPoolTotalLiquidity: this.props.data != null ? this.props.data.scanMinPoolTotalLiquidity : null,
       scanMaxPoolTotalLiquidity: this.props.data != null ? this.props.data.scanMaxPoolTotalLiquidity : null,
       scanMinPoolTotalTxs: this.props.data != null ? this.props.data.scanMinPoolTotalTxs : null,
@@ -201,6 +202,7 @@ class DataSettings extends React.Component {
     this.setScanInterval = this.setScanInterval.bind(this)
     this.setScanMaxPoolCount = this.setScanMaxPoolCount.bind(this)
     this.setScanPoolCreationTimestampRange = this.setScanPoolCreationTimestampRange.bind(this)
+    this.setScanPoolCreationTimestampRange2 = this.setScanPoolCreationTimestampRange2.bind(this)
     this.setScanMinPoolTotalLiquidity = this.setScanMinPoolTotalLiquidity.bind(this)
     this.setScanMaxPoolTotalLiquidity = this.setScanMaxPoolTotalLiquidity.bind(this)
     this.setScanMinPoolTotalTxs = this.setScanMinPoolTotalTxs.bind(this)
@@ -243,6 +245,12 @@ class DataSettings extends React.Component {
   setScanPoolCreationTimestampRange(value) {
     this.setState({
       scanPoolCreationTimestampRange: value
+    })
+  }
+
+  setScanPoolCreationTimestampRange2(value) {
+    this.setState({
+      scanPoolCreationTimestampRange2: value
     })
   }
 
@@ -303,6 +311,7 @@ class DataSettings extends React.Component {
         scanInterval: config['scan_interval'] / 60,
         scanMaxPoolCount: config['scan_max_pool_count'],
         scanPoolCreationTimestampRange: config['scan_pool_creation_timestamp_range'] / (60 * 60),
+        scanPoolCreationTimestampRange2: config['scan_pool_creation_timestamp_range_2'] / (60 * 60),
         scanMinPoolTotalLiquidity: config['keyword_scan_min_pool_total_liquidity'],
         scanMaxPoolTotalLiquidity: config['keyword_scan_max_pool_total_liquidity'],
         scanMinPoolTotalTxs: config['keyword_scan_min_pool_total_txs'],
@@ -326,6 +335,7 @@ class DataSettings extends React.Component {
         scan_interval: this.state.scanInterval ? this.state.scanInterval * 60 : null,
         scan_max_pool_count: this.state.scanMaxPoolCount ? this.state.scanMaxPoolCount : null,
         scan_pool_creation_timestamp_range: this.state.scanPoolCreationTimestampRange ? this.state.scanPoolCreationTimestampRange * (60 * 60) : null,
+        scan_pool_creation_timestamp_range_2: this.state.scanPoolCreationTimestampRange2 ? this.state.scanPoolCreationTimestampRange2 * (60 * 60) : null,
         keyword_scan_min_pool_total_liquidity: this.state.scanMinPoolTotalLiquidity ? this.state.scanMinPoolTotalLiquidity : null,
         keyword_scan_max_pool_total_liquidity: this.state.scanMaxPoolTotalLiquidity ? this.state.scanMaxPoolTotalLiquidity : null,
         keyword_scan_min_pool_total_txs: this.state.scanMinPoolTotalTxs ? this.state.scanMinPoolTotalTxs : null,
@@ -495,150 +505,178 @@ class DataSettings extends React.Component {
           <h5 style={{ textAlign: "center" }}>{t("and")}</h5>
           <div>
             <h5>{t("filter2")}</h5>
-            <div style={{ columnCount: 2, padding: 10, borderStyle: "solid", borderWidth: 2 }}>
-              <div style={{ clear: "both", height: 40 }}>
-                <span className="App-Label-Filter-Block">{t("total_liquidity_usd")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  variant="outlined"
-                  value={this.state.scanMinPoolTotalLiquidity ? this.state.scanMinPoolTotalLiquidity : ""}
-                  onChange={(event) => {
-                    this.setScanMinPoolTotalLiquidity(event.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
-                <span className="App-Label-Filter-Inline">{t("to")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  value={this.state.scanMaxPoolTotalLiquidity ? this.state.scanMaxPoolTotalLiquidity : ""}
-                  onChange={(event) => {
-                    this.setScanMaxPoolTotalLiquidity(event.target.value);
-                  }}
-                  variant="outlined"
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
+            <div style={{ padding: 10, borderStyle: "solid", borderWidth: 2 }}>
+              <div>
+                <div style={{ clear: "both", height: 40 }}>
+                  <span className="App-Label-Filter-Block">{t("filter1_description")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanPoolCreationTimestampRange2 ? this.state.scanPoolCreationTimestampRange2 : ""}
+                    onChange={(event) => {
+                      this.setScanPoolCreationTimestampRange2(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("hours")}</span>
+                </div>
               </div>
-              <div style={{ clear: "both", height: 40 }}>
-                <span className="App-Label-Filter-Block">{t("token_holders")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  variant="outlined"
-                  value={this.state.scanMinTokenTotalHolders ? this.state.scanMinTokenTotalHolders : ""}
-                  onChange={(event) => {
-                    this.setScanMinTokenTotalHolders(event.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
-                <span className="App-Label-Filter-Inline">{t("to")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  variant="outlined"
-                  value={this.state.scanMaxTokenTotalHolders ? this.state.scanMaxTokenTotalHolders : ""}
-                  onChange={(event) => {
-                    this.setScanMaxTokenTotalHolders(event.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
-              </div>
-              <div style={{ clear: "both", height: 40 }}>
-                <span className="App-Label-Filter-Block">{t("total_txs")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  variant="outlined"
-                  value={this.state.scanMinPoolTotalTxs ? this.state.scanMinPoolTotalTxs : ""}
-                  onChange={(event) => {
-                    this.setScanMinPoolTotalTxs(event.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
-                <span className="App-Label-Filter-Inline">{t("to")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  variant="outlined"
-                  value={this.state.scanMaxPoolTotalTxs ? this.state.scanMaxPoolTotalTxs : ""}
-                  onChange={(event) => {
-                    this.setScanMaxPoolTotalTxs(event.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
-              </div>
-              <div style={{ clear: "both", height: 40 }}>
-                <span className="App-Label-Filter-Block">{t("total_market_cap_usd")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  variant="outlined"
-                  value={this.state.scanMinTokenTotalMarketCap ? this.state.scanMinTokenTotalMarketCap : ""}
-                  onChange={(event) => {
-                    this.setScanMinTokenTotalMarketCap(event.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
-                <span className="App-Label-Filter-Inline">{t("to")}</span>
-                <CssTextField
-                  type="number"
-                  style={{ width: 125 }}
-                  size="small"
-                  variant="outlined"
-                  value={this.state.scanMaxTokenTotalMarketCap ? this.state.scanMaxTokenTotalMarketCap : ""}
-                  onChange={(event) => {
-                    this.setScanMaxTokenTotalMarketCap(event.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: false,
-                    className: "App-TextField-Filter"
-                  }}
-                  InputProps={{
-                    className: "App-TextField-Filter"
-                  }} />
+              <h6 style={{ textAlign: "center" }}>{t("and")}</h6>
+              <div style={{ columnCount: 2 }}>
+                <div style={{ clear: "both", height: 40 }}>
+                  <span className="App-Label-Filter-Block">{t("total_liquidity_usd")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanMinPoolTotalLiquidity ? this.state.scanMinPoolTotalLiquidity : ""}
+                    onChange={(event) => {
+                      this.setScanMinPoolTotalLiquidity(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    value={this.state.scanMaxPoolTotalLiquidity ? this.state.scanMaxPoolTotalLiquidity : ""}
+                    onChange={(event) => {
+                      this.setScanMaxPoolTotalLiquidity(event.target.value);
+                    }}
+                    variant="outlined"
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                </div>
+                <h6 style={{ textAlign: "center", margin: 5 }}>{t("or")}</h6>
+                <div style={{ clear: "both", height: 40 }}>
+                  <span className="App-Label-Filter-Block">{t("token_holders")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanMinTokenTotalHolders ? this.state.scanMinTokenTotalHolders : ""}
+                    onChange={(event) => {
+                      this.setScanMinTokenTotalHolders(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanMaxTokenTotalHolders ? this.state.scanMaxTokenTotalHolders : ""}
+                    onChange={(event) => {
+                      this.setScanMaxTokenTotalHolders(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                </div>
+                <h6 style={{ textAlign: "center", margin: 5 }}>{t("or")}</h6>
+                <div style={{ clear: "both", height: 40 }}>
+                  <span className="App-Label-Filter-Block">{t("total_txs")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanMinPoolTotalTxs ? this.state.scanMinPoolTotalTxs : ""}
+                    onChange={(event) => {
+                      this.setScanMinPoolTotalTxs(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanMaxPoolTotalTxs ? this.state.scanMaxPoolTotalTxs : ""}
+                    onChange={(event) => {
+                      this.setScanMaxPoolTotalTxs(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                </div>
+                <h6 style={{ textAlign: "center", margin: 5 }}>{t("or")}</h6>
+                <div style={{ clear: "both", height: 40 }}>
+                  <span className="App-Label-Filter-Block">{t("total_market_cap_usd")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanMinTokenTotalMarketCap ? this.state.scanMinTokenTotalMarketCap : ""}
+                    onChange={(event) => {
+                      this.setScanMinTokenTotalMarketCap(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                  <span className="App-Label-Filter-Inline">{t("to")}</span>
+                  <CssTextField
+                    type="number"
+                    style={{ width: 125 }}
+                    size="small"
+                    variant="outlined"
+                    value={this.state.scanMaxTokenTotalMarketCap ? this.state.scanMaxTokenTotalMarketCap : ""}
+                    onChange={(event) => {
+                      this.setScanMaxTokenTotalMarketCap(event.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: false,
+                      className: "App-TextField-Filter"
+                    }}
+                    InputProps={{
+                      className: "App-TextField-Filter"
+                    }} />
+                </div>
               </div>
             </div>
           </div>

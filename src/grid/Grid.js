@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { withTranslation } from 'react-i18next';
 import i18next, { t } from 'i18next';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { instanceOf } from "prop-types";
 import { withCookies, Cookies } from "react-cookie";
 import { DataGrid, gridPageSizeSelector, gridPaginationModelSelector, gridRowCountSelector, gridClasses, useGridApiRef, GridCellEditStopReasons } from '@mui/x-data-grid';
@@ -33,6 +34,9 @@ import {
 } from "@mui/x-data-grid";
 import TablePagination from "@mui/material/TablePagination";
 import Filter from "./Filter";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCancel, faCheck, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { Typography } from "@mui/material";
 
 export const withNavigation = (Component) => {
   return props => <Component {...props} navigate={useNavigate()} />;
@@ -220,55 +224,63 @@ const COLUMN_SCAN_SCORE = {
   renderCell: (params) => (
     <div>
       {params.value ? params.value : ""}
-      <a onClick={() => editScanScore(params)} className="App-link" style={{ marginLeft: 5 }}>EDIT</a>
+      <a onClick={() => editScanScore(params)} className="App-link" style={{ marginLeft: 5 }}>
+        <FontAwesomeIcon icon={faEdit} />
+      </a>
     </div>
   ),
   renderEditCell: (params) => {
     return (
-      <div style={{ width: '100%' }}>
-        <input style={{ width: '100%' }} value={params.value} onChange={e => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })} />
-        <input type="button" value={'OK'} style={{ width: '40%' }} onClick={async () => {
-          if (params.value < -1 || params.value > 10) {
-            alert('Scan score MUST between -1 and 10')
-            return
-          }
+      <div style={{ width: '100%', position: 'relative' }}>
+        <input type="number" style={{ width: '100%' }} value={params.value} onChange={e => params.api.setEditCellValue({ id: params.id, field: params.field, value: e.target.value })} />
+        <div style={{ position: 'absolute', width: '100%', display: 'flex' }}>
+          <Typography typeof="span" sx={(theme) => ({
+            width: '50%', textAlign: 'center', padding: '2px', fontSize: '14px', color: 'green', backgroundColor: 'gray', opacity: 1, '&:hover': { opacity: 0.7 }
+          })} onClick={async () => {
+            if (params.value < -1 || params.value > 10) {
+              alert('Scan score MUST between -1 and 10')
+              return
+            }
 
-          const requestBody = {
-            chain_id: 1,
-            pool_address: params.row.pool_address,
-            scan_score: parseInt(params.value),
-          }
+            const requestBody = {
+              chain_id: 1,
+              pool_address: params.row.pool_address,
+              scan_score: parseInt(params.value),
+            }
 
-          await fetch(`${SERVER_URL}${API_SET_SCAN_SCORE}`, {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {
-              'Content-type': 'application/json; charset=UTF-8',
-            },
-          })
+            await fetch(`${SERVER_URL}${API_SET_SCAN_SCORE}`, {
+              method: 'POST',
+              body: JSON.stringify(requestBody),
+              headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+              },
+            })
 
-          params.api.stopCellEditMode({ id: params.id, field: params.field })
-        }} />
-        <input type="button" value={'Cancel'} style={{ width: '60%' }} onClick={async () => {
-          const requestBody = {
-            chain_id: 1,
-            pool_address: params.row.pool_address,
-          }
+            params.api.stopCellEditMode({ id: params.id, field: params.field })
+          }}><FontAwesomeIcon icon={faCheck} /></Typography>
+          <Typography typeof="span" sx={(theme) => ({
+            width: '50%', textAlign: 'center', padding: '2px', fontSize: '14px', color: 'red', backgroundColor: 'gray', opacity: 1, '&:hover': { opacity: 0.7 }
+          })} onClick={async () => {
+            const requestBody = {
+              chain_id: 1,
+              pool_address: params.row.pool_address,
+            }
 
-          let response = await fetch(`${SERVER_URL}${API_GET_SCAN_SCORE}`, {
-            method: 'POST',
-            body: JSON.stringify(requestBody),
-            headers: {
-              'Content-type': 'application/json; charset=UTF-8',
-            },
-          })
+            let response = await fetch(`${SERVER_URL}${API_GET_SCAN_SCORE}`, {
+              method: 'POST',
+              body: JSON.stringify(requestBody),
+              headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+              },
+            })
 
-          response = await response.json()
+            response = await response.json()
 
-          params.api.setEditCellValue({ id: params.id, field: params.field, value: response.scan_score })
+            params.api.setEditCellValue({ id: params.id, field: params.field, value: response.scan_score })
 
-          params.api.stopCellEditMode({ id: params.id, field: params.field })
-        }} />
+            params.api.stopCellEditMode({ id: params.id, field: params.field })
+          }}><FontAwesomeIcon icon={faCancel} /></Typography>
+        </div>
       </div>
     )
   }
@@ -483,27 +495,6 @@ const COLUMN_TOKEN_TOTAL_HOLDERS = {
   }
 }
 
-const COLUMN_TOKEN_TOTAL_SUPPLY = {
-  ...COLUMN_OPTIONS,
-  type: 'number',
-  field: 'token_total_supply',
-  renderHeader: (params) => (
-    <strong>
-      {i18next.t("column_total_supply")}
-      <span id="arrowTokenTotalSupplyDown" style={{ display: "none" }}>
-        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
-      </span>
-      <span id="arrowTokenTotalSupplyUp" style={{ display: "none" }}>
-        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
-      </span>
-    </strong>
-  ),
-  minWidth: 120,
-  renderCell: (params) => {
-    return params.value ? formatDecimal(params.value) : "-";
-  }
-}
-
 const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
   ...COLUMN_OPTIONS,
   type: 'number',
@@ -522,6 +513,27 @@ const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
   minWidth: 140,
   renderCell: (params) => {
     return params.value ? formatMoney(params.row.pool_total_liquidity > 1 ? params.value : 0) : "-";
+  }
+}
+
+const COLUMN_TOKEN_TOTAL_SUPPLY = {
+  ...COLUMN_OPTIONS,
+  type: 'number',
+  field: 'token_total_supply',
+  renderHeader: (params) => (
+    <strong>
+      {i18next.t("column_total_supply")}
+      <span id="arrowTokenTotalSupplyDown" style={{ display: "none" }}>
+        <ArrowDown style={{ verticalAlign: "middle" }}></ArrowDown>
+      </span>
+      <span id="arrowTokenTotalSupplyUp" style={{ display: "none" }}>
+        <ArrowUp style={{ verticalAlign: "middle" }}></ArrowUp>
+      </span>
+    </strong>
+  ),
+  minWidth: 120,
+  renderCell: (params) => {
+    return params.value ? formatDecimal(params.value) : "-";
   }
 }
 
@@ -560,8 +572,8 @@ const pool_columns = [
   COLUMN_POOL_TOTAL_LIQUIDITY,
   COLUMN_POOL_TOTAL_TXS,
   COLUMN_TOKEN_TOTAL_HOLDERS,
-  COLUMN_TOKEN_TOTAL_SUPPLY,
   COLUMN_TOKEN_TOTAL_MARKET_CAP,
+  COLUMN_TOKEN_TOTAL_SUPPLY,
   COLUMN_VOLUME_24H,
 ]
 
@@ -574,8 +586,8 @@ const pool_log_columns = [
   COLUMN_POOL_TOTAL_LIQUIDITY,
   COLUMN_POOL_TOTAL_TXS,
   COLUMN_TOKEN_TOTAL_HOLDERS,
-  COLUMN_TOKEN_TOTAL_SUPPLY,
   COLUMN_TOKEN_TOTAL_MARKET_CAP,
+  COLUMN_TOKEN_TOTAL_SUPPLY,
   COLUMN_VOLUME_24H,
 ]
 
@@ -758,6 +770,9 @@ class Grid extends React.Component {
     this.showFilter = this.showFilter.bind(this)
     this.hideFilter = this.hideFilter.bind(this)
     this.onFilter = this.onFilter.bind(this)
+
+    sortModel = null
+    pageModel = null
   }
 
   async componentDidMount() {
@@ -766,28 +781,35 @@ class Grid extends React.Component {
     this.onFilter(filter)
     window.addEventListener("scroll", this.listenToScroll);
 
-    const timerId = setInterval(async () => {
-      const pool_address = this.props.pair
-      const filter = await this.loadFilter()
+    if (!this.state.timerId) {
+      const timerId = setInterval(async () => {
+        const pool_address = this.props.pair
+        const filter = await this.loadFilter()
 
-      const poolLogCount = this.context.getPoolLogCount({ pool_address, filterModel: filter })
+        const poolLogCount = this.context.getPoolLogCount({ pool_address, filterModel: filter })
 
-      if (poolLogCount != this.state.poolLogCount) {
-        this.setState({
-          poolLogCount
-        })
+        if (poolLogCount != this.state.poolLogCount) {
+          this.setState({
+            poolLogCount
+          })
 
-        this.onFilter(filter)
-      }
-    }, 60 * 1000)
+          this.onFilter(filter)
+        }
+      }, 60 * 1000)
 
-    this.setState({
-      timerId
-    })
+      this.setState({
+        timerId
+      })
+    }
   }
 
   componentWillUnmount() {
-    clearInterval(this.state.timerId)
+    if (this.state.timerId) {
+      clearInterval(this.state.timerId)
+      this.setState({
+        timerId: null,
+      })
+    }
   }
 
   showFilter() {
@@ -989,10 +1011,10 @@ class Grid extends React.Component {
     })
 
     if (sortModel == null) {
-      sortModel = {
-        sortField: this.state.sortField,
-        sortDir: this.state.sortDir,
-      }
+      sortModel = [{
+        field: this.state.sortField,
+        sort: this.state.sortDir,
+      }]
     }
 
     if (pageModel == null) {
@@ -1077,6 +1099,10 @@ class Grid extends React.Component {
             },
             [`.${gridClasses.columnHeader}`]: {
               outline: "none !important"
+            },
+
+            ".MuiDataGrid-cell.MuiDataGrid-cell--editing": {
+              backgroundColor: "transparent"
             }
           })}
           rows={this.state.rows}
