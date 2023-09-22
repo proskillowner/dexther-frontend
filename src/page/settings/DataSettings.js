@@ -53,7 +53,7 @@ const columns = [
         {'NO'}
       </strong>
     ),
-    width: 50,
+    width: 40,
     renderCell: (params) => {
       return params.value
     }
@@ -67,7 +67,7 @@ const columns = [
         {i18next.t("start_time")}
       </strong>
     ),
-    width: 150,
+    width: 120,
     headerAlign: 'center',
     align: "center",
     renderCell: (params) => {
@@ -84,7 +84,7 @@ const columns = [
         {i18next.t("end_time")}
       </strong>
     ),
-    width: 150,
+    width: 120,
     headerAlign: 'center',
     align: "center",
     renderCell: (params) => {
@@ -101,7 +101,7 @@ const columns = [
         {i18next.t("type")}
       </strong>
     ),
-    width: 150,
+    width: 120,
     renderCell: (params) => {
       if (params.value === 1) return i18next.t("sync")
       if (params.value === 2) return i18next.t("scan")
@@ -128,7 +128,7 @@ const columns = [
 
       </div>
     ),
-    width: 100,
+    width: 80,
     renderCell: (params) => {
       return params.value
     }
@@ -142,7 +142,7 @@ const columns = [
         {i18next.t("status")}
       </strong>
     ),
-    width: 100,
+    width: 80,
     renderCell: (params) => {
       return params.value === 0 ? i18next.t("success") : (params.value === 1 ? i18next.t("failed") : i18next.t("unknown"))
     }
@@ -156,7 +156,7 @@ const columns = [
         {i18next.t("description")}
       </strong>
     ),
-    width: 580,
+    width: 400,
     renderCell: (params) => {
       return (
         <div>
