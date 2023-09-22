@@ -1,5 +1,10 @@
 {
     "app_name": "DEXTHER",
+    "ok": "Ok",
+    "cancel": "Cancel",
+    "and": "AND",
+    "or": "OR",
+    "to": "to",
     "login": "Login",
     "email": "Email",
     "username": "Username",
@@ -11,8 +16,6 @@
     "settings": "Settings",
     "logout": "Logout",
     "logout_confirm": "Are you sure to logout?",
-    "ok": "Ok",
-    "cancel": "Cancel",
     "reload_data": "Reload Data",
     "filter": "Filter",
     "text_copied": "Text has been copied to clipboard",
@@ -20,7 +23,6 @@
     "request_load_data": "Permintaan Anda sedang diproses. Ketika proses selesai data akan diperbarui secara otomatis",
     "request_load_data_on_progress": "Proses pengambilan data masih berlangsung.",
     "date_history": "History Time",
-    "to": "to",
     "chain": "Chain",
     "name_protocol": "Name/Protocol",
     "token_address": "Token Address",
@@ -58,11 +60,12 @@
     "log_job": "Log",
     "log_job_title": "Job Log",
     "start_time": "Start Time",
+    "end_time": "End Time",
     "type": "Type",
     "sync": "Sync New Token",
     "scan": "Scan History Token",
     "scan_filter": "Scan Filters History Token",
-    "scan_count": "Scan History Count",
+    "scan_count": "Scan History Count Max",
     "duration": "Duration",
     "close": "Close",
     "status": "Status",
@@ -75,11 +78,14 @@
     "data_interval_empty": "Please input interval data",
     "data_interval_invalid": "Interval data must equal or greater than 1 minute",
     "description": "Description",
-
+    "filter1": "Filter 1",
+    "filter2": "Filter 2",
+    "filter3": "Filter 3",
+    "filter1_description": "Exclude tokens older than",
     "column_chain": "CHAIN",
     "column_token_symbol": "NAME / PROTOCOL",
     "column_pool_index": "PAIR INDEX",
-    "column_scan_score": "SCAN SCORE",
+    "column_scan_score": "SCORE",
     "column_token_address": "TOKEN ADDRESS",
     "column_pool_address": "PAIR ADDRESS",
     "column_creation_time": "CREATION TIME",
@@ -100,7 +106,4 @@
     "column_sell_1h": "SELLS 1H",
     "column_swap_1h": "SWAPS 1H",
     "column_history_time": "HISTORY TIME"
-    
-
-
 }

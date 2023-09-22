@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.1576fdc8.css",
-    "main.js": "/static/js/main.99c64e7f.js",
+    "main.js": "/static/js/main.fa19182a.js",
     "static/js/787.6ce6ffd1.chunk.js": "/static/js/787.6ce6ffd1.chunk.js",
     "static/media/honeypot.png": "/static/media/honeypot.392803faa69396559831.png",
     "static/media/logo.jpeg": "/static/media/logo.d2345265f0bce2a17d03.jpeg",
@@ -9,11 +9,11 @@
     "static/media/c_green.svg": "/static/media/c_green.5586f961a2ea24fe62455653fb7b9e55.svg",
     "index.html": "/index.html",
     "main.1576fdc8.css.map": "/static/css/main.1576fdc8.css.map",
-    "main.99c64e7f.js.map": "/static/js/main.99c64e7f.js.map",
+    "main.fa19182a.js.map": "/static/js/main.fa19182a.js.map",
     "787.6ce6ffd1.chunk.js.map": "/static/js/787.6ce6ffd1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1576fdc8.css",
-    "static/js/main.99c64e7f.js"
+    "static/js/main.fa19182a.js"
   ]
 }
