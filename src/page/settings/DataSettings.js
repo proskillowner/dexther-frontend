@@ -160,7 +160,7 @@ const columns = [
     renderCell: (params) => {
       return (
         <div>
-          <Tooltip title={<span style={{ whiteSpace: "pre-line", maxWidth: 600 }}>{params.value}</span>}>
+          <Tooltip title={<span style={{ whiteSpace: "pre-line", width: 600, maxWidth: 600 }}>{params.value}</span>}>
             <span style={{ whiteSpace: "pre-line" }}>{params.value.substring(0, 100) + (params.value.length > 100 ? '...' : '')}</span>
           </Tooltip>
         </div>
