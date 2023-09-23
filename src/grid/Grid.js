@@ -786,7 +786,7 @@ class Grid extends React.Component {
         const pool_address = this.props.pair
         const filter = await this.loadFilter()
 
-        const poolLogCount = this.context.getPoolLogCount({ pool_address, filterModel: filter })
+        const poolLogCount = await this.context.getPoolLogCount({ pool_address, filterModel: filter })
 
         if (poolLogCount != this.state.poolLogCount) {
           this.setState({

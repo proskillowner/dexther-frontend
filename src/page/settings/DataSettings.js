@@ -16,11 +16,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { CssSelect, CssTextField, style } from "../../Style.js";
 import { SERVER_URL, API_GET_OPERATION_LOG, API_GET_CHAIN, API_GET_CONFIG, API_SET_CONFIG } from '../../Api.js'
+import MainContext from "../../context/MainContext";
 
 import { DataGrid, gridPageSizeSelector, gridPaginationModelSelector, gridRowCountSelector, gridClasses } from '@mui/x-data-grid';
 
-import MainContext from "../../context/MainContext";
-import { Tooltip } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -34,6 +35,14 @@ const MenuProps = {
     },
   },
 };
+
+const NoMaxWidthTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 'none',
+  },
+});
 
 const COLUMN_OPTIONS = {
   headerClassName: 'super-app-theme--header',
@@ -160,9 +169,9 @@ const columns = [
     renderCell: (params) => {
       return (
         <div>
-          <Tooltip title={<span style={{ whiteSpace: "pre-line", width: 600, maxWidth: 600 }}>{params.value}</span>}>
+          <NoMaxWidthTooltip title={<span style={{ whiteSpace: "pre-line" }}>{params.value}</span>}>
             <span style={{ whiteSpace: "pre-line" }}>{params.value.substring(0, 100) + (params.value.length > 100 ? '...' : '')}</span>
-          </Tooltip>
+          </NoMaxWidthTooltip>
         </div>
       )
     }
