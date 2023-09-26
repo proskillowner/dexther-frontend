@@ -4,7 +4,7 @@ import {
 	API_GET_CONFIG,
 	API_SET_CONFIG,
 	API_GET_POOL_LOG,
-	API_GET_POOL_LOG_COUNT,
+	API_IS_SYNC_CHECKED,
 	API_GET_SCAN_SCORE,
 	API_SET_SCAN_SCORE
 } from "../Api";
@@ -22,22 +22,10 @@ class MainContextProvider extends React.Component {
 		localConfig: null,
 	}
 
-	getPoolLogCount = async ({ pool_address, filterModel }) => {
-		const requestBody = {}
-
-		requestBody.chain_id = 1
-
-		if (pool_address) {
-			requestBody.pool_address = pool_address
-		}
-
-		if (filterModel) {
-			requestBody.where = filterModel
-		}
-
-		let response = await fetch(`${SERVER_URL}${API_GET_POOL_LOG_COUNT}`, {
+	isSyncChecked = async () => {
+		let response = await fetch(`${SERVER_URL}${API_IS_SYNC_CHECKED}`, {
 			method: 'POST',
-			body: JSON.stringify(requestBody),
+			body: JSON.stringify(),
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8',
 			},
@@ -45,7 +33,7 @@ class MainContextProvider extends React.Component {
 
 		response = await response.json()
 
-		return response.pool_log_count ? response.pool_log_count : 0
+		return response.is_sync_checked
 	}
 
 	loadTableData = async ({ sortModel, pageModel, filterModel, chain, token, trail, pool_address }) => {
@@ -209,7 +197,7 @@ class MainContextProvider extends React.Component {
 			<MainContext.Provider value={{
 				tableData,
 				loadTableData: this.loadTableData,
-				getPoolLogCount: this.getPoolLogCount,
+				isSyncChecked: this.isSyncChecked,
 				loadConfig: this.loadConfig,
 				saveConfig: this.saveConfig,
 				getScanScore: this.getScanScore,

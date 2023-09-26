@@ -43,12 +43,13 @@ export const withNavigation = (Component) => {
 }
 
 const formatCurrency = (value, maximumFractionDigits) => {
+  value = value ? value : 0
   let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits });
-  return value ? nf.format(value) : "-";
+  return nf.format(value);
 }
 
 const formatDecimal = (value) => {
-  if (!value) return "-"
+  value = value ? value : 0
 
   let nf = new Intl.NumberFormat('en-US');
 
@@ -73,7 +74,7 @@ const formatDecimal = (value) => {
 }
 
 const formatMoney = (value) => {
-  if (!value) return "-"
+  value = value ? value : 0
 
   let nf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
 
@@ -98,8 +99,9 @@ const formatMoney = (value) => {
 }
 
 const formatPct = (value) => {
+  value = value ? value : 0
   let nf = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
-  return value ? (nf.format(value * 100) + "%") : "0%";
+  return (nf.format(value * 100) + "%");
 }
 
 const COLUMN_OPTIONS = {
@@ -120,7 +122,7 @@ const COLUMN_ID = {
       {'NO'}
     </strong>
   ),
-  minWidth: 40,
+  width: 40,
   filterable: false,
   hideable: false,
   sortable: false,
@@ -403,7 +405,7 @@ const COLUMN_TOKEN_PRICE = {
   renderCell: (params) => (
     <div style={{ textAlign: "right" }}>
       <div>
-        <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{formatCurrency(params.row.pool_total_liquidity > 1 ? params.value : 0, 12)}</a>
+        <a href="#" onClick={() => dextools(params)} className="App-link" target="_blank">{params.value ? formatCurrency(params.value, 12) : '-'}</a>
       </div>
     </div>
   )
@@ -426,7 +428,7 @@ const COLUMN_POOL_AMOUNT = {
   ),
   minWidth: 120,
   renderCell: (params) => {
-    return formatCurrency(params.value > 1 ? params.value : 0, 6);
+    return /*formatCurrency(params.value, 6)*/'-';
   }
 }
 
@@ -447,7 +449,7 @@ const COLUMN_POOL_TOTAL_LIQUIDITY = {
   ),
   minWidth: 120,
   renderCell: (params) => {
-    return formatCurrency(params.value > 1 ? params.value : 0, 0);
+    return formatCurrency(params.value, 0);
   }
 }
 
@@ -512,7 +514,7 @@ const COLUMN_TOKEN_TOTAL_MARKET_CAP = {
   ),
   minWidth: 140,
   renderCell: (params) => {
-    return params.value ? formatMoney(params.row.pool_total_liquidity > 1 ? params.value : 0) : "-";
+    return params.value ? formatMoney(params.value) : "-";
   }
 }
 
@@ -777,23 +779,17 @@ class Grid extends React.Component {
 
   async componentDidMount() {
     // this.loadData()
+    await this.context.isSyncChecked()
     const filter = await this.loadFilter()
     this.onFilter(filter)
     window.addEventListener("scroll", this.listenToScroll);
 
     if (!this.state.timerId) {
       const timerId = setInterval(async () => {
-        const pool_address = this.props.pair
-        const filter = await this.loadFilter()
+        const isSyncChecked = await this.context.isSyncChecked()
 
-        const poolLogCount = await this.context.getPoolLogCount({ pool_address, filterModel: filter })
-
-        if (poolLogCount != this.state.poolLogCount) {
-          this.setState({
-            poolLogCount
-          })
-
-          this.onFilter(filter)
+        if (!isSyncChecked) {
+          this.loadData()
         }
       }, 60 * 1000)
 
@@ -1005,7 +1001,7 @@ class Grid extends React.Component {
     return newFilter
   }
 
-  async loadData(keepPage = false) {
+  async loadData() {
     this.setState({
       loading: true
     })
@@ -1025,30 +1021,26 @@ class Grid extends React.Component {
 
     let tableData = {}
 
-    if (keepPage && this.context.tableData && this.context.tableData.totalCount) {
-      tableData = this.context.tableData
+    if (this.props.hist === "true") {
+      tableData = await this.context.loadTableData({
+        chain_id: 1,
+        pool_address: this.props.pair,
+        filterModel: this.state.filterModel,
+        sortModel,
+        pageModel,
+        token: '',
+        trail: '',
+      })
     } else {
-      if (this.props.hist === "true") {
-        tableData = await this.context.loadTableData({
-          chain_id: 1,
-          pool_address: this.props.pair,
-          filterModel: this.state.filterModel,
-          sortModel,
-          pageModel,
-          token: '',
-          trail: '',
-        })
-      } else {
-        tableData = await this.context.loadTableData({
-          chain_id: 1,
-          pool_address: null,
-          filterModel: this.state.filterModel,
-          sortModel,
-          pageModel,
-          token: '',
-          trail: '',
-        })
-      }
+      tableData = await this.context.loadTableData({
+        chain_id: 1,
+        pool_address: null,
+        filterModel: this.state.filterModel,
+        sortModel,
+        pageModel,
+        token: '',
+        trail: '',
+      })
     }
 
     this.setState(

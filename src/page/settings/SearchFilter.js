@@ -57,8 +57,8 @@ class SearchFilter extends React.Component {
       searchMaxVolume24H: this.props.data != null ? this.props.data.searchMaxVolume24H : null,
       searchMinScanScore: this.props.data != null ? this.props.data.searchMinScanScore : null,
       searchMaxScanScore: this.props.data != null ? this.props.data.searchMaxScanScore : null,
-      searchValueTokenContractVerified: this.props.data != null ? this.props.data.search_contract_verified : null,
-      searchValueTokenContractRenounced: this.props.data != null ? this.props.data.search_contract_renounced : null,
+      searchValueTokenContractVerified: this.props.data != null ? this.props.data.search_contract_verified : false,
+      searchValueTokenContractRenounced: this.props.data != null ? this.props.data.search_contract_renounced : false,
     }
 
     this.setSearchPoolCreationTimestampRange = this.setSearchPoolCreationTimestampRange.bind(this)

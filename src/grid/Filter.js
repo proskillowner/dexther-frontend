@@ -66,8 +66,8 @@ class Filter extends React.Component {
       searchMaxVolume24H: this.props.data != null ? this.props.data.keyword_search_max_volume_24h : null,
       searchMinScanScore: this.props.data != null ? this.props.data.keyword_search_min_scan_score : null,
       searchMaxScanScore: this.props.data != null ? this.props.data.keyword_search_max_scan_score : null,
-      searchValueTokenContractVerified: this.props.data != null ? this.props.data.search_contract_verified : null,
-      searchValueTokenContractRenounced: this.props.data != null ? this.props.data.search_contract_renounced : null,
+      searchValueTokenContractVerified: this.props.data != null ? this.props.data.search_contract_verified : false,
+      searchValueTokenContractRenounced: this.props.data != null ? this.props.data.search_contract_renounced : false,
     }
 
     this.setSearchSubTokenSymbol = this.setSearchSubTokenSymbol.bind(this)
@@ -273,8 +273,8 @@ class Filter extends React.Component {
         searchMaxVolume24H: null,
         searchMinScanScore: null,
         searchMaxScanScore: null,
-        searchValueTokenContractVerified: null,
-        searchValueTokenContractRenounced: null,
+        searchValueTokenContractVerified: false,
+        searchValueTokenContractRenounced: false,
       }
     )
   }
